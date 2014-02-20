@@ -1,0 +1,125 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of dockexample</title>
+  <meta name="keywords" content="dockexample">
+  <meta name="description" content="DOCKEXAMPLE: An example of using the panelbox dock/undock functionality">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">ImageComponentParser</a> &gt; <a href="../../index.html">GUILayout-v1p13</a> &gt; <a href="../index.html">layoutHelp</a> &gt; <a href="index.html">Examples</a> &gt; dockexample.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for ImageComponentParser\GUILayout-v1p13\layoutHelp\Examples&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>dockexample
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>DOCKEXAMPLE: An example of using the panelbox dock/undock functionality</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function dockexample() </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">DOCKEXAMPLE: An example of using the panelbox dock/undock functionality</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function nDock( eventSource, eventData, whichpanel )</a></li><li><a href="#_sub2" class="code">function nCloseAll( ~, ~ )</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function dockexample()</a>
+0002 <span class="comment">%DOCKEXAMPLE: An example of using the panelbox dock/undock functionality</span>
+0003 
+0004 <span class="comment">%   Copyright 2009-2013 The MathWorks Ltd.</span>
+0005 
+0006 <span class="comment">% Create the window and main layout</span>
+0007 fig = figure( <span class="string">'Name'</span>, <span class="string">'Dockable GUI example'</span>, <span class="keyword">...</span><span class="comment">'</span>
+0008     <span class="string">'NumberTitle'</span>, <span class="string">'off'</span>, <span class="keyword">...</span>
+0009     <span class="string">'Toolbar'</span>, <span class="string">'none'</span>, <span class="keyword">...</span>
+0010     <span class="string">'MenuBar'</span>, <span class="string">'none'</span>, <span class="keyword">...</span>
+0011     <span class="string">'CloseRequestFcn'</span>, @<a href="#_sub2" class="code" title="subfunction nCloseAll( ~, ~ )">nCloseAll</a> );
+0012 box = uiextras.HBox( <span class="string">'Parent'</span>, fig );
+0013 
+0014 <span class="comment">% Add three panels to the box</span>
+0015 panel{1} = uiextras.BoxPanel( <span class="string">'Title'</span>, <span class="string">'Panel 1'</span>, <span class="keyword">...</span>
+0016     <span class="string">'DockFcn'</span>, {@<a href="#_sub1" class="code" title="subfunction nDock( eventSource, eventData, whichpanel ) ">nDock</a>, 1}, <span class="keyword">...</span>
+0017     <span class="string">'Parent'</span>, box );
+0018 panel{2} = uiextras.BoxPanel( <span class="string">'Title'</span>, <span class="string">'Panel 2'</span>, <span class="keyword">...</span>
+0019     <span class="string">'DockFcn'</span>, {@<a href="#_sub1" class="code" title="subfunction nDock( eventSource, eventData, whichpanel ) ">nDock</a>, 2}, <span class="keyword">...</span>
+0020     <span class="string">'Parent'</span>, box );
+0021 panel{3} = uiextras.BoxPanel( <span class="string">'Title'</span>, <span class="string">'Panel 3'</span>, <span class="keyword">...</span>
+0022     <span class="string">'DockFcn'</span>, {@<a href="#_sub1" class="code" title="subfunction nDock( eventSource, eventData, whichpanel ) ">nDock</a>, 3}, <span class="keyword">...</span>
+0023     <span class="string">'Parent'</span>, box );
+0024 
+0025 <span class="comment">% Add some contents</span>
+0026 uicontrol( <span class="string">'Style'</span>, <span class="string">'PushButton'</span>, <span class="string">'String'</span>, <span class="string">'Button 1'</span>, <span class="string">'Parent'</span>, panel{1} );
+0027 uicontrol( <span class="string">'Style'</span>, <span class="string">'PushButton'</span>, <span class="string">'String'</span>, <span class="string">'Button 2'</span>, <span class="string">'Parent'</span>, panel{2} );
+0028 uicontrol( <span class="string">'Style'</span>, <span class="string">'PushButton'</span>, <span class="string">'String'</span>, <span class="string">'Button 3'</span>, <span class="string">'Parent'</span>, panel{3} );
+0029 
+0030 <span class="comment">% Set the dock/undock callback</span>
+0031 set( panel{1}, <span class="string">'DockFcn'</span>, {@<a href="#_sub1" class="code" title="subfunction nDock( eventSource, eventData, whichpanel ) ">nDock</a>, 1} );
+0032 set( panel{2}, <span class="string">'DockFcn'</span>, {@<a href="#_sub1" class="code" title="subfunction nDock( eventSource, eventData, whichpanel ) ">nDock</a>, 2} );
+0033 set( panel{3}, <span class="string">'DockFcn'</span>, {@<a href="#_sub1" class="code" title="subfunction nDock( eventSource, eventData, whichpanel ) ">nDock</a>, 3} );
+0034 
+0035 <span class="comment">%-------------------------------------------------------------------------%</span>
+0036     <a name="_sub1" href="#_subfunctions" class="code">function nDock( eventSource, eventData, whichpanel ) </a><span class="comment">%#ok&lt;INUSL&gt;</span>
+0037         <span class="comment">% Set the flag</span>
+0038         panel{whichpanel}.IsDocked = ~panel{whichpanel}.IsDocked;
+0039         <span class="keyword">if</span> panel{whichpanel}.IsDocked
+0040             <span class="comment">% Put it back into the layout</span>
+0041             newfig = get( panel{whichpanel}, <span class="string">'Parent'</span> );
+0042             set( panel{whichpanel}, <span class="string">'Parent'</span>, box );
+0043             delete( newfig );
+0044         <span class="keyword">else</span>
+0045             <span class="comment">% Take it out of the layout</span>
+0046             pos = getpixelposition( panel{whichpanel} );
+0047             newfig = figure( <span class="keyword">...</span>
+0048                 <span class="string">'Name'</span>, get( panel{whichpanel}, <span class="string">'Title'</span> ), <span class="keyword">...</span>
+0049                 <span class="string">'NumberTitle'</span>, <span class="string">'off'</span>, <span class="keyword">...</span>
+0050                 <span class="string">'MenuBar'</span>, <span class="string">'none'</span>, <span class="keyword">...</span>
+0051                 <span class="string">'Toolbar'</span>, <span class="string">'none'</span>, <span class="keyword">...</span>
+0052                 <span class="string">'CloseRequestFcn'</span>, {@<a href="#_sub1" class="code" title="subfunction nDock( eventSource, eventData, whichpanel ) ">nDock</a>, whichpanel} );
+0053             figpos = get( newfig, <span class="string">'Position'</span> );
+0054             set( newfig, <span class="string">'Position'</span>, [figpos(1,1:2), pos(1,3:4)] );
+0055             set( panel{whichpanel}, <span class="string">'Parent'</span>, newfig, <span class="keyword">...</span>
+0056                 <span class="string">'Units'</span>, <span class="string">'Normalized'</span>, <span class="keyword">...</span>
+0057                 <span class="string">'Position'</span>, [0 0 1 1] );
+0058         <span class="keyword">end</span>
+0059     <span class="keyword">end</span> <span class="comment">% nDock</span>
+0060 
+0061 <span class="comment">%-------------------------------------------------------------------------%</span>
+0062     <a name="_sub2" href="#_subfunctions" class="code">function nCloseAll( ~, ~ )</a>
+0063         <span class="comment">% User wished to close the application, so we need to tidy up</span>
+0064         
+0065         <span class="comment">% Delete all windows, including undocked ones. We can do this by</span>
+0066         <span class="comment">% getting the window for each panel in turn and deleting it.</span>
+0067         <span class="keyword">for</span> ii=1:numel( panel )
+0068             <span class="keyword">if</span> isvalid( panel{ii} ) &amp;&amp; ~strcmpi( panel{ii}.BeingDeleted, <span class="string">'on'</span> )
+0069                 figh = ancestor( panel{ii}, <span class="string">'figure'</span> );
+0070                 delete( figh );
+0071             <span class="keyword">end</span>
+0072         <span class="keyword">end</span>
+0073         
+0074     <span class="keyword">end</span> <span class="comment">% nCloseAll</span>
+0075 
+0076 <span class="keyword">end</span> <span class="comment">% Main function</span></pre></div>
+<hr><address>Generated on Thu 20-Feb-2014 10:46:33 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

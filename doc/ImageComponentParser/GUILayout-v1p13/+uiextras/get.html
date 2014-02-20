@@ -1,0 +1,117 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of get</title>
+  <meta name="keywords" content="get">
+  <meta name="description" content="uiextras.get  Retrieve a default property value from a parent object">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">ImageComponentParser</a> &gt; <a href="../index.html">GUILayout-v1p13</a> &gt; <a href="index.html">+uiextras</a> &gt; get.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for ImageComponentParser\GUILayout-v1p13\+uiextras&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>get
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>uiextras.get  Retrieve a default property value from a parent object</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function propValue = get( hObj, propName ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">uiextras.get  Retrieve a default property value from a parent object
+
+   propValue = uiextras.get(hObj,propName) retrieves a default property
+   value from the object hObj. Note that the hObj must be a valid graphics
+   container object such as a uipanel, figure or the special flag 0 (the
+   overall environment). The property name should take the form
+   &quot;DefaultClassProperty&quot;, for example to get the default &quot;TitleColor&quot; for
+   the class &quot;uiextras.BoxPanel&quot;, use &quot;DefaultBoxPanelTitleColor&quot;. If no
+   default has been set for the specified property an error is thrown.
+
+   Examples:
+   &gt;&gt; p = uiextras.get( gcf(), 'DefaultBoxPanelTitleColor' )
+   
+   &gt;&gt; p = uiextras.get( 0, 'DefaultHBoxPadding' )
+
+   See also: uiextras.<a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>	uiextras.get  Retrieve a default property value from a parent object</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="BoxPanel.html" class="code" title="classdef BoxPanel < uiextras.CardPanel & uiextras.DecoratedPanel">BoxPanel</a>	BoxPanel  Show one element inside a box panel</li><li><a href="CardPanel.html" class="code" title="classdef CardPanel < uiextras.Container">CardPanel</a>	CardPanel  Show one element (card) from a list</li><li><a href="Container.html" class="code" title="classdef Container < hgsetget">Container</a>	Container  Container base class</li><li><a href="DecoratedPanel.html" class="code" title="classdef DecoratedPanel < handle">DecoratedPanel</a>	DecoratedPanel  Abstract panel class that manages fonts and colors</li><li><a href="Empty.html" class="code" title="classdef Empty < hgsetget">Empty</a>	Empty  Create an empty space</li><li><a href="GridFlex.html" class="code" title="classdef GridFlex < uiextras.Grid">GridFlex</a>	GridFlex  Container with contents arranged in a resizable grid</li><li><a href="HBoxFlex.html" class="code" title="classdef HBoxFlex < uiextras.HBox">HBoxFlex</a>	HBoxFlex  A dynamically resizable horizontal layout</li><li><a href="MousePointerHandler.html" class="code" title="classdef MousePointerHandler < handle">MousePointerHandler</a>	MousePointerHandler  A class to handle mouse-over events</li><li><a href="Panel.html" class="code" title="classdef Panel < uiextras.CardPanel & uiextras.DecoratedPanel">Panel</a>	Panel  Show one element inside a panel</li><li><a href="TabPanel.html" class="code" title="classdef TabPanel < uiextras.CardPanel & uiextras.DecoratedPanel">TabPanel</a>	TabPanel  Show one element inside a tabbed panel</li><li><a href="VBoxFlex.html" class="code" title="classdef VBoxFlex < uiextras.VBox">VBoxFlex</a>	VBoxFlex  A dynamically resizable vertical layout</li><li><a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>	uiextras.get  Retrieve a default property value from a parent object</li><li><a href="loadLayoutIcon.html" class="code" title="function cdata = loadLayoutIcon(imagefilename,bgcol)">loadLayoutIcon</a>	loadLayoutIcon  Load an icon and set the transparent color</li><li><a href="makeFlexDivider.html" class="code" title="function uic = makeFlexDivider( parent, position, bgCol, orientation, showMarks )">makeFlexDivider</a>	makeFlexDivider  Create a divider widget and add markings if desired</li><li><a href="unset.html" class="code" title="function unset( hObj, propName )">unset</a>	uiextras.unset  Clear a default property value from a parent object</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function propValue = get( hObj, propName )</a>
+0002 <span class="comment">%uiextras.get  Retrieve a default property value from a parent object</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%   propValue = uiextras.get(hObj,propName) retrieves a default property</span>
+0005 <span class="comment">%   value from the object hObj. Note that the hObj must be a valid graphics</span>
+0006 <span class="comment">%   container object such as a uipanel, figure or the special flag 0 (the</span>
+0007 <span class="comment">%   overall environment). The property name should take the form</span>
+0008 <span class="comment">%   &quot;DefaultClassProperty&quot;, for example to get the default &quot;TitleColor&quot; for</span>
+0009 <span class="comment">%   the class &quot;uiextras.BoxPanel&quot;, use &quot;DefaultBoxPanelTitleColor&quot;. If no</span>
+0010 <span class="comment">%   default has been set for the specified property an error is thrown.</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%   Examples:</span>
+0013 <span class="comment">%   &gt;&gt; p = uiextras.get( gcf(), 'DefaultBoxPanelTitleColor' )</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">%   &gt;&gt; p = uiextras.get( 0, 'DefaultHBoxPadding' )</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">%   See also: uiextras.set</span>
+0018 
+0019 <span class="comment">%   Copyright 2010 The MathWorks, Inc.</span>
+0020 <span class="comment">%   $Revision: 1$</span>
+0021 <span class="comment">%   $Date: 2010-05-18$</span>
+0022 
+0023 <span class="comment">% Check inputs</span>
+0024 error( nargchk( 2, 2, nargin ) );
+0025 <span class="keyword">if</span> isempty( hObj )
+0026     hObj = 0;
+0027 <span class="keyword">end</span>
+0028 <span class="keyword">if</span> strncmpi( class( hObj ), <span class="string">'uiextras.'</span>, 9 )
+0029     hObj = double( hObj );
+0030 <span class="keyword">end</span>
+0031 <span class="keyword">if</span> ~isequal( hObj, 0 ) &amp;&amp; ~ishghandle( hObj )
+0032     error( <span class="string">'GUILayout:InvalidArgument'</span>, <span class="string">'Object must be a valid Handle Graphics object.'</span> );
+0033 <span class="keyword">end</span>
+0034 <span class="keyword">if</span> ~ischar( propName )
+0035     error( <span class="string">'GUILayout:InvalidArgument'</span>, <span class="string">'Property name must be a string.'</span> )
+0036 <span class="keyword">end</span>
+0037 
+0038 <span class="comment">% Make sure the property requested is a default</span>
+0039 <span class="keyword">if</span> ~strncmp( propName, <span class="string">'Default'</span>, 7 )
+0040     error( <span class="string">'GUILayout:InvalidArgument'</span>, <span class="string">'Property name must begin with ''Default''.'</span> )
+0041 <span class="keyword">end</span>
+0042 
+0043 <span class="comment">% All OK, so set it</span>
+0044 propValue = getappdata( hObj, propName );
+0045 
+0046 <span class="comment">% If not found, try the parent</span>
+0047 <span class="keyword">while</span> isempty( propValue ) &amp;&amp; ~isequal( hObj, 0 )
+0048     hObj = <a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>( hObj, <span class="string">'Parent'</span> );
+0049     propValue = getappdata( hObj, propName );
+0050 <span class="keyword">end</span>
+0051 
+0052 <span class="keyword">if</span> isempty( propValue )
+0053     error( <span class="string">'GUILayout:get:ItemNotFound'</span>, <span class="keyword">...</span>
+0054         <span class="string">'Could not find a value for property ''%s'' in the ancestors of this object.'</span>, propName );
+0055 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Thu 20-Feb-2014 10:46:33 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

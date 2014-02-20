@@ -1,0 +1,170 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of HBox</title>
+  <meta name="keywords" content="HBox">
+  <meta name="description" content="HBox  Arrange elements in a single horizontal row">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">ImageComponentParser</a> &gt; <a href="../index.html">GUILayout-v1p13</a> &gt; <a href="index.html">+uiextras</a> &gt; HBox.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for ImageComponentParser\GUILayout-v1p13\+uiextras&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>HBox
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>HBox  Arrange elements in a single horizontal row</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>classdef HBox < uiextras.Box </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">HBox  Arrange elements in a single horizontal row
+
+   obj = uiextras.HBox() creates a new horizontal box layout with
+   all parameters set to defaults. The output is a new layout object
+   that can be used as the parent for other user-interface components.
+
+   obj = uiextras.HBox(param,value,...) also sets one or more
+   parameter values.
+
+   See the &lt;a href=&quot;matlab:doc uiextras.HBox&quot;&gt;documentation&lt;/a&gt; for more detail and the list of properties.
+
+   Examples:
+   &gt;&gt; f = figure();
+   &gt;&gt; b = uiextras.HBox( 'Parent', f );
+   &gt;&gt; uicontrol( 'Parent', b, 'Background', 'r' )
+   &gt;&gt; uicontrol( 'Parent', b, 'Background', 'b' )
+   &gt;&gt; uicontrol( 'Parent', b, 'Background', 'g' )
+   &gt;&gt; set( b, 'Sizes', [-1 100 -2], 'Spacing', 5 );
+
+   &gt;&gt; f = figure();
+   &gt;&gt; b1 = uiextras.VBox( 'Parent', f );
+   &gt;&gt; b2 = uiextras.HBox( 'Parent', b1, 'Padding', 5, 'Spacing', 5 );
+   &gt;&gt; uicontrol( 'Style', 'frame', 'Parent', b1, 'Background', 'r' )
+   &gt;&gt; uicontrol( 'Parent', b2, 'String', 'Button1' )
+   &gt;&gt; uicontrol( 'Parent', b2, 'String', 'Button2' )
+   &gt;&gt; set( b1, 'Sizes', [30 -1] );
+
+   See also: uiextras.<a href="VBox.html" class="code" title="classdef VBox < uiextras.Box">VBox</a>
+             uiextras.<a href="HBoxFlex.html" class="code" title="classdef HBoxFlex < uiextras.HBox">HBoxFlex</a>
+             uiextras.<a href="Grid.html" class="code" title="classdef Grid < uiextras.Container">Grid</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>	uiextras.set  Store a default property value in a parent object</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function obj = HBox( varargin )</a></li><li><a href="#_sub2" class="code">function [widths,heights] = redraw( obj )</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 classdef <a href="#_sub1" class="code" title="subfunction obj = HBox( varargin )">HBox</a> &lt; uiextras.Box
+0002     <span class="comment">%HBox  Arrange elements in a single horizontal row</span>
+0003     <span class="comment">%</span>
+0004     <span class="comment">%   obj = uiextras.HBox() creates a new horizontal box layout with</span>
+0005     <span class="comment">%   all parameters set to defaults. The output is a new layout object</span>
+0006     <span class="comment">%   that can be used as the parent for other user-interface components.</span>
+0007     <span class="comment">%</span>
+0008     <span class="comment">%   obj = uiextras.HBox(param,value,...) also sets one or more</span>
+0009     <span class="comment">%   parameter values.</span>
+0010     <span class="comment">%</span>
+0011     <span class="comment">%   See the &lt;a href=&quot;matlab:doc uiextras.HBox&quot;&gt;documentation&lt;/a&gt; for more detail and the list of properties.</span>
+0012     <span class="comment">%</span>
+0013     <span class="comment">%   Examples:</span>
+0014     <span class="comment">%   &gt;&gt; f = figure();</span>
+0015     <span class="comment">%   &gt;&gt; b = uiextras.HBox( 'Parent', f );</span>
+0016     <span class="comment">%   &gt;&gt; uicontrol( 'Parent', b, 'Background', 'r' )</span>
+0017     <span class="comment">%   &gt;&gt; uicontrol( 'Parent', b, 'Background', 'b' )</span>
+0018     <span class="comment">%   &gt;&gt; uicontrol( 'Parent', b, 'Background', 'g' )</span>
+0019     <span class="comment">%   &gt;&gt; set( b, 'Sizes', [-1 100 -2], 'Spacing', 5 );</span>
+0020     <span class="comment">%</span>
+0021     <span class="comment">%   &gt;&gt; f = figure();</span>
+0022     <span class="comment">%   &gt;&gt; b1 = uiextras.VBox( 'Parent', f );</span>
+0023     <span class="comment">%   &gt;&gt; b2 = uiextras.HBox( 'Parent', b1, 'Padding', 5, 'Spacing', 5 );</span>
+0024     <span class="comment">%   &gt;&gt; uicontrol( 'Style', 'frame', 'Parent', b1, 'Background', 'r' )</span>
+0025     <span class="comment">%   &gt;&gt; uicontrol( 'Parent', b2, 'String', 'Button1' )</span>
+0026     <span class="comment">%   &gt;&gt; uicontrol( 'Parent', b2, 'String', 'Button2' )</span>
+0027     <span class="comment">%   &gt;&gt; set( b1, 'Sizes', [30 -1] );</span>
+0028     <span class="comment">%</span>
+0029     <span class="comment">%   See also: uiextras.VBox</span>
+0030     <span class="comment">%             uiextras.HBoxFlex</span>
+0031     <span class="comment">%             uiextras.Grid</span>
+0032     
+0033     <span class="comment">%   Copyright 2009-2010 The MathWorks, Inc.</span>
+0034     <span class="comment">%   $Revision: 374 $</span>
+0035     <span class="comment">%   $Date: 2012-12-20 09:18:15 +0000 (Thu, 20 Dec 2012) $</span>
+0036     
+0037     methods
+0038         
+0039         <a name="_sub0" href="#_subfunctions" class="code">function obj = HBox( varargin )</a>
+0040             <span class="comment">%HBox  Container with contents in a single horizontal row</span>
+0041             
+0042             <span class="comment">% First step is to create the parent class. We pass the</span>
+0043             <span class="comment">% arguments (if any) just incase the parent needs setting</span>
+0044             obj@uiextras.Box( varargin{:} );
+0045             
+0046             <span class="comment">% Set user-supplied property values</span>
+0047             <span class="keyword">if</span> nargin &gt; 0
+0048                 <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( obj, varargin{:} );
+0049             <span class="keyword">end</span>  
+0050         <span class="keyword">end</span> <span class="comment">% constructor</span>
+0051         
+0052     <span class="keyword">end</span> <span class="comment">% public methods</span>
+0053     
+0054     methods( Access = protected )
+0055         
+0056         <a name="_sub1" href="#_subfunctions" class="code">function [widths,heights] = redraw( obj )</a>
+0057             <span class="comment">%REDRAW  Redraw container contents.</span>
+0058             <span class="comment">% Get container width and height</span>
+0059             totalPosition = ceil( getpixelposition( obj.UIContainer ) );
+0060             totalWidth = totalPosition(3);
+0061             totalHeight = totalPosition(4);
+0062             
+0063             <span class="comment">% Get children</span>
+0064             children = obj.getValidChildren();
+0065             nChildren = numel( children );
+0066             
+0067             <span class="comment">% Get padding, spacing and sizes</span>
+0068             padding = obj.Padding;
+0069             spacing = obj.Spacing;
+0070             
+0071             <span class="comment">% Compute widths</span>
+0072             widths = uiextras.calculatePixelSizes( totalWidth, <span class="keyword">...</span>
+0073                 obj.Sizes, obj.MinimumSizes, padding, spacing );
+0074             
+0075             <span class="comment">% Compute heights</span>
+0076             heights = repmat( totalHeight - padding * 2, size( children ) );
+0077             heights = max( heights, 1 ); <span class="comment">% minimum is 1 pixel</span>
+0078             
+0079             <span class="comment">% Compute and set new positions in pixels</span>
+0080             <span class="keyword">for</span> ii = 1:nChildren
+0081                 child = children(ii);
+0082                 newPosition = [sum( widths(1:ii-1) ) + padding + spacing * (ii-1) + 1, <span class="keyword">...</span>
+0083                     padding + 1, <span class="keyword">...</span>
+0084                     widths(ii), <span class="keyword">...</span>
+0085                     heights(ii)];
+0086                 obj.repositionChild( child, newPosition )
+0087             <span class="keyword">end</span>   
+0088         <span class="keyword">end</span> <span class="comment">% redraw</span>
+0089         
+0090     <span class="keyword">end</span> <span class="comment">% protected methods</span>
+0091     
+0092 <span class="keyword">end</span> <span class="comment">% classdef</span></pre></div>
+<hr><address>Generated on Thu 20-Feb-2014 10:46:33 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

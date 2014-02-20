@@ -1,0 +1,174 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of interpretColor</title>
+  <meta name="keywords" content="interpretColor">
+  <meta name="description" content="interpretColor  Interpret a color as an RGB triple">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">ImageComponentParser</a> &gt; <a href="../index.html">GUILayout-v1p13</a> &gt; <a href="index.html">+uiextras</a> &gt; interpretColor.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for ImageComponentParser\GUILayout-v1p13\+uiextras&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>interpretColor
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>interpretColor  Interpret a color as an RGB triple</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function col = interpretColor(str) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">interpretColor  Interpret a color as an RGB triple
+
+   rgb = uiextras.interpretColor(col) interprets the input color COL and
+   returns the equivalent RGB triple. COL can be one of:
+   * RGB triple of floating point numbers in the range 0 to 1
+   * RGB triple of UINT8 numbers in the range 0 to 255
+   * single character: 'r','g','b','m','y','c','k','w'
+   * string: one of 'red','green','blue','magenta','yellow','cyan','black'
+             'white'
+   * HTML-style string (e.g. '#FF23E0')
+
+   Examples:
+   &gt;&gt; uiextras.interpretColor( 'r' )
+   ans =
+        1   0   0
+   &gt;&gt; uiextras.interpretColor( 'cyan' )
+   ans =
+        0   1   1
+   &gt;&gt; uiextras.interpretColor( '#FF23E0' )
+   ans =
+        1.0000    0.1373    0.8784
+
+   See also: ColorSpec</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function str = dequote(str)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function col = interpretColor(str)</a>
+0002 <span class="comment">%interpretColor  Interpret a color as an RGB triple</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%   rgb = uiextras.interpretColor(col) interprets the input color COL and</span>
+0005 <span class="comment">%   returns the equivalent RGB triple. COL can be one of:</span>
+0006 <span class="comment">%   * RGB triple of floating point numbers in the range 0 to 1</span>
+0007 <span class="comment">%   * RGB triple of UINT8 numbers in the range 0 to 255</span>
+0008 <span class="comment">%   * single character: 'r','g','b','m','y','c','k','w'</span>
+0009 <span class="comment">%   * string: one of 'red','green','blue','magenta','yellow','cyan','black'</span>
+0010 <span class="comment">%             'white'</span>
+0011 <span class="comment">%   * HTML-style string (e.g. '#FF23E0')</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">%   Examples:</span>
+0014 <span class="comment">%   &gt;&gt; uiextras.interpretColor( 'r' )</span>
+0015 <span class="comment">%   ans =</span>
+0016 <span class="comment">%        1   0   0</span>
+0017 <span class="comment">%   &gt;&gt; uiextras.interpretColor( 'cyan' )</span>
+0018 <span class="comment">%   ans =</span>
+0019 <span class="comment">%        0   1   1</span>
+0020 <span class="comment">%   &gt;&gt; uiextras.interpretColor( '#FF23E0' )</span>
+0021 <span class="comment">%   ans =</span>
+0022 <span class="comment">%        1.0000    0.1373    0.8784</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">%   See also: ColorSpec</span>
+0025 
+0026 <span class="comment">%   Copyright 2005-2010 The MathWorks Ltd.</span>
+0027 <span class="comment">%   $Revision: 329 $</span>
+0028 <span class="comment">%   $Date: 2010-08-26 09:53:44 +0100 (Thu, 26 Aug 2010) $</span>
+0029 
+0030 <span class="keyword">if</span> ischar( str )
+0031     str = strtrim(str);
+0032     str = <a href="#_sub1" class="code" title="subfunction str = dequote(str)">dequote</a>(str);
+0033     <span class="keyword">if</span> str(1)==<span class="string">'#'</span>
+0034         <span class="comment">% HTML-style string</span>
+0035         <span class="keyword">if</span> numel(str)==4
+0036             col = [hex2dec( str(2) ), hex2dec( str(3) ), hex2dec( str(4) )]/15;
+0037         <span class="keyword">elseif</span> numel(str)==7
+0038             col = [hex2dec( str(2:3) ), hex2dec( str(4:5) ), hex2dec( str(6:7) )]/255;
+0039         <span class="keyword">else</span>
+0040             error( <span class="string">'UIExtras:interpretColor:BadColor'</span>, <span class="string">'Invalid HTML color %s'</span>, str );
+0041         <span class="keyword">end</span>
+0042     <span class="keyword">elseif</span> all( ismember( str, <span class="string">'1234567890.,; []'</span> ) )
+0043         <span class="comment">% Try the '[0 0 1]' thing first</span>
+0044         col = str2num( str ); <span class="comment">%#ok&lt;ST2NM&gt;</span>
+0045         <span class="keyword">if</span> numel(col) == 3
+0046             <span class="comment">% Conversion worked, so just check for silly values</span>
+0047             col(col&lt;0) = 0;
+0048             col(col&gt;1) = 1;
+0049         <span class="keyword">end</span>
+0050     <span class="keyword">else</span>
+0051         <span class="comment">% that didn't work, so try the name</span>
+0052         <span class="keyword">switch</span> upper(str)
+0053             <span class="keyword">case</span> {<span class="string">'R'</span>,<span class="string">'RED'</span>}
+0054                 col = [1 0 0];
+0055             <span class="keyword">case</span> {<span class="string">'G'</span>,<span class="string">'GREEN'</span>}
+0056                 col = [0 1 0];
+0057             <span class="keyword">case</span> {<span class="string">'B'</span>,<span class="string">'BLUE'</span>}
+0058                 col = [0 0 1];
+0059             <span class="keyword">case</span> {<span class="string">'C'</span>,<span class="string">'CYAN'</span>}
+0060                 col = [0 1 1];
+0061             <span class="keyword">case</span> {<span class="string">'Y'</span>,<span class="string">'YELLOW'</span>}
+0062                 col = [1 1 0];
+0063             <span class="keyword">case</span> {<span class="string">'M'</span>,<span class="string">'MAGENTA'</span>}
+0064                 col = [1 0 1];
+0065             <span class="keyword">case</span> {<span class="string">'K'</span>,<span class="string">'BLACK'</span>}
+0066                 col = [0 0 0];
+0067             <span class="keyword">case</span> {<span class="string">'W'</span>,<span class="string">'WHITE'</span>}
+0068                 col = [1 1 1];
+0069             <span class="keyword">case</span> {<span class="string">'N'</span>,<span class="string">'NONE'</span>}
+0070                 col = [nan nan nan];
+0071             <span class="keyword">otherwise</span>
+0072                 <span class="comment">% Failed</span>
+0073                 error( <span class="string">'UIExtras:interpretColor:BadColor'</span>, <span class="string">'Could not interpret color %s'</span>, num2str( str ) );
+0074         <span class="keyword">end</span>
+0075     <span class="keyword">end</span>
+0076 <span class="keyword">elseif</span> isfloat(str) || isdouble(str)
+0077     <span class="comment">% Floating point, so should be a triple in range 0 to 1</span>
+0078     <span class="keyword">if</span> numel(str)==3
+0079         col = double( str );
+0080         col(col&lt;0) = 0;
+0081         col(col&gt;1) = 1;
+0082     <span class="keyword">else</span>
+0083         error( <span class="string">'UIExtras:interpretColor:BadColor'</span>, <span class="string">'Could not interpret color %s'</span>, num2str( str ) );
+0084     <span class="keyword">end</span>
+0085 <span class="keyword">elseif</span> isa(str,<span class="string">'uint8'</span>)
+0086     <span class="comment">% UINT8, so range is implicit</span>
+0087     <span class="keyword">if</span> numel(str)==3
+0088         col = double( str )/255;
+0089         col(col&lt;0) = 0;
+0090         col(col&gt;1) = 1;
+0091     <span class="keyword">else</span>
+0092         error( <span class="string">'UIExtras:interpretColor:BadColor'</span>, <span class="string">'Could not interpret color %s'</span>, num2str( str ) );
+0093     <span class="keyword">end</span>
+0094 <span class="keyword">else</span>
+0095     error( <span class="string">'UIExtras:interpretColor:BadColor'</span>, <span class="string">'Could not interpret color %s'</span>, num2str( str ) );
+0096 <span class="keyword">end</span>
+0097 
+0098 
+0099 <a name="_sub1" href="#_subfunctions" class="code">function str = dequote(str)</a>
+0100 str(str==<span class="string">''''</span>) = [];
+0101 str(str==<span class="string">'&quot;'</span>) = [];
+0102 str(str==<span class="string">'['</span>) = [];
+0103 str(str==<span class="string">']'</span>) = [];</pre></div>
+<hr><address>Generated on Thu 20-Feb-2014 10:46:33 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

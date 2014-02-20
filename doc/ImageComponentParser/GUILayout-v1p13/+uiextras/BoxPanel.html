@@ -1,0 +1,493 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of BoxPanel</title>
+  <meta name="keywords" content="BoxPanel">
+  <meta name="description" content="BoxPanel  Show one element inside a box panel">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">ImageComponentParser</a> &gt; <a href="../index.html">GUILayout-v1p13</a> &gt; <a href="index.html">+uiextras</a> &gt; BoxPanel.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for ImageComponentParser\GUILayout-v1p13\+uiextras&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>BoxPanel
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>BoxPanel  Show one element inside a box panel</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>classdef BoxPanel < uiextras.CardPanel & uiextras.DecoratedPanel </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">BoxPanel  Show one element inside a box panel
+
+   obj = uiextras.BoxPanel() creates a box-styled panel object with
+   automatic management of the contained widget or layout. The
+   properties available are largely the same as the builtin UIPANEL
+   object. Where more than one child is added, the currently visible
+   child is determined using the SelectedChild property.
+
+   obj = uiextras.BoxPanel(param,value,...) also sets one or more
+   property values.
+
+   See the &lt;a href=&quot;matlab:doc uiextras.BoxPanel&quot;&gt;documentation&lt;/a&gt; for more detail and the list of properties.
+
+   Examples:
+   &gt;&gt; f = figure();
+   &gt;&gt; p = uiextras.BoxPanel( 'Parent', f, 'Title', 'A BoxPanel', 'Padding', 5 );
+   &gt;&gt; uicontrol( 'Style', 'frame', 'Parent', p, 'Background', 'r' )
+
+   &gt;&gt; f = figure();
+   &gt;&gt; p = uiextras.BoxPanel( 'Parent', f, 'Title', 'A BoxPanel', 'Padding', 5 );
+   &gt;&gt; b = uiextras.HBox( 'Parent', p, 'Spacing', 5 );
+   &gt;&gt; uicontrol( 'Style', 'listbox', 'Parent', b, 'String', {'Item 1','Item 2'} );
+   &gt;&gt; uicontrol( 'Style', 'frame', 'Parent', b, 'Background', 'b' );
+   &gt;&gt; set( b, 'Sizes', [100 -1] );
+   &gt;&gt; p.FontSize = 12;
+   &gt;&gt; p.FontWeight = 'bold';
+   &gt;&gt; p.HelpFcn = @(x,y) disp('Help me!');
+
+   See also: uiextras.<a href="Panel.html" class="code" title="classdef Panel < uiextras.CardPanel & uiextras.DecoratedPanel">Panel</a>
+             uiextras.<a href="TabPanel.html" class="code" title="classdef TabPanel < uiextras.CardPanel & uiextras.DecoratedPanel">TabPanel</a>
+             uiextras.<a href="HBoxFlex.html" class="code" title="classdef HBoxFlex < uiextras.HBox">HBoxFlex</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>	uiextras.get  Retrieve a default property value from a parent object</li><li><a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>	uiextras.set  Store a default property value in a parent object</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function obj = BoxPanel(varargin)</a></li><li><a href="#_sub2" class="code">function set.Title( obj, value )</a></li><li><a href="#_sub3" class="code">function value = get.Title( obj )</a></li><li><a href="#_sub4" class="code">function set.HelpFcn( obj, value )</a></li><li><a href="#_sub5" class="code">function set.CloseRequestFcn( obj, value )</a></li><li><a href="#_sub6" class="code">function set.MinimizeFcn( obj, value )</a></li><li><a href="#_sub7" class="code">function set.IsMinimized( obj, value )</a></li><li><a href="#_sub8" class="code">function set.DockFcn( obj, value )</a></li><li><a href="#_sub9" class="code">function set.IsDocked( obj, value )</a></li><li><a href="#_sub10" class="code">function value = get.CloseRequestFcn( obj )</a></li><li><a href="#_sub11" class="code">function value = get.HelpFcn( obj )</a></li><li><a href="#_sub12" class="code">function value = get.MinimizeFcn( obj )</a></li><li><a href="#_sub13" class="code">function value = get.DockFcn( obj )</a></li><li><a href="#_sub14" class="code">function set.TitleColor( obj, value )</a></li><li><a href="#_sub15" class="code">function value = get.TitleColor( obj )</a></li><li><a href="#_sub16" class="code">function set.TooltipString( obj, value )</a></li><li><a href="#_sub17" class="code">function value = get.TooltipString( obj )</a></li><li><a href="#_sub18" class="code">function redraw( obj )</a></li><li><a href="#_sub19" class="code">function onChildAdded( obj, source, eventData )</a></li><li><a href="#_sub20" class="code">function onChildRemoved( obj, source, eventData )</a></li><li><a href="#_sub21" class="code">function onEnable(obj, source, eventData )</a></li><li><a href="#_sub22" class="code">function onPanelColorChanged( obj, source, eventData )</a></li><li><a href="#_sub23" class="code">function onPanelFontChanged( obj, source, eventData )</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 classdef <a href="#_sub1" class="code" title="subfunction obj = BoxPanel(varargin)">BoxPanel</a> &lt; uiextras.CardPanel &amp; uiextras.DecoratedPanel
+0002     <span class="comment">%BoxPanel  Show one element inside a box panel</span>
+0003     <span class="comment">%</span>
+0004     <span class="comment">%   obj = uiextras.BoxPanel() creates a box-styled panel object with</span>
+0005     <span class="comment">%   automatic management of the contained widget or layout. The</span>
+0006     <span class="comment">%   properties available are largely the same as the builtin UIPANEL</span>
+0007     <span class="comment">%   object. Where more than one child is added, the currently visible</span>
+0008     <span class="comment">%   child is determined using the SelectedChild property.</span>
+0009     <span class="comment">%</span>
+0010     <span class="comment">%   obj = uiextras.BoxPanel(param,value,...) also sets one or more</span>
+0011     <span class="comment">%   property values.</span>
+0012     <span class="comment">%</span>
+0013     <span class="comment">%   See the &lt;a href=&quot;matlab:doc uiextras.BoxPanel&quot;&gt;documentation&lt;/a&gt; for more detail and the list of properties.</span>
+0014     <span class="comment">%</span>
+0015     <span class="comment">%   Examples:</span>
+0016     <span class="comment">%   &gt;&gt; f = figure();</span>
+0017     <span class="comment">%   &gt;&gt; p = uiextras.BoxPanel( 'Parent', f, 'Title', 'A BoxPanel', 'Padding', 5 );</span>
+0018     <span class="comment">%   &gt;&gt; uicontrol( 'Style', 'frame', 'Parent', p, 'Background', 'r' )</span>
+0019     <span class="comment">%</span>
+0020     <span class="comment">%   &gt;&gt; f = figure();</span>
+0021     <span class="comment">%   &gt;&gt; p = uiextras.BoxPanel( 'Parent', f, 'Title', 'A BoxPanel', 'Padding', 5 );</span>
+0022     <span class="comment">%   &gt;&gt; b = uiextras.HBox( 'Parent', p, 'Spacing', 5 );</span>
+0023     <span class="comment">%   &gt;&gt; uicontrol( 'Style', 'listbox', 'Parent', b, 'String', {'Item 1','Item 2'} );</span>
+0024     <span class="comment">%   &gt;&gt; uicontrol( 'Style', 'frame', 'Parent', b, 'Background', 'b' );</span>
+0025     <span class="comment">%   &gt;&gt; set( b, 'Sizes', [100 -1] );</span>
+0026     <span class="comment">%   &gt;&gt; p.FontSize = 12;</span>
+0027     <span class="comment">%   &gt;&gt; p.FontWeight = 'bold';</span>
+0028     <span class="comment">%   &gt;&gt; p.HelpFcn = @(x,y) disp('Help me!');</span>
+0029     <span class="comment">%</span>
+0030     <span class="comment">%   See also: uiextras.Panel</span>
+0031     <span class="comment">%             uiextras.TabPanel</span>
+0032     <span class="comment">%             uiextras.HBoxFlex</span>
+0033     
+0034     <span class="comment">%   Copyright 2009-2010 The MathWorks, Inc.</span>
+0035     <span class="comment">%   $Revision: 301 $</span>
+0036     <span class="comment">%   $Date: 2010-07-22 16:40:01 +0100 (Thu, 22 Jul 2010) $</span>
+0037     
+0038     properties
+0039         IsMinimized = false
+0040         IsDocked = true
+0041     <span class="keyword">end</span> <span class="comment">% public properties</span>
+0042     
+0043     properties( Dependent = true )
+0044         CloseRequestFcn
+0045         HelpFcn
+0046         MinimizeFcn
+0047         DockFcn
+0048         Title
+0049         TitleColor
+0050         TooltipString
+0051     <span class="keyword">end</span> <span class="comment">% dependent properties</span>
+0052     
+0053     properties( SetAccess = private, GetAccess = private, Hidden = true )
+0054         HGWidgets_ = struct()
+0055     <span class="keyword">end</span> <span class="comment">% private properties</span>
+0056     
+0057     methods
+0058         
+0059         <a name="_sub0" href="#_subfunctions" class="code">function obj = BoxPanel(varargin)</a>
+0060             <span class="comment">% First step is to create the parent class. We pass the</span>
+0061             <span class="comment">% arguments (if any) just incase the parent needs setting</span>
+0062             obj = obj@uiextras.CardPanel( varargin{:} );
+0063             obj = obj@uiextras.DecoratedPanel( varargin{:} );
+0064             
+0065             <span class="comment">% For this container we need the border on</span>
+0066             <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( obj.UIContainer, <span class="string">'BorderType'</span>, <span class="string">'etchedin'</span> );
+0067             
+0068             <span class="comment">% Text control for title</span>
+0069             figh = ancestor( obj.UIContainer, <span class="string">'figure'</span> );
+0070             contextmenu = uicontextmenu( <span class="string">'Parent'</span>, figh );
+0071             titleColor = [0.75 0.9 1.0];
+0072             obj.HGWidgets_.TitleText = uicontrol(<span class="string">'parent'</span>, obj.UIContainer, <span class="keyword">...</span>
+0073                 <span class="string">'Visible'</span>, obj.Visible, <span class="keyword">...</span>
+0074                 <span class="string">'units'</span>, <span class="string">'pixels'</span>, <span class="keyword">...</span>
+0075                 <span class="string">'HitTest'</span>, <span class="string">'off'</span>, <span class="keyword">...</span>
+0076                 <span class="string">'style'</span>, <span class="string">'text'</span>, <span class="keyword">...</span>
+0077                 <span class="string">'string'</span>, <span class="string">''</span>, <span class="keyword">...</span>
+0078                 <span class="string">'horizontalalignment'</span>, <span class="string">'left'</span>,<span class="keyword">...</span>
+0079                 <span class="string">'BackgroundColor'</span>, titleColor, <span class="keyword">...</span>
+0080                 <span class="string">'ForegroundColor'</span>, obj.ForegroundColor, <span class="keyword">...</span>
+0081                 <span class="string">'FontSize'</span>, obj.FontSize, <span class="keyword">...</span>
+0082                 <span class="string">'FontName'</span>, obj.FontName, <span class="keyword">...</span>
+0083                 <span class="string">'FontAngle'</span>, obj.FontAngle, <span class="keyword">...</span>
+0084                 <span class="string">'FontWeight'</span>, obj.FontWeight, <span class="keyword">...</span>
+0085                 <span class="string">'FontUnits'</span>, obj.FontUnits, <span class="keyword">...</span>
+0086                 <span class="string">'UIContextMenu'</span>, contextmenu, <span class="keyword">...</span>
+0087                 <span class="string">'HandleVisibility'</span>, <span class="string">'off'</span>, <span class="keyword">...</span>
+0088                 <span class="string">'Tag'</span>, <span class="string">'uiextras:BoxPanel:TitleText'</span>);
+0089             
+0090             <span class="comment">% Panel for title</span>
+0091             obj.HGWidgets_.TitlePanel = uipanel(<span class="string">'parent'</span>, obj.UIContainer, <span class="keyword">...</span>
+0092                 <span class="string">'Visible'</span>, obj.Visible, <span class="keyword">...</span>
+0093                 <span class="string">'units'</span>, <span class="string">'pixels'</span>, <span class="keyword">...</span>
+0094                 <span class="string">'HitTest'</span>, <span class="string">'off'</span>, <span class="keyword">...</span>
+0095                 <span class="string">'bordertype'</span>, <span class="string">'etchedin'</span>, <span class="keyword">...</span>
+0096                 <span class="string">'BackgroundColor'</span>, titleColor, <span class="keyword">...</span>
+0097                 <span class="string">'Tag'</span>, <span class="string">'uiextras:BoxPanel:TitlePanel'</span>, <span class="keyword">...</span>
+0098                 <span class="string">'HandleVisibility'</span>, <span class="string">'off'</span>, <span class="keyword">...</span>
+0099                 <span class="string">'UIContextMenu'</span>, contextmenu);
+0100             
+0101             <span class="comment">% Create the buttons</span>
+0102             obj.HGWidgets_.HelpButton = uicontrol(<span class="string">'parent'</span>, obj.UIContainer, <span class="keyword">...</span>
+0103                 <span class="string">'style'</span>, <span class="string">'checkbox'</span>, <span class="keyword">...</span>
+0104                 <span class="string">'cdata'</span>, uiextras.loadLayoutIcon( <span class="string">'panelHelp.png'</span> ), <span class="keyword">...</span>
+0105                 <span class="string">'BackgroundColor'</span>, titleColor, <span class="keyword">...</span>
+0106                 <span class="string">'Visible'</span>, <span class="string">'off'</span>, <span class="keyword">...</span>
+0107                 <span class="string">'Tag'</span>, <span class="string">'uiextras:BoxPanel:HelpButton'</span>, <span class="keyword">...</span>
+0108                 <span class="string">'HandleVisibility'</span>, <span class="string">'off'</span>, <span class="keyword">...</span>
+0109                 <span class="string">'tooltip'</span>, <span class="string">'Get help on this panel'</span> );
+0110             
+0111             obj.HGWidgets_.CloseButton = uicontrol(<span class="string">'parent'</span>, obj.UIContainer, <span class="keyword">...</span>
+0112                 <span class="string">'style'</span>, <span class="string">'checkbox'</span>, <span class="keyword">...</span>
+0113                 <span class="string">'cdata'</span>, uiextras.loadLayoutIcon( <span class="string">'panelClose.png'</span> ), <span class="keyword">...</span>
+0114                 <span class="string">'BackgroundColor'</span>, titleColor, <span class="keyword">...</span>
+0115                 <span class="string">'Visible'</span>, <span class="string">'off'</span>, <span class="keyword">...</span>
+0116                 <span class="string">'Tag'</span>, <span class="string">'uiextras:BoxPanel:CloseButton'</span>, <span class="keyword">...</span>
+0117                 <span class="string">'HandleVisibility'</span>, <span class="string">'off'</span>, <span class="keyword">...</span>
+0118                 <span class="string">'tooltip'</span>, <span class="string">'Close this panel'</span> );
+0119             
+0120             obj.HGWidgets_.DockButton = uicontrol(<span class="string">'parent'</span>, obj.UIContainer, <span class="keyword">...</span>
+0121                 <span class="string">'style'</span>, <span class="string">'checkbox'</span>, <span class="keyword">...</span>
+0122                 <span class="string">'cdata'</span>, uiextras.loadLayoutIcon( <span class="string">'panelUndock.png'</span> ), <span class="keyword">...</span>
+0123                 <span class="string">'BackgroundColor'</span>, titleColor, <span class="keyword">...</span>
+0124                 <span class="string">'Visible'</span>, <span class="string">'off'</span>, <span class="keyword">...</span>
+0125                 <span class="string">'Tag'</span>, <span class="string">'uiextras:BoxPanel:DockButton'</span>, <span class="keyword">...</span>
+0126                 <span class="string">'HandleVisibility'</span>, <span class="string">'off'</span>, <span class="keyword">...</span>
+0127                 <span class="string">'tooltip'</span>, <span class="string">'Undock this panel'</span> );
+0128             
+0129             obj.HGWidgets_.MinimizeButton = uicontrol(<span class="string">'parent'</span>, obj.UIContainer, <span class="keyword">...</span>
+0130                 <span class="string">'style'</span>, <span class="string">'checkbox'</span>, <span class="keyword">...</span>
+0131                 <span class="string">'cdata'</span>, uiextras.loadLayoutIcon( <span class="string">'panelMinimize.png'</span> ), <span class="keyword">...</span>
+0132                 <span class="string">'BackgroundColor'</span>, titleColor, <span class="keyword">...</span>
+0133                 <span class="string">'Visible'</span>, <span class="string">'off'</span>, <span class="keyword">...</span>
+0134                 <span class="string">'Tag'</span>, <span class="string">'uiextras:BoxPanel:MinimizeButton'</span>, <span class="keyword">...</span>
+0135                 <span class="string">'HandleVisibility'</span>, <span class="string">'off'</span>, <span class="keyword">...</span>
+0136                 <span class="string">'tooltip'</span>, <span class="string">'Minimize this panel'</span> );
+0137             
+0138             <span class="comment">% Get some defaults</span>
+0139             obj.setPropertyFromDefault( <span class="string">'TitleColor'</span> );
+0140             
+0141             <span class="comment">% Parse any input arguments</span>
+0142             <span class="keyword">if</span> nargin&gt;0
+0143                 <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( obj, varargin{:} );
+0144             <span class="keyword">end</span>
+0145             <span class="comment">% Redraw both contents and styling</span>
+0146             obj.redraw();
+0147         <span class="keyword">end</span> <span class="comment">% constructor</span>
+0148     <span class="keyword">end</span> <span class="comment">% public methods</span>
+0149     
+0150     methods
+0151         
+0152         <a name="_sub1" href="#_subfunctions" class="code">function set.Title( obj, value )</a>
+0153             <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( obj.HGWidgets_.TitleText, <span class="string">'String'</span>, value );
+0154             obj.redraw();
+0155         <span class="keyword">end</span> <span class="comment">% set.Title</span>
+0156         
+0157         <a name="_sub2" href="#_subfunctions" class="code">function value = get.Title( obj )</a>
+0158             value = <a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>( obj.HGWidgets_.TitleText, <span class="string">'String'</span> );
+0159         <span class="keyword">end</span> <span class="comment">% get.Title</span>
+0160         
+0161         <a name="_sub3" href="#_subfunctions" class="code">function set.HelpFcn( obj, value )</a>
+0162             <span class="keyword">if</span> isempty( value )
+0163                 <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( obj.HGWidgets_.HelpButton, <span class="string">'Visible'</span>, <span class="string">'off'</span>, <span class="string">'Callback'</span>, [] );
+0164             <span class="keyword">else</span>
+0165                 <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( obj.HGWidgets_.HelpButton, <span class="string">'Visible'</span>, obj.Visible, <span class="string">'Callback'</span>, value );
+0166             <span class="keyword">end</span>
+0167         <span class="keyword">end</span> <span class="comment">% set.HelpFcn</span>
+0168         
+0169         <a name="_sub4" href="#_subfunctions" class="code">function set.CloseRequestFcn( obj, value )</a>
+0170             <span class="keyword">if</span> isempty( value )
+0171                 <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( obj.HGWidgets_.CloseButton, <span class="string">'Visible'</span>, <span class="string">'off'</span>, <span class="string">'Callback'</span>, [] );
+0172             <span class="keyword">else</span>
+0173                 <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( obj.HGWidgets_.CloseButton, <span class="string">'Visible'</span>, obj.Visible, <span class="string">'Callback'</span>, value );
+0174             <span class="keyword">end</span>
+0175         <span class="keyword">end</span> <span class="comment">% set.CloseRequestFcn</span>
+0176         
+0177         <a name="_sub5" href="#_subfunctions" class="code">function set.MinimizeFcn( obj, value )</a>
+0178             <span class="keyword">if</span> isempty( value )
+0179                 <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( obj.HGWidgets_.MinimizeButton, <span class="string">'Visible'</span>, <span class="string">'off'</span>, <span class="string">'Callback'</span>, [] );
+0180             <span class="keyword">else</span>
+0181                 <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( obj.HGWidgets_.MinimizeButton, <span class="string">'Visible'</span>, obj.Visible, <span class="string">'Callback'</span>, value );
+0182             <span class="keyword">end</span>
+0183         <span class="keyword">end</span> <span class="comment">% set.MinimizeFcn</span>
+0184         
+0185         <a name="_sub6" href="#_subfunctions" class="code">function set.IsMinimized( obj, value )</a>
+0186             obj.IsMinimized = (value(1) == true);
+0187             <span class="keyword">if</span> value( obj.IsMinimized )
+0188                 <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( obj.HGWidgets_.MinimizeButton, <span class="keyword">...</span>
+0189                     <span class="string">'cdata'</span>, uiextras.loadLayoutIcon( <span class="string">'panelMaximize.png'</span> ), <span class="keyword">...</span>
+0190                     <span class="string">'tooltip'</span>, <span class="string">'Maximize this panel'</span> ); <span class="comment">%#ok&lt;MCSUP&gt;</span>
+0191             <span class="keyword">else</span>
+0192                 <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( obj.HGWidgets_.MinimizeButton, <span class="keyword">...</span>
+0193                     <span class="string">'cdata'</span>, uiextras.loadLayoutIcon( <span class="string">'panelMinimize.png'</span> ), <span class="keyword">...</span>
+0194                     <span class="string">'tooltip'</span>, <span class="string">'Minimize this panel'</span> ); <span class="comment">%#ok&lt;MCSUP&gt;</span>
+0195             <span class="keyword">end</span>
+0196         <span class="keyword">end</span> <span class="comment">% set.IsMinimized</span>
+0197         
+0198         <a name="_sub7" href="#_subfunctions" class="code">function set.DockFcn( obj, value )</a>
+0199             <span class="keyword">if</span> isempty( value )
+0200                 <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( obj.HGWidgets_.DockButton, <span class="string">'Visible'</span>, <span class="string">'off'</span>, <span class="string">'Callback'</span>, [] );
+0201             <span class="keyword">else</span>
+0202                 <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( obj.HGWidgets_.DockButton, <span class="string">'Visible'</span>, obj.Visible, <span class="string">'Callback'</span>, value );
+0203             <span class="keyword">end</span>
+0204         <span class="keyword">end</span> <span class="comment">% set.DockFcn</span>
+0205         
+0206         <a name="_sub8" href="#_subfunctions" class="code">function set.IsDocked( obj, value )</a>
+0207             obj.IsDocked = (value(1) == true);
+0208             <span class="keyword">if</span> value( obj.IsDocked )
+0209                 <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( obj.HGWidgets_.DockButton, <span class="keyword">...</span>
+0210                     <span class="string">'cdata'</span>, uiextras.loadLayoutIcon( <span class="string">'panelUndock.png'</span> ), <span class="keyword">...</span>
+0211                     <span class="string">'tooltip'</span>, <span class="string">'Undock this panel'</span> ); <span class="comment">%#ok&lt;MCSUP&gt;</span>
+0212             <span class="keyword">else</span>
+0213                 <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( obj.HGWidgets_.DockButton, <span class="keyword">...</span>
+0214                     <span class="string">'cdata'</span>, uiextras.loadLayoutIcon( <span class="string">'panelDock.png'</span> ), <span class="keyword">...</span>
+0215                     <span class="string">'tooltip'</span>, <span class="string">'Dock this panel'</span> ); <span class="comment">%#ok&lt;MCSUP&gt;</span>
+0216             <span class="keyword">end</span>
+0217         <span class="keyword">end</span> <span class="comment">% set.IsMinimized</span>
+0218         
+0219         <a name="_sub9" href="#_subfunctions" class="code">function value = get.CloseRequestFcn( obj )</a>
+0220             value = <a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>( obj.HGWidgets_.CloseButton, <span class="string">'Callback'</span> );
+0221         <span class="keyword">end</span> <span class="comment">% get.CloseRequestFcn</span>
+0222         
+0223         <a name="_sub10" href="#_subfunctions" class="code">function value = get.HelpFcn( obj )</a>
+0224             value = <a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>( obj.HGWidgets_.HelpButton, <span class="string">'Callback'</span> );
+0225         <span class="keyword">end</span> <span class="comment">% get.HelpFcn</span>
+0226         
+0227         <a name="_sub11" href="#_subfunctions" class="code">function value = get.MinimizeFcn( obj )</a>
+0228             value = <a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>( obj.HGWidgets_.MinimizeButton, <span class="string">'Callback'</span> );
+0229         <span class="keyword">end</span> <span class="comment">% get.MinimizeFcn</span>
+0230         
+0231         <a name="_sub12" href="#_subfunctions" class="code">function value = get.DockFcn( obj )</a>
+0232             value = <a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>( obj.HGWidgets_.DockButton, <span class="string">'Callback'</span> );
+0233         <span class="keyword">end</span> <span class="comment">% get.DockFcn</span>
+0234         
+0235         <a name="_sub13" href="#_subfunctions" class="code">function set.TitleColor( obj, value )</a>
+0236             widgets = {
+0237                 <span class="string">'TitleText'</span>
+0238                 <span class="string">'TitlePanel'</span>
+0239                 <span class="string">'HelpButton'</span>
+0240                 <span class="string">'CloseButton'</span>
+0241                 <span class="string">'MinimizeButton'</span>
+0242                 <span class="string">'DockButton'</span>
+0243                 };
+0244             <span class="keyword">for</span> ww=1:numel(widgets)
+0245                 <span class="keyword">if</span> isfield( obj.HGWidgets_, widgets{ww} )
+0246                     <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( obj.HGWidgets_.(widgets{ww}), <span class="string">'BackgroundColor'</span>, value );
+0247                 <span class="keyword">end</span>
+0248             <span class="keyword">end</span>
+0249         <span class="keyword">end</span> <span class="comment">% set.TitleColor</span>
+0250         
+0251         <a name="_sub14" href="#_subfunctions" class="code">function value = get.TitleColor( obj )</a>
+0252             value = <a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>( obj.HGWidgets_.TitleText, <span class="string">'BackgroundColor'</span> );
+0253         <span class="keyword">end</span> <span class="comment">% get.TitleColor</span>
+0254         
+0255         <a name="_sub15" href="#_subfunctions" class="code">function set.TooltipString( obj, value )</a>
+0256             <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( obj.HGWidgets_.TitleText, <span class="string">'TooltipString'</span>, value );
+0257         <span class="keyword">end</span> <span class="comment">% set.TooltipString</span>
+0258         
+0259         <a name="_sub16" href="#_subfunctions" class="code">function value = get.TooltipString( obj )</a>
+0260             value = <a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>( obj.HGWidgets_.TitleText, <span class="string">'TooltipString'</span> );
+0261         <span class="keyword">end</span> <span class="comment">% get.TooltipString</span>
+0262         
+0263         
+0264     <span class="keyword">end</span> <span class="comment">% accessor methods</span>
+0265     
+0266     methods( Access = protected )
+0267         
+0268         <a name="_sub17" href="#_subfunctions" class="code">function redraw( obj )</a>
+0269             <span class="comment">%redraw  Redraw this widget and its contents</span>
+0270             pos = getpixelposition( obj.UIContainer );
+0271             decor = obj.HGWidgets_;
+0272             
+0273             <span class="comment">% If size is too small, ignore</span>
+0274             <span class="keyword">if</span> (pos(3)&lt;12) || (pos(4)&lt;18)
+0275                 <span class="keyword">return</span>
+0276             <span class="keyword">end</span>
+0277             
+0278             <span class="comment">% If decorations not yet constructed, ignore</span>
+0279             <span class="keyword">if</span> ~isstruct( decor ) <span class="keyword">...</span>
+0280                     || isempty(fieldnames(decor)) <span class="keyword">...</span>
+0281                     || ~isfield( decor, <span class="string">'MinimizeButton'</span> ) <span class="comment">% this is the last widget constructed</span>
+0282                 <span class="keyword">return</span>
+0283             <span class="keyword">end</span>
+0284             
+0285             <span class="comment">% Work out the title height</span>
+0286             <span class="keyword">if</span> isempty( obj.Title )
+0287                 titleSize = 14;
+0288             <span class="keyword">else</span>
+0289                 <span class="comment">% Work out how much extra space to leave for the title</span>
+0290                 oldunits = <a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>( decor.TitleText, <span class="string">'FontUnits'</span> );
+0291                 <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( decor.TitleText, <span class="string">'FontUnits'</span>, <span class="string">'Pixels'</span> );
+0292                 <span class="comment">% Get the height of the title (in pixels) and add a bit to</span>
+0293                 <span class="comment">% cope with letters below the baseline (e.g. 'g')</span>
+0294                 titleSize = ceil( <a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>( decor.TitleText, <span class="string">'FontSize'</span> )*1.2 );
+0295                 <span class="comment">% Put the old units back</span>
+0296                 <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( decor.TitleText, <span class="string">'FontUnits'</span>, oldunits );
+0297             <span class="keyword">end</span>
+0298             
+0299             <span class="comment">% Set position of close button</span>
+0300             buttonXPos = pos(3)-2;
+0301             buttonWidth = titleSize;
+0302             <span class="keyword">if</span> ~isempty(decor.CloseButton)
+0303                 <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>(decor.CloseButton, <span class="string">'Position'</span>, [buttonXPos-buttonWidth, pos(4)-titleSize, buttonWidth-1, buttonWidth-2]);
+0304                 <span class="keyword">if</span> ~isempty( obj.CloseRequestFcn )
+0305                     <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>(decor.CloseButton,<span class="string">'Visible'</span>, <span class="string">'on'</span> );
+0306                     buttonXPos = buttonXPos - buttonWidth;
+0307                 <span class="keyword">else</span>
+0308                     <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>(decor.CloseButton,<span class="string">'Visible'</span>, <span class="string">'off'</span> );
+0309                 <span class="keyword">end</span>
+0310             <span class="keyword">end</span>
+0311             
+0312             <span class="comment">% Set position of dock button</span>
+0313             <span class="keyword">if</span> ~isempty(decor.DockButton)
+0314                 <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>(decor.DockButton, <span class="string">'Position'</span>, [buttonXPos-buttonWidth, pos(4)-titleSize, buttonWidth-1, buttonWidth-2]);
+0315                 <span class="keyword">if</span> ~isempty( obj.DockFcn )
+0316                     <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>(decor.DockButton,<span class="string">'Visible'</span>, <span class="string">'on'</span> );
+0317                     buttonXPos = buttonXPos - buttonWidth;
+0318                 <span class="keyword">else</span>
+0319                     <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>(decor.DockButton,<span class="string">'Visible'</span>, <span class="string">'off'</span> );
+0320                 <span class="keyword">end</span>
+0321             <span class="keyword">end</span>
+0322             
+0323             <span class="comment">% Set position of minimise button</span>
+0324             <span class="keyword">if</span> ~isempty(decor.MinimizeButton)
+0325                 <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>(decor.MinimizeButton, <span class="string">'Position'</span>, [buttonXPos-buttonWidth, pos(4)-titleSize, buttonWidth-1, buttonWidth-2]);
+0326                 <span class="keyword">if</span> ~isempty( obj.MinimizeFcn )
+0327                     <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>(decor.MinimizeButton,<span class="string">'Visible'</span>, <span class="string">'on'</span> );
+0328                     buttonXPos = buttonXPos - buttonWidth;
+0329                 <span class="keyword">else</span>
+0330                     <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>(decor.MinimizeButton,<span class="string">'Visible'</span>, <span class="string">'off'</span> );
+0331                 <span class="keyword">end</span>
+0332             <span class="keyword">end</span>
+0333             
+0334             <span class="comment">% Set position of help button</span>
+0335             <span class="keyword">if</span> ~isempty(decor.HelpButton)
+0336                 <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>(decor.HelpButton, <span class="string">'Position'</span>, [buttonXPos-buttonWidth, pos(4)-titleSize, buttonWidth-1, buttonWidth-2]);
+0337                 <span class="keyword">if</span> ~isempty( obj.HelpFcn)
+0338                     <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>(decor.HelpButton,<span class="string">'Visible'</span>, <span class="string">'on'</span> );
+0339                     buttonXPos = buttonXPos - buttonWidth;
+0340                 <span class="keyword">else</span>
+0341                     <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>(decor.HelpButton,<span class="string">'Visible'</span>, <span class="string">'off'</span> );
+0342                 <span class="keyword">end</span>
+0343             <span class="keyword">end</span>
+0344             
+0345             <span class="comment">% Set position of title</span>
+0346             posText = [2, pos(4)-titleSize-1, buttonXPos-3, titleSize];
+0347             <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>(decor.TitleText, <span class="string">'Position'</span>, posText, <span class="string">'string'</span>, obj.Title );
+0348             
+0349             <span class="comment">% Set position of panel for title</span>
+0350             posTitle = [-1, pos(4)-titleSize-3, pos(3), titleSize+4];
+0351             <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>(decor.TitlePanel, <span class="string">'Position'</span>, posTitle);
+0352             
+0353             <span class="comment">% Work out where to put the contents</span>
+0354             panelborder = 2;
+0355             x0 = obj.Padding+1;
+0356             y0 = obj.Padding+1;
+0357             w = pos(3) - 2*panelborder - 2*obj.Padding;
+0358             h = pos(4) - titleSize - 2*panelborder - 2*obj.Padding;
+0359             contentPos = [x0 y0 w h];
+0360             
+0361             <span class="comment">% Use the CardLayout function to put the right child onscreen</span>
+0362             obj.showSelectedChild( contentPos )
+0363             
+0364         <span class="keyword">end</span> <span class="comment">% redraw</span>
+0365         
+0366         <a name="_sub18" href="#_subfunctions" class="code">function onChildAdded( obj, source, eventData ) </a><span class="comment">%#ok&lt;INUSD&gt;</span>
+0367             <span class="comment">%onChildAdded  A child has been added to a container</span>
+0368             <span class="comment">% Select the new addition</span>
+0369             obj.SelectedChild = numel( obj.Children );
+0370         <span class="keyword">end</span> <span class="comment">% onChildAdded</span>
+0371         
+0372         <a name="_sub19" href="#_subfunctions" class="code">function onChildRemoved( obj, source, eventData ) </a><span class="comment">%#ok&lt;INUSL&gt;</span>
+0373             <span class="comment">%onChildAdded  A container child has been destroyed or reparented</span>
+0374             <span class="comment">%</span>
+0375             <span class="comment">% If the missing child is the selected one, select something else</span>
+0376             <span class="keyword">if</span> eventData.ChildIndex == obj.SelectedChild
+0377                 <span class="keyword">if</span> isempty( obj.Children )
+0378                     obj.SelectedChild = [];
+0379                 <span class="keyword">else</span>
+0380                     obj.SelectedChild = max( 1, obj.SelectedChild - 1 );
+0381                 <span class="keyword">end</span>
+0382             <span class="keyword">end</span>
+0383         <span class="keyword">end</span> <span class="comment">% onChildRemoved</span>
+0384         
+0385         <a name="_sub20" href="#_subfunctions" class="code">function onEnable(obj, source, eventData ) </a><span class="comment">%#ok&lt;INUSL&gt;</span>
+0386             <span class="comment">%onEnable  Enable state has been changed, so update</span>
+0387             <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( obj.HGWidgets_.TitleText, <span class="string">'Enable'</span>, eventData );
+0388         <span class="keyword">end</span> <span class="comment">% onEnable</span>
+0389         
+0390         <a name="_sub21" href="#_subfunctions" class="code">function onPanelColorChanged( obj, source, eventData ) </a><span class="comment">%#ok&lt;INUSD&gt;</span>
+0391             <span class="comment">%onPanelColorChanged  Colors have been changed, so update</span>
+0392             <span class="keyword">if</span> isfield( obj.HGWidgets_, <span class="string">'TitleText'</span> )
+0393                 <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( obj.HGWidgets_.TitleText, <span class="string">'ForegroundColor'</span>, obj.ForegroundColor );
+0394                 <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( obj.HGWidgets_.TitlePanel, <span class="keyword">...</span>
+0395                     <span class="string">'HighlightColor'</span>, obj.HighlightColor, <span class="keyword">...</span>
+0396                     <span class="string">'ShadowColor'</span>, obj.ShadowColor );
+0397                 <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( obj.UIContainer, <span class="keyword">...</span>
+0398                     <span class="string">'HighlightColor'</span>, obj.HighlightColor, <span class="keyword">...</span>
+0399                     <span class="string">'ShadowColor'</span>, obj.ShadowColor );
+0400             <span class="keyword">end</span>
+0401         <span class="keyword">end</span> <span class="comment">% onPanelColorChanged</span>
+0402         
+0403         <a name="_sub22" href="#_subfunctions" class="code">function onPanelFontChanged( obj, source, eventData ) </a><span class="comment">%#ok&lt;INUSL&gt;</span>
+0404             <span class="comment">% Font has changed. Since the font size and shape affects the</span>
+0405             <span class="comment">% space available for the contents, we need to redraw.</span>
+0406             <span class="keyword">if</span> isfield( obj.HGWidgets_, <span class="string">'TitleText'</span> )
+0407                 <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( obj.HGWidgets_.TitleText, eventData.Property, eventData.Value );
+0408                 obj.redraw();
+0409             <span class="keyword">end</span>
+0410         <span class="keyword">end</span> <span class="comment">% onPanelFontChanged</span>
+0411         
+0412     <span class="keyword">end</span> <span class="comment">% protected methods</span>
+0413     
+0414 <span class="keyword">end</span> <span class="comment">% classdef</span></pre></div>
+<hr><address>Generated on Thu 20-Feb-2014 10:46:33 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

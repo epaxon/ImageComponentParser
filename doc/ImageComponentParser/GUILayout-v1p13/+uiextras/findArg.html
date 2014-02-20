@@ -1,0 +1,86 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of findArg</title>
+  <meta name="keywords" content="findArg">
+  <meta name="description" content="findArg  Find a specific property value from a property-value pairs list">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">ImageComponentParser</a> &gt; <a href="../index.html">GUILayout-v1p13</a> &gt; <a href="index.html">+uiextras</a> &gt; findArg.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for ImageComponentParser\GUILayout-v1p13\+uiextras&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>findArg
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>findArg  Find a specific property value from a property-value pairs list</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function value = findArg( argname, varargin ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">findArg  Find a specific property value from a property-value pairs list
+
+   value = findParentArg(propname,varargin) parses the inputs as property-value
+   pairs looking for the named property. If found, the corresponding
+   value is returned. If not found an empty array is returned.
+
+   Examples:
+   &gt;&gt; uiextras.findArg('Parent','Padding',5,'Parent',1,'Visible','on')
+   ans =
+     1</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function value = findArg( argname, varargin )</a>
+0002 <span class="comment">%findArg  Find a specific property value from a property-value pairs list</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%   value = findParentArg(propname,varargin) parses the inputs as property-value</span>
+0005 <span class="comment">%   pairs looking for the named property. If found, the corresponding</span>
+0006 <span class="comment">%   value is returned. If not found an empty array is returned.</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">%   Examples:</span>
+0009 <span class="comment">%   &gt;&gt; uiextras.findArg('Parent','Padding',5,'Parent',1,'Visible','on')</span>
+0010 <span class="comment">%   ans =</span>
+0011 <span class="comment">%     1</span>
+0012 
+0013 <span class="comment">%   Copyright 2009-2010 The MathWorks, Inc.</span>
+0014 <span class="comment">%   $Revision: 288 $</span>
+0015 <span class="comment">%   $Date: 2010-07-14 12:23:50 +0100 (Wed, 14 Jul 2010) $</span>
+0016 
+0017 error( nargchk( 1, inf, nargin, <span class="string">'struct'</span> ) );
+0018 
+0019 value = [];
+0020 <span class="keyword">if</span> nargin&gt;1
+0021     props = varargin(1:2:end);
+0022     values = varargin(2:2:end);
+0023     <span class="keyword">if</span> ( numel( props ) ~= numel( values ) ) || any( ~cellfun( @ischar, props ) )
+0024         error( <span class="string">'GUILayout:InvalidSyntax'</span>, <span class="string">'Arguments must be supplied as property-value pairs.'</span> );
+0025     <span class="keyword">end</span>
+0026     myArg = find( strcmpi( props, argname ), 1, <span class="string">'last'</span> );
+0027     <span class="keyword">if</span> ~isempty( myArg )
+0028         value = values{myArg};
+0029     <span class="keyword">end</span>
+0030 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Thu 20-Feb-2014 10:46:33 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,210 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of Empty</title>
+  <meta name="keywords" content="Empty">
+  <meta name="description" content="Empty  Create an empty space">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">ImageComponentParser</a> &gt; <a href="../index.html">GUILayout-v1p13</a> &gt; <a href="index.html">+uiextras</a> &gt; Empty.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for ImageComponentParser\GUILayout-v1p13\+uiextras&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>Empty
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>Empty  Create an empty space</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>classdef Empty < hgsetget </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">Empty  Create an empty space
+
+   obj = uiextras.Empty() creates an empty space object that can be
+   used in layouts to add gaps between other elements.
+
+   obj = uiextras.Empty(param,value,...) also sets one or more
+   property values.
+
+   See the &lt;a href=&quot;matlab:doc uiextras.Empty&quot;&gt;documentation&lt;/a&gt; for more detail and the list of properties.
+
+   Examples:
+   &gt;&gt; f = figure();
+   &gt;&gt; box = uiextras.HBox( 'Parent', f );
+   &gt;&gt; uicontrol( 'Parent', box, 'Background', 'r' )
+   &gt;&gt; uiextras.Empty( 'Parent', box )
+   &gt;&gt; uicontrol( 'Parent', box, 'Background', 'b' )
+
+   See also: uiextras.<a href="HBox.html" class="code" title="classdef HBox < uiextras.Box">HBox</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>	uiextras.get  Retrieve a default property value from a parent object</li><li><a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>	uiextras.set  Store a default property value in a parent object</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function obj = Empty( varargin )</a></li><li><a href="#_sub2" class="code">function control = double( obj )</a></li><li><a href="#_sub3" class="code">function delete( obj )</a></li><li><a href="#_sub4" class="code">function set.Position( obj, value )</a></li><li><a href="#_sub5" class="code">function value = get.Position( obj )</a></li><li><a href="#_sub6" class="code">function set.BackgroundColor( obj, value )</a></li><li><a href="#_sub7" class="code">function value = get.BackgroundColor( obj )</a></li><li><a href="#_sub8" class="code">function set.Units( obj, value )</a></li><li><a href="#_sub9" class="code">function value = get.Units( obj )</a></li><li><a href="#_sub10" class="code">function set.Parent( obj, value )</a></li><li><a href="#_sub11" class="code">function value = get.Parent( obj )</a></li><li><a href="#_sub12" class="code">function set.Visible( obj, value )</a></li><li><a href="#_sub13" class="code">function value = get.Visible( obj )</a></li><li><a href="#_sub14" class="code">function set.Tag( obj, value )</a></li><li><a href="#_sub15" class="code">function value = get.Tag( obj )</a></li><li><a href="#_sub16" class="code">function value = get.Type( obj )</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 classdef <a href="#_sub1" class="code" title="subfunction obj = Empty( varargin )">Empty</a> &lt; hgsetget
+0002     <span class="comment">%Empty  Create an empty space</span>
+0003     <span class="comment">%</span>
+0004     <span class="comment">%   obj = uiextras.Empty() creates an empty space object that can be</span>
+0005     <span class="comment">%   used in layouts to add gaps between other elements.</span>
+0006     <span class="comment">%</span>
+0007     <span class="comment">%   obj = uiextras.Empty(param,value,...) also sets one or more</span>
+0008     <span class="comment">%   property values.</span>
+0009     <span class="comment">%</span>
+0010     <span class="comment">%   See the &lt;a href=&quot;matlab:doc uiextras.Empty&quot;&gt;documentation&lt;/a&gt; for more detail and the list of properties.</span>
+0011     <span class="comment">%</span>
+0012     <span class="comment">%   Examples:</span>
+0013     <span class="comment">%   &gt;&gt; f = figure();</span>
+0014     <span class="comment">%   &gt;&gt; box = uiextras.HBox( 'Parent', f );</span>
+0015     <span class="comment">%   &gt;&gt; uicontrol( 'Parent', box, 'Background', 'r' )</span>
+0016     <span class="comment">%   &gt;&gt; uiextras.Empty( 'Parent', box )</span>
+0017     <span class="comment">%   &gt;&gt; uicontrol( 'Parent', box, 'Background', 'b' )</span>
+0018     <span class="comment">%</span>
+0019     <span class="comment">%   See also: uiextras.HBox</span>
+0020     
+0021     <span class="comment">%   Copyright 2009-2010 The MathWorks, Inc.</span>
+0022     <span class="comment">%   $Revision: 287 $</span>
+0023     <span class="comment">%   $Date: 2010-07-14 12:21:33 +0100 (Wed, 14 Jul 2010) $</span>
+0024     
+0025     
+0026     
+0027     properties( Dependent = true, Transient = true )
+0028         BackgroundColor  <span class="comment">% background color [r g b]</span>
+0029         Parent           <span class="comment">% parent [handle]</span>
+0030         Position         <span class="comment">% position [left bottom width height]</span>
+0031         Tag              <span class="comment">% tag [string]</span>
+0032         Type             <span class="comment">% type [string]</span>
+0033         Units            <span class="comment">% units [inches|centimeters|normalized|points|pixels|characters]</span>
+0034         Visible          <span class="comment">% visible [on|off]</span>
+0035     <span class="keyword">end</span> <span class="comment">% dependent properties</span>
+0036     
+0037     properties( SetAccess = private, GetAccess = private )
+0038         UIControl = -1
+0039     <span class="keyword">end</span> <span class="comment">% private properties</span>
+0040     
+0041     methods
+0042         
+0043         <a name="_sub0" href="#_subfunctions" class="code">function obj = Empty( varargin )</a>
+0044             <span class="comment">%Empty  Construct a new empty widget</span>
+0045             
+0046             <span class="comment">% Find if parent has been supplied</span>
+0047             parent = uiextras.findArg( <span class="string">'Parent'</span>, varargin{:} );
+0048             <span class="keyword">if</span> isempty( parent )
+0049                 parent = gcf();
+0050             <span class="keyword">end</span>
+0051             
+0052             <span class="comment">% Find the default background color to use</span>
+0053             color = <a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>( ancestor(parent,<span class="string">'figure'</span>), <span class="string">'DefaultUIControlBackgroundColor'</span> );
+0054             <span class="comment">% Create the widget</span>
+0055             obj.UIControl = uicontrol( <span class="keyword">...</span>
+0056                 <span class="string">'Parent'</span>, parent, <span class="keyword">...</span>
+0057                 <span class="string">'Style'</span>, <span class="string">'frame'</span>, <span class="keyword">...</span>
+0058                 <span class="string">'ForegroundColor'</span>, color, <span class="keyword">...</span>
+0059                 <span class="string">'BackgroundColor'</span>, color, <span class="keyword">...</span>
+0060                 <span class="string">'Tag'</span>, class( obj ), <span class="keyword">...</span>
+0061                 <span class="string">'HitTest'</span>, <span class="string">'off'</span> );
+0062             
+0063             <span class="keyword">if</span> nargin
+0064                 <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( obj, varargin{:} );
+0065             <span class="keyword">end</span>
+0066             
+0067             <span class="comment">% Store it in the Control to prevent it going out of scope</span>
+0068             setappdata( obj.UIControl, <span class="string">'Control'</span>, obj );
+0069         <span class="keyword">end</span> <span class="comment">% constructor</span>
+0070         
+0071         <a name="_sub1" href="#_subfunctions" class="code">function control = double( obj )</a>
+0072             <span class="comment">%double  Convert to an HG double handle.</span>
+0073             <span class="comment">%</span>
+0074             <span class="comment">%  d = double(e) converts empty widget e to an HG handle d.</span>
+0075             control = obj.UIControl;
+0076         <span class="keyword">end</span> <span class="comment">% double</span>
+0077         
+0078         <a name="_sub2" href="#_subfunctions" class="code">function delete( obj )</a>
+0079             <span class="comment">%delete  Destroy this object (and associated graphics)</span>
+0080             <span class="keyword">if</span> ishandle( obj.UIControl )
+0081                 <a href="#_sub3" class="code" title="subfunction delete( obj )">delete</a>( obj.UIControl );
+0082             <span class="keyword">end</span>
+0083         <span class="keyword">end</span> <span class="comment">% delete</span>
+0084         
+0085     <span class="keyword">end</span> <span class="comment">% public methods</span>
+0086     
+0087     methods
+0088         
+0089         <a name="_sub3" href="#_subfunctions" class="code">function set.Position( obj, value )</a>
+0090             <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( obj.UIControl, <span class="string">'Position'</span>, value );
+0091         <span class="keyword">end</span> <span class="comment">% set.Position</span>
+0092         
+0093         <a name="_sub4" href="#_subfunctions" class="code">function value = get.Position( obj )</a>
+0094             value = <a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>( obj.UIControl, <span class="string">'Position'</span> );
+0095         <span class="keyword">end</span> <span class="comment">% get.Position</span>
+0096         
+0097         <a name="_sub5" href="#_subfunctions" class="code">function set.BackgroundColor( obj, value )</a>
+0098             <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( obj.UIControl, <span class="string">'BackgroundColor'</span>, value );
+0099             <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( obj.UIControl, <span class="string">'ForegroundColor'</span>, value );
+0100         <span class="keyword">end</span> <span class="comment">% set.BackgroundColor</span>
+0101         
+0102         <a name="_sub6" href="#_subfunctions" class="code">function value = get.BackgroundColor( obj )</a>
+0103             value = <a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>( obj.UIControl, <span class="string">'BackgroundColor'</span> );
+0104         <span class="keyword">end</span> <span class="comment">% get.BackgroundColor</span>
+0105         
+0106         <a name="_sub7" href="#_subfunctions" class="code">function set.Units( obj, value )</a>
+0107             <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( obj.UIControl, <span class="string">'Units'</span>, value );
+0108         <span class="keyword">end</span> <span class="comment">% set.Units</span>
+0109         
+0110         <a name="_sub8" href="#_subfunctions" class="code">function value = get.Units( obj )</a>
+0111             value = <a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>( obj.UIControl, <span class="string">'Units'</span> );
+0112         <span class="keyword">end</span> <span class="comment">% get.Units</span>
+0113         
+0114         <a name="_sub9" href="#_subfunctions" class="code">function set.Parent( obj, value )</a>
+0115             <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( obj.UIControl, <span class="string">'Parent'</span>, <a href="#_sub2" class="code" title="subfunction control = double( obj )">double</a>( value ) );
+0116         <span class="keyword">end</span> <span class="comment">% set.Parent</span>
+0117         
+0118         <a name="_sub10" href="#_subfunctions" class="code">function value = get.Parent( obj )</a>
+0119             value = <a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>( obj.UIControl, <span class="string">'Parent'</span> );
+0120         <span class="keyword">end</span> <span class="comment">% get.Parent</span>
+0121         
+0122         <a name="_sub11" href="#_subfunctions" class="code">function set.Visible( obj, value )</a>
+0123             <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( obj.UIControl, <span class="string">'Visible'</span>, value );
+0124         <span class="keyword">end</span> <span class="comment">% set.Visible</span>
+0125         
+0126         <a name="_sub12" href="#_subfunctions" class="code">function value = get.Visible( obj )</a>
+0127             value = <a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>( obj.UIControl, <span class="string">'Visible'</span> );
+0128         <span class="keyword">end</span> <span class="comment">% get.Visible</span>
+0129         
+0130         <a name="_sub13" href="#_subfunctions" class="code">function set.Tag( obj, value )</a>
+0131             <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( obj.UIControl, <span class="string">'Tag'</span>, value );
+0132         <span class="keyword">end</span> <span class="comment">% set.Tag</span>
+0133         
+0134         <a name="_sub14" href="#_subfunctions" class="code">function value = get.Tag( obj )</a>
+0135             value = <a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>( obj.UIControl, <span class="string">'Tag'</span> );
+0136         <span class="keyword">end</span> <span class="comment">% get.Tag</span>
+0137         
+0138         <a name="_sub15" href="#_subfunctions" class="code">function value = get.Type( obj )</a>
+0139             value = class( obj );
+0140         <span class="keyword">end</span> <span class="comment">% get.Type</span>
+0141         
+0142     <span class="keyword">end</span> <span class="comment">% accessor methods</span>
+0143     
+0144 <span class="keyword">end</span> <span class="comment">% classdef</span></pre></div>
+<hr><address>Generated on Thu 20-Feb-2014 10:46:33 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

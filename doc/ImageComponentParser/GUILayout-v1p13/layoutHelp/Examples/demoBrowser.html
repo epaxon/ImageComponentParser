@@ -1,0 +1,267 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of demoBrowser</title>
+  <meta name="keywords" content="demoBrowser">
+  <meta name="description" content="demoBrowser: an example of using layouts to build a user interface">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">ImageComponentParser</a> &gt; <a href="../../index.html">GUILayout-v1p13</a> &gt; <a href="../index.html">layoutHelp</a> &gt; <a href="index.html">Examples</a> &gt; demoBrowser.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for ImageComponentParser\GUILayout-v1p13\layoutHelp\Examples&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>demoBrowser
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>demoBrowser: an example of using layouts to build a user interface</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function demoBrowser() </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">demoBrowser: an example of using layouts to build a user interface
+
+   demoBrowser() opens a simple GUI that allows several of MATLAB's
+   built-in demos to be viewed. It aims to demonstrate how multiple
+   layouts can be used to create a good-looking user interface that
+   retains the correct proportions when resized. It also shows how to
+   hook-up callbacks to interpret user interaction.
+
+   See also: &lt;a href=&quot;matlab:doc Layouts&quot;&gt;Layouts&lt;/a&gt;</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="displayEndOfDemoMessage.html" class="code" title="function displayEndOfDemoMessage(filename)">displayEndOfDemoMessage</a>	Dummy function - do nothing.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function data = createData()</a></li><li><a href="#_sub2" class="code">function gui = createInterface( demoList )</a></li><li><a href="#_sub3" class="code">function updateInterface()</a></li><li><a href="#_sub4" class="code">function redrawDemo()</a></li><li><a href="#_sub5" class="code">function onListSelection( src, ~ )</a></li><li><a href="#_sub6" class="code">function onMenuSelection( src, ~ )</a></li><li><a href="#_sub7" class="code">function onHelp( ~, ~ )</a></li><li><a href="#_sub8" class="code">function onDemoHelp( ~, ~ )</a></li><li><a href="#_sub9" class="code">function onExit( ~, ~ )</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function demoBrowser()</a>
+0002 <span class="comment">%demoBrowser: an example of using layouts to build a user interface</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%   demoBrowser() opens a simple GUI that allows several of MATLAB's</span>
+0005 <span class="comment">%   built-in demos to be viewed. It aims to demonstrate how multiple</span>
+0006 <span class="comment">%   layouts can be used to create a good-looking user interface that</span>
+0007 <span class="comment">%   retains the correct proportions when resized. It also shows how to</span>
+0008 <span class="comment">%   hook-up callbacks to interpret user interaction.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">%   See also: &lt;a href=&quot;matlab:doc Layouts&quot;&gt;Layouts&lt;/a&gt;</span>
+0011 
+0012 <span class="comment">%   Copyright 2010-2013 The MathWorks, Inc.</span>
+0013 
+0014 <span class="comment">% Data is shared between all child functions by declaring the variables</span>
+0015 <span class="comment">% here (they become global to the function). We keep things tidy by putting</span>
+0016 <span class="comment">% all GUI stuff in one structure and all data stuff in another. As the app</span>
+0017 <span class="comment">% grows, we might consider making these objects rather than structures.</span>
+0018 data = <a href="#_sub1" class="code" title="subfunction data = createData()">createData</a>();
+0019 gui = <a href="#_sub2" class="code" title="subfunction gui = createInterface( demoList )">createInterface</a>( data.DemoNames );
+0020 
+0021 <span class="comment">% Now update the GUI with the current data</span>
+0022 <a href="#_sub3" class="code" title="subfunction updateInterface()">updateInterface</a>();
+0023 <a href="#_sub4" class="code" title="subfunction redrawDemo()">redrawDemo</a>();
+0024 
+0025 <span class="comment">% Explicitly call the demo display so that it gets included if we deploy</span>
+0026 <a href="displayEndOfDemoMessage.html" class="code" title="function displayEndOfDemoMessage(filename)">displayEndOfDemoMessage</a>(<span class="string">''</span>)
+0027 
+0028 <span class="comment">%-------------------------------------------------------------------------%</span>
+0029     <a name="_sub1" href="#_subfunctions" class="code">function data = createData()</a>
+0030         <span class="comment">% Create the shared data-structure for this application</span>
+0031         demoList = {
+0032             <span class="string">'Complex surface'</span>            <span class="string">'cplxdemo'</span>
+0033             <span class="string">'Cruller'</span>                    <span class="string">'cruller'</span>
+0034             <span class="string">'Earth'</span>                      <span class="string">'earthmap'</span>
+0035             <span class="string">'Four linked tori'</span>           <span class="string">'tori4'</span>
+0036             <span class="string">'Klein bottle'</span>               <span class="string">'xpklein'</span>
+0037             <span class="string">'Klein bottle (1)'</span>           <span class="string">'klein1'</span>
+0038             <span class="string">'Knot'</span>                       <span class="string">'knot'</span>
+0039             <span class="string">'Logo'</span>                       <span class="string">'logo'</span>
+0040             <span class="string">'Spherical Surface Harmonic'</span> <span class="string">'spharm2'</span>
+0041             <span class="string">'Werner Boy''s Surface'</span>      <span class="string">'wernerboy'</span>
+0042             };
+0043         selectedDemo = 8;
+0044         data = struct( <span class="keyword">...</span>
+0045             <span class="string">'DemoNames'</span>, {demoList(:,1)'}, <span class="keyword">...</span>
+0046             <span class="string">'DemoFunctions'</span>, {demoList(:,2)'}, <span class="keyword">...</span>
+0047             <span class="string">'SelectedDemo'</span>, selectedDemo );
+0048     <span class="keyword">end</span> <span class="comment">% createData</span>
+0049 
+0050 <span class="comment">%-------------------------------------------------------------------------%</span>
+0051     <a name="_sub2" href="#_subfunctions" class="code">function gui = createInterface( demoList )</a>
+0052         <span class="comment">% Create the user interface for the application and return a</span>
+0053         <span class="comment">% structure of handles for global use.</span>
+0054         gui = struct();
+0055         <span class="comment">% Open a window and add some menus</span>
+0056         gui.Window = figure( <span class="keyword">...</span>
+0057             <span class="string">'Name'</span>, <span class="string">'Gallery browser'</span>, <span class="keyword">...</span>
+0058             <span class="string">'NumberTitle'</span>, <span class="string">'off'</span>, <span class="keyword">...</span>
+0059             <span class="string">'MenuBar'</span>, <span class="string">'none'</span>, <span class="keyword">...</span>
+0060             <span class="string">'Toolbar'</span>, <span class="string">'none'</span>, <span class="keyword">...</span>
+0061             <span class="string">'HandleVisibility'</span>, <span class="string">'off'</span> );
+0062         
+0063         <span class="comment">% Set default panel color</span>
+0064         uiextras.set( gui.Window, <span class="string">'DefaultBoxPanelTitleColor'</span>, [0.7 1.0 0.7] );
+0065         
+0066         <span class="comment">% + File menu</span>
+0067         gui.FileMenu = uimenu( gui.Window, <span class="string">'Label'</span>, <span class="string">'File'</span> );
+0068         uimenu( gui.FileMenu, <span class="string">'Label'</span>, <span class="string">'Exit'</span>, <span class="string">'Callback'</span>, @<a href="#_sub9" class="code" title="subfunction onExit( ~, ~ )">onExit</a> );
+0069         
+0070         <span class="comment">% + View menu</span>
+0071         gui.ViewMenu = uimenu( gui.Window, <span class="string">'Label'</span>, <span class="string">'View'</span> );
+0072         <span class="keyword">for</span> ii=1:numel( demoList )
+0073             uimenu( gui.ViewMenu, <span class="string">'Label'</span>, demoList{ii}, <span class="string">'Callback'</span>, @<a href="#_sub6" class="code" title="subfunction onMenuSelection( src, ~ )">onMenuSelection</a> );
+0074         <span class="keyword">end</span>
+0075         
+0076         <span class="comment">% + Help menu</span>
+0077         helpMenu = uimenu( gui.Window, <span class="string">'Label'</span>, <span class="string">'Help'</span> );
+0078         uimenu( helpMenu, <span class="string">'Label'</span>, <span class="string">'Documentation'</span>, <span class="string">'Callback'</span>, @<a href="#_sub7" class="code" title="subfunction onHelp( ~, ~ )">onHelp</a> );
+0079         
+0080         
+0081         <span class="comment">% Arrange the main interface</span>
+0082         mainLayout = uiextras.HBoxFlex( <span class="string">'Parent'</span>, gui.Window, <span class="string">'Spacing'</span>, 3 );
+0083         
+0084         <span class="comment">% + Create the panels</span>
+0085         controlPanel = uiextras.BoxPanel( <span class="keyword">...</span>
+0086             <span class="string">'Parent'</span>, mainLayout, <span class="keyword">...</span>
+0087             <span class="string">'Title'</span>, <span class="string">'Select a demo:'</span> );
+0088         gui.ViewPanel = uiextras.BoxPanel( <span class="keyword">...</span>
+0089             <span class="string">'Parent'</span>, mainLayout, <span class="keyword">...</span>
+0090             <span class="string">'Title'</span>, <span class="string">'Viewing: ???'</span>, <span class="keyword">...</span>
+0091             <span class="string">'HelpFcn'</span>, @<a href="#_sub8" class="code" title="subfunction onDemoHelp( ~, ~ )">onDemoHelp</a> );
+0092 
+0093         <span class="comment">% + Adjust the main layout</span>
+0094         set( mainLayout, <span class="string">'Sizes'</span>, [-1,-2]  );
+0095         
+0096         
+0097         <span class="comment">% + Create the controls</span>
+0098         controlLayout = uiextras.VBox( <span class="string">'Parent'</span>, controlPanel, <span class="keyword">...</span>
+0099             <span class="string">'Padding'</span>, 3, <span class="string">'Spacing'</span>, 3 );
+0100         gui.ListBox = uicontrol( <span class="string">'Style'</span>, <span class="string">'list'</span>, <span class="keyword">...</span>
+0101             <span class="string">'BackgroundColor'</span>, <span class="string">'w'</span>, <span class="keyword">...</span>
+0102             <span class="string">'Parent'</span>, controlLayout, <span class="keyword">...</span>
+0103             <span class="string">'String'</span>, demoList(:), <span class="keyword">...</span>
+0104             <span class="string">'Value'</span>, 1, <span class="keyword">...</span>
+0105             <span class="string">'Callback'</span>, @<a href="#_sub5" class="code" title="subfunction onListSelection( src, ~ )">onListSelection</a>);
+0106         gui.HelpButton = uicontrol( <span class="string">'Style'</span>, <span class="string">'PushButton'</span>, <span class="keyword">...</span>
+0107             <span class="string">'Parent'</span>, controlLayout, <span class="keyword">...</span>
+0108             <span class="string">'String'</span>, <span class="string">'Help for &lt;demo&gt;'</span>, <span class="keyword">...</span>
+0109             <span class="string">'Callback'</span>, @<a href="#_sub8" class="code" title="subfunction onDemoHelp( ~, ~ )">onDemoHelp</a> );
+0110         set( controlLayout, <span class="string">'Sizes'</span>, [-1 28] ); <span class="comment">% Make the list fill the space</span>
+0111         
+0112         <span class="comment">% + Create the view</span>
+0113         p = gui.ViewPanel;
+0114         gui.ViewAxes = axes( <span class="string">'Parent'</span>, p );
+0115         
+0116         
+0117     <span class="keyword">end</span> <span class="comment">% createInterface</span>
+0118 
+0119 <span class="comment">%-------------------------------------------------------------------------%</span>
+0120     <a name="_sub3" href="#_subfunctions" class="code">function updateInterface()</a>
+0121         <span class="comment">% Update various parts of the interface in response to the demo</span>
+0122         <span class="comment">% being changed.</span>
+0123         
+0124         <span class="comment">% Update the list and menu to show the current demo</span>
+0125         set( gui.ListBox, <span class="string">'Value'</span>, data.SelectedDemo );
+0126         <span class="comment">% Update the help button label</span>
+0127         demoName = data.DemoNames{ data.SelectedDemo };
+0128         set( gui.HelpButton, <span class="string">'String'</span>, [<span class="string">'Help for '</span>,demoName] );
+0129         <span class="comment">% Update the view panel title</span>
+0130         set( gui.ViewPanel, <span class="string">'Title'</span>, sprintf( <span class="string">'Viewing: %s'</span>, demoName ) );
+0131         <span class="comment">% Untick all menus</span>
+0132         menus = get( gui.ViewMenu, <span class="string">'Children'</span> );
+0133         set( menus, <span class="string">'Checked'</span>, <span class="string">'off'</span> );
+0134         <span class="comment">% Use the name to work out which menu item should be ticked</span>
+0135         whichMenu = strcmpi( demoName, get( menus, <span class="string">'Label'</span> ) );
+0136         set( menus(whichMenu), <span class="string">'Checked'</span>, <span class="string">'on'</span> );
+0137     <span class="keyword">end</span> <span class="comment">% updateInterface</span>
+0138 
+0139 <span class="comment">%-------------------------------------------------------------------------%</span>
+0140     <a name="_sub4" href="#_subfunctions" class="code">function redrawDemo()</a>
+0141         <span class="comment">% Draw a demo into the axes provided</span>
+0142         
+0143         <span class="comment">% We first clear the existing axes ready to build a new one</span>
+0144         <span class="keyword">if</span> ishandle( gui.ViewAxes )
+0145             delete( gui.ViewAxes );
+0146         <span class="keyword">end</span>
+0147         
+0148         <span class="comment">% Some demos create their own figure. Others don't.</span>
+0149         fcnName = data.DemoFunctions{data.SelectedDemo};
+0150         <span class="keyword">switch</span> upper( fcnName )
+0151             <span class="keyword">case</span> <span class="string">'LOGO'</span>
+0152                 <span class="comment">% These demos open their own windows</span>
+0153                 evalin( <span class="string">'base'</span>, fcnName );
+0154                 gui.ViewAxes = gca();
+0155                 fig = gcf();
+0156                 set( fig, <span class="string">'Visible'</span>, <span class="string">'off'</span> );
+0157                 
+0158             <span class="keyword">otherwise</span>
+0159                 <span class="comment">% These demos need a window opening</span>
+0160                 fig = figure( <span class="string">'Visible'</span>, <span class="string">'off'</span> );
+0161                 evalin( <span class="string">'base'</span>, fcnName );
+0162                 gui.ViewAxes = gca();
+0163         <span class="keyword">end</span>
+0164         <span class="comment">% Now copy the axes from the demo into our window and restore its</span>
+0165         <span class="comment">% state.</span>
+0166         cmap = colormap( gui.ViewAxes );
+0167         set( gui.ViewAxes, <span class="string">'Parent'</span>, double(gui.ViewPanel) );
+0168         colormap( gui.ViewAxes, cmap );
+0169         rotate3d( gui.ViewAxes, <span class="string">'on'</span> );
+0170         <span class="comment">% Get rid of the demo figure</span>
+0171         close( fig );
+0172     <span class="keyword">end</span> <span class="comment">% redrawDemo</span>
+0173 
+0174 <span class="comment">%-------------------------------------------------------------------------%</span>
+0175     <a name="_sub5" href="#_subfunctions" class="code">function onListSelection( src, ~ )</a>
+0176         <span class="comment">% User selected a demo from the list - update &quot;data&quot; and refresh</span>
+0177         data.SelectedDemo = get( src, <span class="string">'Value'</span> );
+0178         <a href="#_sub3" class="code" title="subfunction updateInterface()">updateInterface</a>();
+0179         <a href="#_sub4" class="code" title="subfunction redrawDemo()">redrawDemo</a>();
+0180     <span class="keyword">end</span> <span class="comment">% onListSelection</span>
+0181 
+0182 <span class="comment">%-------------------------------------------------------------------------%</span>
+0183     <a name="_sub6" href="#_subfunctions" class="code">function onMenuSelection( src, ~ )</a>
+0184         <span class="comment">% User selected a demo from the menu - work out which one</span>
+0185         demoName = get( src, <span class="string">'Label'</span> );
+0186         data.SelectedDemo = find( strcmpi( demoName, data.DemoNames ), 1, <span class="string">'first'</span> );
+0187         <a href="#_sub3" class="code" title="subfunction updateInterface()">updateInterface</a>();
+0188         <a href="#_sub4" class="code" title="subfunction redrawDemo()">redrawDemo</a>();
+0189     <span class="keyword">end</span> <span class="comment">% onMenuSelection</span>
+0190 
+0191 
+0192 <span class="comment">%-------------------------------------------------------------------------%</span>
+0193     <a name="_sub7" href="#_subfunctions" class="code">function onHelp( ~, ~ )</a>
+0194         <span class="comment">% User has asked for the documentation</span>
+0195         doc layout
+0196     <span class="keyword">end</span> <span class="comment">% onHelp</span>
+0197 
+0198 <span class="comment">%-------------------------------------------------------------------------%</span>
+0199     <a name="_sub8" href="#_subfunctions" class="code">function onDemoHelp( ~, ~ )</a>
+0200         <span class="comment">% User wnats documentation for the current demo</span>
+0201         showdemo( data.DemoFunctions{data.SelectedDemo} );
+0202     <span class="keyword">end</span> <span class="comment">% onDemoHelp</span>
+0203 
+0204 <span class="comment">%-------------------------------------------------------------------------%</span>
+0205     <a name="_sub9" href="#_subfunctions" class="code">function onExit( ~, ~ )</a>
+0206         <span class="comment">% User wants to quit out of the application</span>
+0207         delete( gui.Window );
+0208     <span class="keyword">end</span> <span class="comment">% onExit</span>
+0209 
+0210 <span class="keyword">end</span> <span class="comment">% EOF</span></pre></div>
+<hr><address>Generated on Thu 20-Feb-2014 10:46:33 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

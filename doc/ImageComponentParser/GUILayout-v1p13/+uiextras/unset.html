@@ -1,0 +1,111 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of unset</title>
+  <meta name="keywords" content="unset">
+  <meta name="description" content="uiextras.unset  Clear a default property value from a parent object">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">ImageComponentParser</a> &gt; <a href="../index.html">GUILayout-v1p13</a> &gt; <a href="index.html">+uiextras</a> &gt; unset.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for ImageComponentParser\GUILayout-v1p13\+uiextras&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>unset
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>uiextras.unset  Clear a default property value from a parent object</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function unset( hObj, propName ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">uiextras.unset  Clear a default property value from a parent object
+
+   uiextras.unset(hObj,propName) clears a default property value from the
+   object hObj. Note that the hObj must be a valid graphics container
+   object such as a uipanel, figure or the special flag 0 (the overall
+   environment. If a default has been set for the specified property
+   (propName) of the specified layout (className), it is removed.
+
+   Examples:
+   &gt;&gt; uiextras.unset( gcf(), 'DefaultBoxPanelTitleColor' )
+
+   See also: uiextras.<a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>
+             uiextras.<a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>	uiextras.get  Retrieve a default property value from a parent object</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function unset( hObj, propName )</a>
+0002 <span class="comment">%uiextras.unset  Clear a default property value from a parent object</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%   uiextras.unset(hObj,propName) clears a default property value from the</span>
+0005 <span class="comment">%   object hObj. Note that the hObj must be a valid graphics container</span>
+0006 <span class="comment">%   object such as a uipanel, figure or the special flag 0 (the overall</span>
+0007 <span class="comment">%   environment. If a default has been set for the specified property</span>
+0008 <span class="comment">%   (propName) of the specified layout (className), it is removed.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">%   Examples:</span>
+0011 <span class="comment">%   &gt;&gt; uiextras.unset( gcf(), 'DefaultBoxPanelTitleColor' )</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">%   See also: uiextras.set</span>
+0014 <span class="comment">%             uiextras.get</span>
+0015 
+0016 <span class="comment">%   Copyright 2010 The MathWorks, Inc.</span>
+0017 <span class="comment">%   $Revision: 1$</span>
+0018 <span class="comment">%   $Date: 2010-05-18$</span>
+0019 
+0020 <span class="comment">% Check inputs</span>
+0021 error( nargchk( 2, 2, nargin ) );
+0022 <span class="keyword">if</span> isempty( hObj )
+0023     hObj = 0;
+0024 <span class="keyword">end</span>
+0025 <span class="keyword">if</span> strncmpi( class( hObj ), <span class="string">'uiextras.'</span>, 9 )
+0026     hObj = double( hObj );
+0027 <span class="keyword">end</span>
+0028 <span class="keyword">if</span> ~isequal( hObj, 0 ) &amp;&amp; ~ishghandle( hObj )
+0029     error( <span class="string">'GUILayout:InvalidArgument'</span>, <span class="string">'Object must be a valid Handle Graphics object.'</span> );
+0030 <span class="keyword">end</span>
+0031 <span class="keyword">if</span> ~ischar( propName )
+0032     error( <span class="string">'GUILayout:InvalidArgument'</span>, <span class="string">'Property name must be a string.'</span> )
+0033 <span class="keyword">end</span>
+0034 
+0035 <span class="comment">% Make sure the property requested is a default</span>
+0036 <span class="keyword">if</span> ~strncmp( propName, <span class="string">'Default'</span>, 7 )
+0037     error( <span class="string">'GUILayout:InvalidArgument'</span>, <span class="string">'Property name must begin with ''Default''.'</span> )
+0038 <span class="keyword">end</span>
+0039 
+0040 <span class="comment">% Try to remove appdata</span>
+0041 <span class="keyword">while</span> true
+0042     <span class="keyword">if</span> isappdata( hObj, propName ) <span class="comment">% appdata found</span>
+0043         rmappdata( hObj, propName ); <span class="comment">% remove</span>
+0044         <span class="keyword">break</span> <span class="comment">% done</span>
+0045     <span class="keyword">elseif</span> isempty( <a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>( hObj, <span class="string">'Parent'</span> ) ) <span class="comment">% cannot look higher than root</span>
+0046         error( <span class="string">'GUILayout:get:ItemNotFound'</span>, <span class="keyword">...</span>
+0047             <span class="string">'Could not find a value for property ''%s'' in the ancestors of this object.'</span>, propName );
+0048     <span class="keyword">else</span> <span class="comment">% continue one level up</span>
+0049         hObj = <a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>( hObj, <span class="string">'Parent'</span> );
+0050         <span class="keyword">continue</span>
+0051     <span class="keyword">end</span>
+0052 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Thu 20-Feb-2014 10:46:33 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

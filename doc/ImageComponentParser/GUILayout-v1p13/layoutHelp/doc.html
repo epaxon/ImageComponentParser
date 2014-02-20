@@ -1,0 +1,121 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of doc</title>
+  <meta name="keywords" content="doc">
+  <meta name="description" content="DOC  a wrapper for the built-in &quot;doc&quot; that also finds user documentation">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">ImageComponentParser</a> &gt; <a href="../index.html">GUILayout-v1p13</a> &gt; <a href="index.html">layoutHelp</a> &gt; doc.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for ImageComponentParser\GUILayout-v1p13\layoutHelp&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>doc
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>DOC  a wrapper for the built-in &quot;doc&quot; that also finds user documentation</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function doc( funcname ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">DOC  a wrapper for the built-in &quot;doc&quot; that also finds user documentation
+
+   DOC(FUNCNAME) tries to find HTML help for the function, class or
+   method FUNCNAME. It first searches the MATLAB path for FUNCNAME.html,
+   and if this is not found calls the built-in &quot;doc&quot; function to scan the
+   built-in help files. This is needed because the &quot;doc&quot; command in R2007a
+   and above no longer searches the MATLAB path for help files (it did for
+   R14 up to R2006b). Once this is fixed this hack should be removed.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function type = iResolveSimulinkBlockType( block )</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function doc( funcname )</a>
+0002 <span class="comment">%DOC  a wrapper for the built-in &quot;doc&quot; that also finds user documentation</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%   DOC(FUNCNAME) tries to find HTML help for the function, class or</span>
+0005 <span class="comment">%   method FUNCNAME. It first searches the MATLAB path for FUNCNAME.html,</span>
+0006 <span class="comment">%   and if this is not found calls the built-in &quot;doc&quot; function to scan the</span>
+0007 <span class="comment">%   built-in help files. This is needed because the &quot;doc&quot; command in R2007a</span>
+0008 <span class="comment">%   and above no longer searches the MATLAB path for help files (it did for</span>
+0009 <span class="comment">%   R14 up to R2006b). Once this is fixed this hack should be removed.</span>
+0010 
+0011 <span class="comment">%   Copyright 2007 The MathWorks Ltd.</span>
+0012 <span class="comment">%   $Revision: 71 $</span>
+0013 <span class="comment">%   $Date: 2010-07-07 08:21:55 +0100 (Wed, 07 Jul 2010) $</span>
+0014 
+0015 <span class="keyword">if</span> nargin
+0016     <span class="keyword">if</span> ischar( funcname )
+0017         w = which( [funcname,<span class="string">'.html'</span>] );
+0018     <span class="keyword">elseif</span> ishandle( funcname )
+0019         <span class="keyword">switch</span> upper( get( funcname, <span class="string">'type'</span> ) )
+0020             <span class="keyword">case</span> <span class="string">'BLOCK'</span>
+0021                 funcname = <a href="#_sub1" class="code" title="subfunction type = iResolveSimulinkBlockType( block )">iResolveSimulinkBlockType</a>( funcname );
+0022             <span class="keyword">otherwise</span>
+0023                 error( <span class="string">'doc:BadArg'</span>, <span class="string">'Cannot find documentation for object of type ''%s'''</span>, get( funcname, <span class="string">'type'</span> ) );
+0024         <span class="keyword">end</span>
+0025         <span class="keyword">if</span> isempty(funcname)
+0026             error( <span class="string">'doc:BadArg'</span>, <span class="string">'Object returned empty type description'</span> );
+0027         <span class="keyword">else</span>
+0028             w = which( [funcname,<span class="string">'.html'</span>] );
+0029         <span class="keyword">end</span>
+0030     <span class="keyword">end</span>
+0031 <span class="keyword">else</span>
+0032     w = [];
+0033 <span class="keyword">end</span>
+0034 <span class="keyword">if</span> isempty(w)
+0035     <span class="comment">% To get a function handle to the original function we first have to CD</span>
+0036     <span class="comment">% to its directory, then get a handle, then return to where we were.</span>
+0037     <span class="comment">% Urgh! Just horrible.</span>
+0038     olddir = pwd();
+0039     origpath = fullfile( matlabroot(), <span class="string">'toolbox'</span>, <span class="string">'matlab'</span>, <span class="string">'helptools'</span> );
+0040     cd(origpath);
+0041     orig_doc = str2func( <span class="string">'doc'</span> );
+0042     cd(olddir);
+0043     
+0044     <span class="comment">% OK, we have the handle, so call it</span>
+0045     <span class="keyword">if</span> nargin
+0046         feval( orig_doc, funcname );
+0047     <span class="keyword">else</span>
+0048         feval( orig_doc );
+0049     <span class="keyword">end</span>
+0050 <span class="keyword">else</span>
+0051     web(w, <span class="string">'-helpbrowser'</span>); <span class="comment">% was helpview(w) but gave Java issues - DJA</span>
+0052 <span class="keyword">end</span>
+0053 
+0054 <a name="_sub1" href="#_subfunctions" class="code">function type = iResolveSimulinkBlockType( block )</a>
+0055 <span class="comment">% Simulink block. The block type can be in many places</span>
+0056 <span class="comment">% according to how the block was constructed so we need to</span>
+0057 <span class="comment">% check the type</span>
+0058 block_type = get( block, <span class="string">'BlockType'</span> );
+0059 <span class="keyword">switch</span> upper( block_type )
+0060     <span class="keyword">case</span> <span class="string">'SUBSYSTEM'</span>
+0061         type = get( block, <span class="string">'MaskType'</span> );
+0062     <span class="keyword">otherwise</span>
+0063         error( <span class="string">'doc:BadArg'</span>, <span class="string">'Simulink block type ''%s'' is not yet supported'</span>, block_type );
+0064 <span class="keyword">end</span>
+0065</pre></div>
+<hr><address>Generated on Thu 20-Feb-2014 10:46:33 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

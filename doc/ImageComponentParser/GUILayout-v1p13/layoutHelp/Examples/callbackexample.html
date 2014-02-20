@@ -1,0 +1,96 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of callbackexample</title>
+  <meta name="keywords" content="callbackexample">
+  <meta name="description" content="Copyright 2009-2013 The MathWorks, Inc.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">ImageComponentParser</a> &gt; <a href="../../index.html">GUILayout-v1p13</a> &gt; <a href="../index.html">layoutHelp</a> &gt; <a href="index.html">Examples</a> &gt; callbackexample.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for ImageComponentParser\GUILayout-v1p13\layoutHelp\Examples&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>callbackexample
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>Copyright 2009-2013 The MathWorks, Inc.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function callbackexample() </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Copyright 2009-2013 The MathWorks, Inc.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function onChangeColor( source, ~ )</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function callbackexample()</a>
+0002 
+0003 <span class="comment">% Copyright 2009-2013 The MathWorks, Inc.</span>
+0004 
+0005 <span class="comment">% Create application data</span>
+0006 colorNames = {
+0007     <span class="string">'Red'</span>
+0008     <span class="string">'Orange'</span>
+0009     <span class="string">'Yellow'</span>
+0010     <span class="string">'Green'</span>
+0011     <span class="string">'Blue'</span>
+0012     <span class="string">'Indigo'</span>
+0013     <span class="string">'Violet'</span>
+0014     };
+0015 colorValues = [
+0016     1.0 0.2 0.2
+0017     1.0 0.6 0.2
+0018     1.0 1.0 0.4
+0019     0.6 1.0 0.6
+0020     0.2 0.4 1.0
+0021     0.4 0.1 0.6
+0022     0.7 0.5 1.0
+0023     ];
+0024 
+0025 <span class="comment">% Layout the interface</span>
+0026 f = figure();
+0027 p = uiextras.Panel( <span class="string">'Parent'</span>, f, <span class="string">'Title'</span>, <span class="string">'A Panel'</span>, <span class="string">'TitlePosition'</span>, <span class="string">'CenterTop'</span>);
+0028 b = uiextras.HBoxFlex( <span class="string">'Parent'</span>, p, <span class="string">'Spacing'</span>, 5, <span class="string">'Padding'</span>, 5  );
+0029 hList = uicontrol( <span class="string">'Style'</span>, <span class="string">'listbox'</span>, <span class="string">'Parent'</span>, b, <span class="keyword">...</span>
+0030     <span class="string">'String'</span>, colorNames, <span class="keyword">...</span>
+0031     <span class="string">'Back'</span>, <span class="string">'w'</span> );
+0032 hButton = uicontrol( <span class="string">'Parent'</span>, b, <span class="keyword">...</span>
+0033     <span class="string">'Background'</span>, colorValues(1,:), <span class="keyword">...</span>
+0034     <span class="string">'String'</span>, colorNames{1} );
+0035 set( b, <span class="string">'Sizes'</span>, [-1 -3] );
+0036 
+0037 <span class="comment">% Add user interactions</span>
+0038 set( hList, <span class="string">'Callback'</span>, @<a href="#_sub1" class="code" title="subfunction onChangeColor( source, ~ )">onChangeColor</a> );
+0039 
+0040 
+0041     <a name="_sub1" href="#_subfunctions" class="code">function onChangeColor( source, ~ )</a>
+0042         idx = get( source, <span class="string">'Value'</span> );
+0043         set( hButton, <span class="string">'Background'</span>, colorValues(idx,:), <span class="string">'String'</span>, colorNames{idx} )
+0044     <span class="keyword">end</span> <span class="comment">% onChangeColor</span>
+0045 
+0046 
+0047 <span class="keyword">end</span> <span class="comment">% main</span></pre></div>
+<hr><address>Generated on Thu 20-Feb-2014 10:46:33 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

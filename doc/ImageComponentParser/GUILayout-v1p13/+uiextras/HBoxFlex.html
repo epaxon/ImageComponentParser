@@ -1,0 +1,369 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of HBoxFlex</title>
+  <meta name="keywords" content="HBoxFlex">
+  <meta name="description" content="HBoxFlex  A dynamically resizable horizontal layout">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">ImageComponentParser</a> &gt; <a href="../index.html">GUILayout-v1p13</a> &gt; <a href="index.html">+uiextras</a> &gt; HBoxFlex.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for ImageComponentParser\GUILayout-v1p13\+uiextras&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>HBoxFlex
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>HBoxFlex  A dynamically resizable horizontal layout</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>classdef HBoxFlex < uiextras.HBox </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">HBoxFlex  A dynamically resizable horizontal layout
+
+   obj = uiextras.HBoxFlex() creates a new dynamically resizable
+   horizontal box layout with all parameters set to defaults. The
+   output is a new layout object that can be used as the parent for
+   other user-interface components.
+
+   obj = uiextras.HBoxFlex(param,value,...) also sets one or more
+   parameter values.
+
+   See the &lt;a href=&quot;matlab:doc uiextras.HBoxFlex&quot;&gt;documentation&lt;/a&gt; for more detail and the list of properties.
+
+   Examples:
+   &gt;&gt; f = figure( 'Name', 'uiextras.HBoxFlex example' );
+   &gt;&gt; b = uiextras.HBoxFlex( 'Parent', f );
+   &gt;&gt; uicontrol( 'Parent', b, 'Background', 'r' )
+   &gt;&gt; uicontrol( 'Parent', b, 'Background', 'b' )
+   &gt;&gt; uicontrol( 'Parent', b, 'Background', 'g' )
+   &gt;&gt; uicontrol( 'Parent', b, 'Background', 'y' )
+   &gt;&gt; set( b, 'Sizes', [-1 100 -2 -1], 'Spacing', 5 );
+
+   See also: uiextras.<a href="VBoxFlex.html" class="code" title="classdef VBoxFlex < uiextras.VBox">VBoxFlex</a>
+             uiextras.<a href="HBox.html" class="code" title="classdef HBox < uiextras.Box">HBox</a>
+             uiextras.<a href="Grid.html" class="code" title="classdef Grid < uiextras.Container">Grid</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>	uiextras.get  Retrieve a default property value from a parent object</li><li><a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>	uiextras.set  Store a default property value in a parent object</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function obj = HBoxFlex( varargin )</a></li><li><a href="#_sub2" class="code">function set.ShowMarkings( obj, value )</a></li><li><a href="#_sub3" class="code">function redraw( obj )</a></li><li><a href="#_sub4" class="code">function onButtonDown( obj, source, eventData )</a></li><li><a href="#_sub5" class="code">function onButtonMotion( obj, source, eventData )</a></li><li><a href="#_sub6" class="code">function onButtonUp( obj, source, eventData, oldFigProps, oldState )</a></li><li><a href="#_sub7" class="code">function onBackgroundColorChanged( obj, source, eventData )</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 classdef <a href="#_sub1" class="code" title="subfunction obj = HBoxFlex( varargin )">HBoxFlex</a> &lt; uiextras.HBox
+0002     <span class="comment">%HBoxFlex  A dynamically resizable horizontal layout</span>
+0003     <span class="comment">%</span>
+0004     <span class="comment">%   obj = uiextras.HBoxFlex() creates a new dynamically resizable</span>
+0005     <span class="comment">%   horizontal box layout with all parameters set to defaults. The</span>
+0006     <span class="comment">%   output is a new layout object that can be used as the parent for</span>
+0007     <span class="comment">%   other user-interface components.</span>
+0008     <span class="comment">%</span>
+0009     <span class="comment">%   obj = uiextras.HBoxFlex(param,value,...) also sets one or more</span>
+0010     <span class="comment">%   parameter values.</span>
+0011     <span class="comment">%</span>
+0012     <span class="comment">%   See the &lt;a href=&quot;matlab:doc uiextras.HBoxFlex&quot;&gt;documentation&lt;/a&gt; for more detail and the list of properties.</span>
+0013     <span class="comment">%</span>
+0014     <span class="comment">%   Examples:</span>
+0015     <span class="comment">%   &gt;&gt; f = figure( 'Name', 'uiextras.HBoxFlex example' );</span>
+0016     <span class="comment">%   &gt;&gt; b = uiextras.HBoxFlex( 'Parent', f );</span>
+0017     <span class="comment">%   &gt;&gt; uicontrol( 'Parent', b, 'Background', 'r' )</span>
+0018     <span class="comment">%   &gt;&gt; uicontrol( 'Parent', b, 'Background', 'b' )</span>
+0019     <span class="comment">%   &gt;&gt; uicontrol( 'Parent', b, 'Background', 'g' )</span>
+0020     <span class="comment">%   &gt;&gt; uicontrol( 'Parent', b, 'Background', 'y' )</span>
+0021     <span class="comment">%   &gt;&gt; set( b, 'Sizes', [-1 100 -2 -1], 'Spacing', 5 );</span>
+0022     <span class="comment">%</span>
+0023     <span class="comment">%   See also: uiextras.VBoxFlex</span>
+0024     <span class="comment">%             uiextras.HBox</span>
+0025     <span class="comment">%             uiextras.Grid</span>
+0026     
+0027     <span class="comment">%   Copyright 2009-2010 The MathWorks, Inc.</span>
+0028     <span class="comment">%   $Revision: 366 $</span>
+0029     <span class="comment">%   $Date: 2011-02-10 15:48:11 +0000 (Thu, 10 Feb 2011) $</span>
+0030     
+0031     properties
+0032         ShowMarkings = <span class="string">'on'</span>  <span class="comment">% Show markings on the draggable dividers [ on | off ]</span>
+0033     <span class="keyword">end</span> <span class="comment">% public methods</span>
+0034     
+0035     properties (Access=private)
+0036         Dividers = []
+0037         SelectedDivider = -1
+0038     <span class="keyword">end</span> <span class="comment">% private properties</span>
+0039     
+0040     methods
+0041         
+0042         <a name="_sub0" href="#_subfunctions" class="code">function obj = HBoxFlex( varargin )</a>
+0043             <span class="comment">% First step is to create the parent class. We pass the</span>
+0044             <span class="comment">% arguments (if any) just incase the parent needs setting</span>
+0045             obj@uiextras.HBox( varargin{:} );
+0046             
+0047             <span class="comment">% Set some defaults</span>
+0048             obj.setPropertyFromDefault( <span class="string">'ShowMarkings'</span> );
+0049             
+0050             <span class="comment">% Set user-supplied property values</span>
+0051             <span class="keyword">if</span> nargin &gt; 0
+0052                 <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( obj, varargin{:} );
+0053             <span class="keyword">end</span>
+0054         <span class="keyword">end</span> <span class="comment">% constructor</span>
+0055         
+0056     <span class="keyword">end</span> <span class="comment">% public methods</span>
+0057     
+0058     methods
+0059         
+0060         <a name="_sub1" href="#_subfunctions" class="code">function set.ShowMarkings( obj, value )</a>
+0061             <span class="comment">% Check</span>
+0062             <span class="keyword">if</span> ~ischar( value ) || ~ismember( lower( value ), {<span class="string">'on'</span>,<span class="string">'off'</span>} )
+0063                 error( <span class="string">'GUILayout:HBoxFlex:InvalidPropertyValue'</span>, <span class="keyword">...</span>
+0064                     <span class="string">'Property ''ShowMarkings'' may only be set to ''on'' or ''off''.'</span> )
+0065             <span class="keyword">end</span>
+0066             <span class="comment">% Apply</span>
+0067             obj.ShowMarkings = lower( value );
+0068             obj.redraw();
+0069         <span class="keyword">end</span> <span class="comment">% set.ShowMarkings</span>
+0070     <span class="keyword">end</span> <span class="comment">% accessor methods</span>
+0071     
+0072     methods( Access = protected )
+0073         
+0074         <a name="_sub2" href="#_subfunctions" class="code">function redraw( obj )</a>
+0075             <span class="comment">%REDRAW  Redraw container contents.</span>
+0076             
+0077             <span class="comment">% First call the grid redraw</span>
+0078             [widths,heights] = <a href="#_sub3" class="code" title="subfunction redraw( obj )">redraw</a>@uiextras.HBox(obj);
+0079             sizes = obj.Sizes;
+0080             children = obj.getValidChildren();
+0081             nChildren = numel( children );
+0082             padding = obj.Padding;
+0083             spacing = obj.Spacing;
+0084             
+0085             <span class="comment">% Now also add/update some dividers</span>
+0086             mph = uiextras.MousePointerHandler( obj.Parent );
+0087             numDynamic = 0;
+0088             <span class="keyword">for</span> ii = 1:nChildren-1
+0089                 <span class="keyword">if</span> any(sizes(1:ii)&lt;0) &amp;&amp; any(sizes(ii+1:end)&lt;0)
+0090                     numDynamic = numDynamic + 1;
+0091                     <span class="comment">% Both dynamic, so add a divider</span>
+0092                     position = [sum( widths(1:ii) ) + padding + spacing * (ii-1) + 1, <span class="keyword">...</span>
+0093                         padding + 1, <span class="keyword">...</span>
+0094                         max(1,spacing), <span class="keyword">...</span>
+0095                         heights(ii)];
+0096                     <span class="comment">% Create the divider widget</span>
+0097                     <span class="keyword">if</span> numDynamic &gt; numel( obj.Dividers )
+0098                         obj.Dividers(numDynamic) = uiextras.makeFlexDivider( <span class="keyword">...</span>
+0099                             obj.UIContainer, <span class="keyword">...</span>
+0100                             position, <span class="keyword">...</span>
+0101                             <a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>( obj.UIContainer, <span class="string">'BackgroundColor'</span> ), <span class="keyword">...</span>
+0102                             <span class="string">'Vertical'</span>, <span class="keyword">...</span>
+0103                             obj.ShowMarkings );
+0104                         <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( obj.Dividers(numDynamic), <span class="string">'ButtonDownFcn'</span>, @obj.onButtonDown, <span class="keyword">...</span>
+0105                             <span class="string">'Tag'</span>, <span class="string">'UIExtras:HBoxFlex:Divider'</span> );
+0106                         <span class="comment">% Add it to the mouse-over handler</span>
+0107                         mph.register( obj.Dividers(numDynamic), <span class="string">'left'</span> );
+0108                     <span class="keyword">else</span>
+0109                         <span class="comment">% Just update an existing divider</span>
+0110                         uiextras.makeFlexDivider( <span class="keyword">...</span>
+0111                             obj.Dividers(numDynamic), <span class="keyword">...</span>
+0112                             position, <span class="keyword">...</span>
+0113                             <a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>( obj.UIContainer, <span class="string">'BackgroundColor'</span> ), <span class="keyword">...</span>
+0114                             <span class="string">'Vertical'</span>, <span class="keyword">...</span>
+0115                             obj.ShowMarkings );
+0116                     <span class="keyword">end</span>
+0117                     setappdata( obj.Dividers(numDynamic), <span class="string">'WhichDivider'</span>, ii );
+0118                 <span class="keyword">end</span>
+0119             <span class="keyword">end</span>
+0120             <span class="comment">% Remove any excess dividers</span>
+0121             <span class="keyword">if</span> numel( obj.Dividers ) &gt; numDynamic
+0122                 delete( obj.Dividers(numDynamic+1:end) );
+0123                 obj.Dividers(numDynamic+1:end) = [];
+0124             <span class="keyword">end</span>
+0125         <span class="keyword">end</span> <span class="comment">% redraw</span>
+0126         
+0127         <a name="_sub3" href="#_subfunctions" class="code">function onButtonDown( obj, source, eventData ) </a><span class="comment">%#ok&lt;INUSD&gt;</span>
+0128             figh = ancestor( source, <span class="string">'figure'</span> );
+0129             <span class="comment">% We need to store any existing motion callbacks so that we can</span>
+0130             <span class="comment">% restore them later.</span>
+0131             oldProps = struct();
+0132             oldProps.WindowButtonMotionFcn = <a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>( figh, <span class="string">'WindowButtonMotionFcn'</span> );
+0133             oldProps.WindowButtonUpFcn = <a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>( figh, <span class="string">'WindowButtonUpFcn'</span> );
+0134             oldProps.Pointer = <a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>( figh, <span class="string">'Pointer'</span> );
+0135             oldProps.Units = <a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>( figh, <span class="string">'Units'</span> );
+0136             
+0137             <span class="comment">% Make sure all interaction modes are off to prevent our</span>
+0138             <span class="comment">% callbacks being clobbered</span>
+0139             zoomh = zoom( figh );
+0140             r3dh = rotate3d( figh );
+0141             panh = pan( figh );
+0142             oldState = <span class="string">''</span>;
+0143             <span class="keyword">if</span> isequal( zoomh.Enable, <span class="string">'on'</span> )
+0144                 zoomh.Enable = <span class="string">'off'</span>;
+0145                 oldState = <span class="string">'zoom'</span>;
+0146             <span class="keyword">end</span>
+0147             <span class="keyword">if</span> isequal( r3dh.Enable, <span class="string">'on'</span> )
+0148                 r3dh.Enable = <span class="string">'off'</span>;
+0149                 oldState = <span class="string">'rotate3d'</span>;
+0150             <span class="keyword">end</span>
+0151             <span class="keyword">if</span> isequal( panh.Enable, <span class="string">'on'</span> )
+0152                 panh.Enable = <span class="string">'off'</span>;
+0153                 oldState = <span class="string">'pan'</span>;
+0154             <span class="keyword">end</span>
+0155             
+0156             <span class="comment">% Now set the new callbacks</span>
+0157             <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( figh, <span class="keyword">...</span>
+0158                 <span class="string">'WindowButtonMotionFcn'</span>, @obj.onButtonMotion, <span class="keyword">...</span>
+0159                 <span class="string">'WindowButtonUpFcn'</span>, {@obj.onButtonUp, oldProps, oldState}, <span class="keyword">...</span>
+0160                 <span class="string">'Pointer'</span>, <span class="string">'left'</span>, <span class="keyword">...</span>
+0161                 <span class="string">'Units'</span>, <span class="string">'Pixels'</span> );
+0162             <span class="comment">% Make the divider visible</span>
+0163             cdata = <a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>( source, <span class="string">'CData'</span> );
+0164             <span class="keyword">if</span> mean( cdata(:) ) &lt; 0.5
+0165                 <span class="comment">% Make it brighter</span>
+0166                 cdata = 1-0.5*(1-cdata);
+0167                 newCol = 1-0.5*(1-<a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>( obj.UIContainer, <span class="string">'BackgroundColor'</span> ));
+0168             <span class="keyword">else</span>
+0169                 <span class="comment">% Make it darker</span>
+0170                 cdata = 0.5*cdata;
+0171                 newCol = 0.5*<a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>( obj.UIContainer, <span class="string">'BackgroundColor'</span> );
+0172             <span class="keyword">end</span>
+0173             
+0174             <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( source, <span class="keyword">...</span>
+0175                 <span class="string">'BackgroundColor'</span>, newCol, <span class="keyword">...</span>
+0176                 <span class="string">'ForegroundColor'</span>, newCol, <span class="keyword">...</span>
+0177                 <span class="string">'CData'</span>, cdata );
+0178             obj.SelectedDivider = source;
+0179         <span class="keyword">end</span> <span class="comment">% onButtonDown</span>
+0180         
+0181         <a name="_sub4" href="#_subfunctions" class="code">function onButtonMotion( obj, source, eventData ) </a><span class="comment">%#ok&lt;INUSD&gt;</span>
+0182             <span class="comment">% First capture the current cursor position</span>
+0183             figh = ancestor( source, <span class="string">'figure'</span> );
+0184             cursorpos = <a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>( figh, <span class="string">'CurrentPoint'</span> );
+0185             pos0 = getpixelposition( obj.UIContainer, true );
+0186             
+0187             <span class="comment">% We need to gaurd against the focus having been lost. In this</span>
+0188             <span class="comment">% case we should have received a button-up event, but sometimes</span>
+0189             <span class="comment">% don't (at least on Windows).</span>
+0190             <span class="keyword">if</span> ishandle( obj.SelectedDivider )
+0191                 <span class="comment">% All OK, so move it</span>
+0192                 dividerpos = <a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>( obj.SelectedDivider, <span class="string">'Position'</span> );
+0193                 dividerpos(1) = cursorpos(1) - pos0(1) - round(obj.Spacing/2) + 1;
+0194                 
+0195                 <span class="comment">% Make sure that the position doesn't cause an element to</span>
+0196                 <span class="comment">% shrink too much</span>
+0197                 minSizes = obj.MinimumSizes(:);
+0198                 pixSizes = uiextras.calculatePixelSizes( pos0(3), <span class="keyword">...</span>
+0199                     obj.Sizes, minSizes, obj.Padding, obj.Spacing );
+0200 
+0201                 N = numel( minSizes );
+0202                 <span class="comment">% Sometimes the actual width is smaller than the minimum!</span>
+0203                 minSizes = min( minSizes, pixSizes );
+0204                 whichDivider = getappdata( obj.SelectedDivider, <span class="string">'WhichDivider'</span> );
+0205                 minPos = ceil( obj.Padding <span class="keyword">...</span>
+0206                     + sum( pixSizes(1:whichDivider-1) ) <span class="keyword">...</span>
+0207                     + minSizes(whichDivider) <span class="keyword">...</span>
+0208                     + obj.Spacing*(whichDivider-0.5) );
+0209                 dividerpos(1) = max( dividerpos(1), minPos );
+0210                 <span class="keyword">if</span> whichDivider&lt;(N-1)
+0211                     maxPos = pos0(3) - floor( obj.Padding <span class="keyword">...</span>
+0212                         + sum( pixSizes(whichDivider+2:end) ) <span class="keyword">...</span>
+0213                         + minSizes(whichDivider+1) <span class="keyword">...</span>
+0214                         + obj.Spacing*(N-whichDivider-0.5) );
+0215                 <span class="keyword">else</span>
+0216                     <span class="comment">% Final divider</span>
+0217                     maxPos = pos0(3) - floor( obj.Padding <span class="keyword">...</span>
+0218                         + minSizes(whichDivider+1) <span class="keyword">...</span>
+0219                         + obj.Spacing*0.5 );
+0220                 <span class="keyword">end</span>
+0221                 dividerpos(1) = min( dividerpos(1), maxPos );
+0222                 <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( obj.SelectedDivider, <span class="string">'Position'</span>, dividerpos );
+0223             <span class="keyword">else</span>
+0224                 <span class="comment">% Divider has been lost, so we are in a bad state. The</span>
+0225                 <span class="comment">% best we can do is kill the callbacks and attempt to put</span>
+0226                 <span class="comment">% the figure back in a decent state.</span>
+0227                 <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( figh, <span class="string">'Pointer'</span>, <span class="string">'arrow'</span>, <span class="keyword">...</span>
+0228                     <span class="string">'WindowButtonMotionFcn'</span>, [], <span class="keyword">...</span>
+0229                     <span class="string">'WindowButtonUpFcn'</span>, [] );
+0230             <span class="keyword">end</span>
+0231         <span class="keyword">end</span> <span class="comment">% onButtonMotion</span>
+0232         
+0233         <a name="_sub5" href="#_subfunctions" class="code">function onButtonUp( obj, source, eventData, oldFigProps, oldState )</a>
+0234             <span class="comment">% Deliberately call the motion function to ensure any last</span>
+0235             <span class="comment">% movement is captured</span>
+0236             obj.onButtonMotion( source, eventData );
+0237             
+0238             <span class="comment">% Restore figure properties</span>
+0239             figh = ancestor( source, <span class="string">'figure'</span> );
+0240             flds = fieldnames( oldFigProps );
+0241             <span class="keyword">for</span> ii=1:numel(flds)
+0242                 <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( figh, flds{ii}, oldFigProps.(flds{ii}) );
+0243             <span class="keyword">end</span>
+0244             
+0245             <span class="comment">% If the figure has an interaction mode set, re-set it now</span>
+0246             <span class="keyword">if</span> ~isempty( oldState )
+0247                 <span class="keyword">switch</span> upper( oldState )
+0248                     <span class="keyword">case</span> <span class="string">'ZOOM'</span>
+0249                         zoom( figh, <span class="string">'on'</span> );
+0250                     <span class="keyword">case</span> <span class="string">'PAN'</span>
+0251                         pan( figh, <span class="string">'on'</span> );
+0252                     <span class="keyword">case</span> <span class="string">'ROTATE3D'</span>
+0253                         rotate3d( figh, <span class="string">'on'</span> );
+0254                     <span class="keyword">otherwise</span>
+0255                         error( <span class="string">'GUILayout:InvalidState'</span>, <span class="string">'Invalid interaction mode ''%s''.'</span>, oldState );
+0256                 <span class="keyword">end</span>
+0257             <span class="keyword">end</span>
+0258             
+0259             <span class="comment">% Work out which divider was moved and which are the resizable</span>
+0260             <span class="comment">% elements either side of it</span>
+0261             newPos = <a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>( obj.SelectedDivider, <span class="string">'Position'</span> );
+0262             origPos = getappdata( obj.SelectedDivider, <span class="string">'OriginalPosition'</span> );
+0263             whichDivider = getappdata( obj.SelectedDivider, <span class="string">'WhichDivider'</span> );
+0264             obj.SelectedDivider = -1;
+0265             delta = newPos(1) - origPos(1) - round(obj.Spacing/2) + 1;
+0266             sizes = obj.Sizes;
+0267             
+0268             <span class="comment">% Convert all flexible sizes into pixel units</span>
+0269             totalPosition = ceil( getpixelposition( obj.UIContainer ) );
+0270             totalWidth = totalPosition(3);
+0271             pixSizes = uiextras.calculatePixelSizes( totalWidth, <span class="keyword">...</span>
+0272                     obj.Sizes, obj.MinimumSizes, obj.Padding, obj.Spacing );
+0273             
+0274             leftelement = find( sizes(1:whichDivider)&lt;0, 1, <span class="string">'last'</span> );
+0275             rightelement = find( sizes(whichDivider+1:end)&lt;0, 1, <span class="string">'first'</span> )+whichDivider;
+0276             
+0277             <span class="comment">% Now work out the new sizes. Note that we must ensure the size</span>
+0278             <span class="comment">% stays negative otherwise it'll stop being resizable</span>
+0279             change = sum(sizes(sizes&lt;0)) * delta / sum( pixSizes(sizes&lt;0) );
+0280             sizes(leftelement) = min( -0.000001, sizes(leftelement) + change );
+0281             sizes(rightelement) = min( -0.000001, sizes(rightelement) - change );
+0282             
+0283             <span class="comment">% Setting the sizes will cause a redraw</span>
+0284             obj.Sizes = sizes;
+0285         <span class="keyword">end</span> <span class="comment">% onButtonUp</span>
+0286         
+0287         <a name="_sub6" href="#_subfunctions" class="code">function onBackgroundColorChanged( obj, source, eventData ) </a><span class="comment">%#ok&lt;INUSD&gt;</span>
+0288             <span class="comment">%onBackgroundColorChanged  Callback that fires when the container background color is changed</span>
+0289             <span class="comment">%</span>
+0290             <span class="comment">% We need to make the dividers match the background, so redarw</span>
+0291             <span class="comment">% them</span>
+0292             obj.redraw();
+0293         <span class="keyword">end</span> <span class="comment">% onChildRemoved</span>
+0294         
+0295     <span class="keyword">end</span> <span class="comment">% protected methods</span>
+0296     
+0297 <span class="keyword">end</span> <span class="comment">% classdef</span></pre></div>
+<hr><address>Generated on Thu 20-Feb-2014 10:46:33 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

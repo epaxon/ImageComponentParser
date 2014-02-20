@@ -1,0 +1,291 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of Panel</title>
+  <meta name="keywords" content="Panel">
+  <meta name="description" content="Panel  Show one element inside a panel">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">ImageComponentParser</a> &gt; <a href="../index.html">GUILayout-v1p13</a> &gt; <a href="index.html">+uiextras</a> &gt; Panel.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for ImageComponentParser\GUILayout-v1p13\+uiextras&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>Panel
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>Panel  Show one element inside a panel</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>classdef Panel < uiextras.CardPanel & uiextras.DecoratedPanel </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">Panel  Show one element inside a panel
+
+   obj = uiextras.Panel() creates a standard UIPANEL object but with
+   automatic management of the contained widget or layout. The
+   properties available are largely the same as the builtin UIPANEL
+   object. Where more than one child is added, the currently visible
+   child is determined using the SelectedChild property.
+
+   obj = uiextras.Panel(param,value,...) also sets one or more
+   property values.
+
+   See the &lt;a href=&quot;matlab:doc uiextras.Panel&quot;&gt;documentation&lt;/a&gt; for more detail and the list of properties.
+
+   Examples:
+   &gt;&gt; f = figure();
+   &gt;&gt; p = uiextras.Panel( 'Parent', f, 'Title', 'A Panel', 'Padding', 5 );
+   &gt;&gt; uicontrol( 'Parent', p, 'Background', 'r' )
+
+   &gt;&gt; f = figure();
+   &gt;&gt; p = uiextras.Panel( 'Parent', f, 'Title', 'A Panel', 'Padding', 5 );
+   &gt;&gt; b = uiextras.HBox( 'Parent', p, 'Spacing', 5 );
+   &gt;&gt; uicontrol( 'Style', 'listbox', 'Parent', b, 'String', {'Item 1','Item 2'} );
+   &gt;&gt; uicontrol( 'Parent', b, 'Background', 'b' );
+   &gt;&gt; set( b, 'Sizes', [100 -1] );
+
+   See also: uipanel
+             uiextras.<a href="BoxPanel.html" class="code" title="classdef BoxPanel < uiextras.CardPanel & uiextras.DecoratedPanel">BoxPanel</a>
+             uiextras.<a href="HBox.html" class="code" title="classdef HBox < uiextras.Box">HBox</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>	uiextras.get  Retrieve a default property value from a parent object</li><li><a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>	uiextras.set  Store a default property value in a parent object</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function obj = Panel( varargin )</a></li><li><a href="#_sub2" class="code">function value = get.BorderType( obj )</a></li><li><a href="#_sub3" class="code">function set.BorderType( obj, value )</a></li><li><a href="#_sub4" class="code">function value = get.BorderWidth( obj )</a></li><li><a href="#_sub5" class="code">function set.BorderWidth( obj, value )</a></li><li><a href="#_sub6" class="code">function value = get.Title( obj )</a></li><li><a href="#_sub7" class="code">function set.Title( obj, value )</a></li><li><a href="#_sub8" class="code">function value = get.TitlePosition( obj )</a></li><li><a href="#_sub9" class="code">function set.TitlePosition( obj, value )</a></li><li><a href="#_sub10" class="code">function redraw( obj )</a></li><li><a href="#_sub11" class="code">function onChildAdded( obj, source, eventData )</a></li><li><a href="#_sub12" class="code">function onChildRemoved( obj, source, eventData )</a></li><li><a href="#_sub13" class="code">function onEnable( obj, source, eventData )</a></li><li><a href="#_sub14" class="code">function onBackgroundColorChanged( obj, source, eventData )</a></li><li><a href="#_sub15" class="code">function onPanelColorChanged( obj, source, eventData )</a></li><li><a href="#_sub16" class="code">function onPanelFontChanged( obj, source, eventData )</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 classdef <a href="#_sub1" class="code" title="subfunction obj = Panel( varargin )">Panel</a> &lt; uiextras.CardPanel &amp; uiextras.DecoratedPanel
+0002     <span class="comment">%Panel  Show one element inside a panel</span>
+0003     <span class="comment">%</span>
+0004     <span class="comment">%   obj = uiextras.Panel() creates a standard UIPANEL object but with</span>
+0005     <span class="comment">%   automatic management of the contained widget or layout. The</span>
+0006     <span class="comment">%   properties available are largely the same as the builtin UIPANEL</span>
+0007     <span class="comment">%   object. Where more than one child is added, the currently visible</span>
+0008     <span class="comment">%   child is determined using the SelectedChild property.</span>
+0009     <span class="comment">%</span>
+0010     <span class="comment">%   obj = uiextras.Panel(param,value,...) also sets one or more</span>
+0011     <span class="comment">%   property values.</span>
+0012     <span class="comment">%</span>
+0013     <span class="comment">%   See the &lt;a href=&quot;matlab:doc uiextras.Panel&quot;&gt;documentation&lt;/a&gt; for more detail and the list of properties.</span>
+0014     <span class="comment">%</span>
+0015     <span class="comment">%   Examples:</span>
+0016     <span class="comment">%   &gt;&gt; f = figure();</span>
+0017     <span class="comment">%   &gt;&gt; p = uiextras.Panel( 'Parent', f, 'Title', 'A Panel', 'Padding', 5 );</span>
+0018     <span class="comment">%   &gt;&gt; uicontrol( 'Parent', p, 'Background', 'r' )</span>
+0019     <span class="comment">%</span>
+0020     <span class="comment">%   &gt;&gt; f = figure();</span>
+0021     <span class="comment">%   &gt;&gt; p = uiextras.Panel( 'Parent', f, 'Title', 'A Panel', 'Padding', 5 );</span>
+0022     <span class="comment">%   &gt;&gt; b = uiextras.HBox( 'Parent', p, 'Spacing', 5 );</span>
+0023     <span class="comment">%   &gt;&gt; uicontrol( 'Style', 'listbox', 'Parent', b, 'String', {'Item 1','Item 2'} );</span>
+0024     <span class="comment">%   &gt;&gt; uicontrol( 'Parent', b, 'Background', 'b' );</span>
+0025     <span class="comment">%   &gt;&gt; set( b, 'Sizes', [100 -1] );</span>
+0026     <span class="comment">%</span>
+0027     <span class="comment">%   See also: uipanel</span>
+0028     <span class="comment">%             uiextras.BoxPanel</span>
+0029     <span class="comment">%             uiextras.HBox</span>
+0030     
+0031     <span class="comment">%   Copyright 2009-2010 The MathWorks, Inc.</span>
+0032     <span class="comment">%   $Revision: 373 $</span>
+0033     <span class="comment">%   $Date: 2011-07-14 13:24:10 +0100 (Thu, 14 Jul 2011) $</span>
+0034     
+0035     properties( Dependent = true )
+0036         BorderType      <span class="comment">% Type of border around the uipanel area  [none|etchedin|etchedout|beveledin|beveledout|line]</span>
+0037         BorderWidth     <span class="comment">% Width of the panel border</span>
+0038         Title           <span class="comment">% Title string</span>
+0039         TitlePosition   <span class="comment">% Location of title string in relation to the panel [lefttop|centertop|righttop|leftbottom|centerbottom|rightbottom]</span>
+0040     <span class="keyword">end</span> <span class="comment">% dependent properties</span>
+0041     
+0042     methods
+0043         
+0044         <a name="_sub0" href="#_subfunctions" class="code">function obj = Panel( varargin )</a>
+0045             <span class="comment">%PANEL constructor</span>
+0046             
+0047             <span class="comment">% First step is to create the parent class. We pass the</span>
+0048             <span class="comment">% arguments (if any) just incase the parent needs setting</span>
+0049             obj = obj@uiextras.CardPanel( varargin{:} );
+0050             obj = obj@uiextras.DecoratedPanel( varargin{:} );
+0051             
+0052             <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( obj.UIContainer, <span class="string">'Title'</span>, <span class="string">''</span> );
+0053             
+0054             <span class="comment">% Override base settings</span>
+0055             obj.BorderType = <span class="string">'etchedin'</span>;
+0056             obj.BorderWidth = 1;
+0057             obj.TitlePosition = <span class="string">'lefttop'</span>;
+0058             
+0059             <span class="comment">% See if the user has set any defaults</span>
+0060             obj.setPropertyFromDefault( <span class="string">'BorderType'</span> );
+0061             obj.setPropertyFromDefault( <span class="string">'BorderWidth'</span> );
+0062             obj.setPropertyFromDefault( <span class="string">'TitlePosition'</span> );
+0063             
+0064             <span class="comment">% Set user-supplied property values</span>
+0065             <span class="keyword">if</span> nargin &gt; 0
+0066                 <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( obj, varargin{:} );
+0067             <span class="keyword">end</span>
+0068         <span class="keyword">end</span> <span class="comment">% Panel</span>
+0069         
+0070     <span class="keyword">end</span> <span class="comment">% public methods</span>
+0071     
+0072     methods
+0073         
+0074         <a name="_sub1" href="#_subfunctions" class="code">function value = get.BorderType( obj )</a>
+0075             value = <a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>( obj.UIContainer, <span class="string">'BorderType'</span> );
+0076         <span class="keyword">end</span> <span class="comment">% get.BorderType</span>
+0077         
+0078         <a name="_sub2" href="#_subfunctions" class="code">function set.BorderType( obj, value )</a>
+0079             <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( obj.UIContainer, <span class="string">'BorderType'</span>, value );
+0080         <span class="keyword">end</span> <span class="comment">% set.BorderType</span>
+0081         
+0082         <a name="_sub3" href="#_subfunctions" class="code">function value = get.BorderWidth( obj )</a>
+0083             value = <a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>( obj.UIContainer, <span class="string">'BorderWidth'</span> );
+0084         <span class="keyword">end</span> <span class="comment">% get.BorderWidth</span>
+0085         
+0086         <a name="_sub4" href="#_subfunctions" class="code">function set.BorderWidth( obj, value )</a>
+0087             <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( obj.UIContainer, <span class="string">'BorderWidth'</span>, value );
+0088             obj.redraw();
+0089         <span class="keyword">end</span> <span class="comment">% set.BorderWidth</span>
+0090         
+0091         <a name="_sub5" href="#_subfunctions" class="code">function value = get.Title( obj )</a>
+0092             value = <a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>( obj.UIContainer, <span class="string">'Title'</span> );
+0093         <span class="keyword">end</span> <span class="comment">% get.Title</span>
+0094         
+0095         <a name="_sub6" href="#_subfunctions" class="code">function set.Title( obj, value )</a>
+0096             <span class="comment">% Only need to redraw if changing to/from empty</span>
+0097             oldValue = <a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>( obj.UIContainer, <span class="string">'Title'</span> );
+0098             <span class="comment">% Unfortunately setting the title creates a uicontrol that</span>
+0099             <span class="comment">% isn't tagged, so we have to set a flag so that we know to</span>
+0100             <span class="comment">% ignore it for resize purposes</span>
+0101             setappdata( obj.UIContainer, <span class="string">'PanelTitleCreate'</span>, true );
+0102             <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( obj.UIContainer, <span class="string">'Title'</span>, value );
+0103             rmappdata( obj.UIContainer, <span class="string">'PanelTitleCreate'</span> );
+0104             <span class="keyword">if</span> isempty( value ) &amp;&amp; ~isempty( oldValue )
+0105                 obj.redraw();
+0106             <span class="keyword">elseif</span> isempty( oldValue ) &amp;&amp; ~isempty( value )
+0107                 obj.redraw();
+0108             <span class="keyword">end</span>
+0109         <span class="keyword">end</span> <span class="comment">% set.Title</span>
+0110         
+0111         <a name="_sub7" href="#_subfunctions" class="code">function value = get.TitlePosition( obj )</a>
+0112             value = <a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>( obj.UIContainer, <span class="string">'TitlePosition'</span> );
+0113         <span class="keyword">end</span> <span class="comment">% get.TitlePosition</span>
+0114         
+0115         <a name="_sub8" href="#_subfunctions" class="code">function set.TitlePosition( obj, value )</a>
+0116             <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( obj.UIContainer, <span class="string">'TitlePosition'</span>, value );
+0117             obj.redraw();
+0118         <span class="keyword">end</span> <span class="comment">% set.TitlePosition</span>
+0119         
+0120     <span class="keyword">end</span> <span class="comment">% accessor methods</span>
+0121     
+0122     methods( Access = protected )
+0123         
+0124         <a name="_sub9" href="#_subfunctions" class="code">function redraw( obj )</a>
+0125             <span class="comment">%redraw  Redraw the layout, positioning the children</span>
+0126             
+0127             <span class="keyword">if</span> isempty( obj.UIContainer ) || ~ishandle( obj.UIContainer )
+0128                 <span class="keyword">return</span>
+0129             <span class="keyword">end</span>
+0130             
+0131             <span class="comment">% The selected one inherits the visibility of the layout and</span>
+0132             <span class="comment">% fills the available space</span>
+0133             oldUnits = obj.Units;
+0134             obj.Units = <span class="string">'Pixels'</span>;
+0135             pos = getpixelposition( obj );
+0136             border = obj.BorderWidth+1+obj.Padding;
+0137             x0 = border;
+0138             y0 = border;
+0139             w = pos(3) - 2*border;
+0140             h = pos(4) - 2*border;
+0141             <span class="keyword">if</span> ~isempty( obj.Title )
+0142                 <span class="comment">% Work out how much extra space to leave for the title</span>
+0143                 oldFontUnits = <a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>( obj.UIContainer, <span class="string">'FontUnits'</span> );
+0144                 <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( obj.UIContainer, <span class="string">'FontUnits'</span>, <span class="string">'Pixels'</span> );
+0145                 <span class="comment">% Get the height of the title (in pixels)</span>
+0146                 titleSize = <a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>( obj.UIContainer, <span class="string">'FontSize'</span> );
+0147                 <span class="comment">% Put the old units back</span>
+0148                 <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( obj.UIContainer, <span class="string">'FontUnits'</span>, oldFontUnits );
+0149                 
+0150                 <span class="comment">% Whether to move top or bottom depends on title</span>
+0151                 <span class="comment">% position</span>
+0152                 <span class="keyword">if</span> isempty( strfind( <a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>( obj.UIContainer, <span class="string">'TitlePosition'</span> ), <span class="string">'top'</span> ) )
+0153                     <span class="comment">% Title at the bottom</span>
+0154                     h = h - titleSize;
+0155                     y0 = y0 + titleSize;
+0156                 <span class="keyword">else</span>
+0157                     <span class="comment">% Title at the top</span>
+0158                     h = h - titleSize;
+0159                 <span class="keyword">end</span>
+0160                 
+0161             <span class="keyword">end</span>
+0162             <span class="comment">% Use the CardLayout function to put the right child onscreen</span>
+0163             obj.showSelectedChild( [x0 y0 w h] );
+0164             obj.Units = oldUnits;
+0165         <span class="keyword">end</span> <span class="comment">% redraw</span>
+0166         
+0167         <a name="_sub10" href="#_subfunctions" class="code">function onChildAdded( obj, source, eventData ) </a><span class="comment">%#ok&lt;INUSD&gt;</span>
+0168             <span class="comment">%onChildAdded: Callback that fires when a child is added to a container.</span>
+0169             <span class="comment">% Select the new addition</span>
+0170             obj.SelectedChild = numel( obj.Children );
+0171         <span class="keyword">end</span> <span class="comment">% onChildAdded</span>
+0172         
+0173         <a name="_sub11" href="#_subfunctions" class="code">function onChildRemoved( obj, source, eventData ) </a><span class="comment">%#ok&lt;INUSL&gt;</span>
+0174             <span class="comment">%onChildAdded: Callback that fires when a container child is destroyed or reparented.</span>
+0175             <span class="comment">% If the missing child is the selected one, select something else</span>
+0176             <span class="keyword">if</span> eventData.ChildIndex == obj.SelectedChild
+0177                 <span class="keyword">if</span> isempty( obj.Children )
+0178                     obj.SelectedChild = [];
+0179                 <span class="keyword">else</span>
+0180                     obj.SelectedChild = max( 1, obj.SelectedChild - 1 );
+0181                 <span class="keyword">end</span>
+0182             <span class="keyword">end</span>
+0183         <span class="keyword">end</span> <span class="comment">% onChildRemoved</span>
+0184         
+0185         <a name="_sub12" href="#_subfunctions" class="code">function onEnable( obj, source, eventData ) </a><span class="comment">%#ok&lt;INUSD&gt;</span>
+0186             <span class="comment">%onEnable  Callback that fires when the enable state is changed</span>
+0187             t = findall( obj.UIContainer, <span class="keyword">...</span>
+0188                 <span class="string">'Type'</span>, <span class="string">'uicontrol'</span>, <span class="keyword">...</span>
+0189                 <span class="string">'HandleVisibility'</span>, <span class="string">'off'</span>, <span class="keyword">...</span>
+0190                 <span class="string">'Parent'</span>, obj.UIContainer );
+0191             <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( t, <span class="string">'Enable'</span>, obj.Enable );
+0192         <span class="keyword">end</span> <span class="comment">% onChildRemoved</span>
+0193         
+0194         <a name="_sub13" href="#_subfunctions" class="code">function onBackgroundColorChanged( obj, source, eventData ) </a><span class="comment">%#ok&lt;INUSL&gt;</span>
+0195             <span class="comment">%onBackgroundColorChanged  Callback that fires when the container background color is changed</span>
+0196             <span class="comment">%</span>
+0197             <span class="comment">% We need to make the panel match the container background</span>
+0198             <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( obj.UIContainer, <span class="string">'BackgroundColor'</span>, eventData );
+0199         <span class="keyword">end</span> <span class="comment">% onChildRemoved</span>
+0200         
+0201         <a name="_sub14" href="#_subfunctions" class="code">function onPanelColorChanged( obj, source, eventData ) </a><span class="comment">%#ok&lt;INUSL&gt;</span>
+0202             <span class="comment">% Colors have changed. This shouldn't require a redraw.</span>
+0203             <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( obj.UIContainer, eventData.Property, eventData.Value );
+0204         <span class="keyword">end</span> <span class="comment">% onPanelColorChanged</span>
+0205         
+0206         <a name="_sub15" href="#_subfunctions" class="code">function onPanelFontChanged( obj, source, eventData ) </a><span class="comment">%#ok&lt;INUSL&gt;</span>
+0207             <span class="comment">% Font has changed. Since the font size and shape affects the</span>
+0208             <span class="comment">% space available for the contents, we need to redraw.</span>
+0209             <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( obj.UIContainer, eventData.Property, eventData.Value );
+0210             obj.redraw();
+0211         <span class="keyword">end</span> <span class="comment">% onPanelFontChanged</span>
+0212         
+0213     <span class="keyword">end</span> <span class="comment">% protected methods</span>
+0214     
+0215 <span class="keyword">end</span> <span class="comment">% classdef</span></pre></div>
+<hr><address>Generated on Thu 20-Feb-2014 10:46:33 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

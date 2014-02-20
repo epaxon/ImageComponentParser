@@ -1,0 +1,93 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of calculatePixelSizes</title>
+  <meta name="keywords" content="calculatePixelSizes">
+  <meta name="description" content="calculatePixelSizes  convert flexible sizes into pixel sizes">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">ImageComponentParser</a> &gt; <a href="../index.html">GUILayout-v1p13</a> &gt; <a href="index.html">+uiextras</a> &gt; calculatePixelSizes.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for ImageComponentParser\GUILayout-v1p13\+uiextras&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>calculatePixelSizes
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>calculatePixelSizes  convert flexible sizes into pixel sizes</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function pixSizes = calculatePixelSizes( availableSize, sizes, minSizes, padding, spacing ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">calculatePixelSizes  convert flexible sizes into pixel sizes</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function pixSizes = calculatePixelSizes( availableSize, sizes, minSizes, padding, spacing )</a>
+0002 <span class="comment">%calculatePixelSizes  convert flexible sizes into pixel sizes</span>
+0003     
+0004 <span class="comment">%   Copyright 2009-2011 The MathWorks, Inc.</span>
+0005 <span class="comment">%   $Revision: 288 $</span>
+0006 <span class="comment">%   $Date: 2010-07-14 12:23:50 +0100 (Wed, 14 Jul 2010) $</span>
+0007 
+0008 
+0009 
+0010 <span class="comment">%calculatePixelSizes</span>
+0011 nChildren = numel( sizes );
+0012 pixSizes = zeros( numel( sizes ), 1 ); <span class="comment">% initialize</span>
+0013 minSizes = minSizes(:);
+0014 
+0015 <span class="comment">% First set the fixed-size components</span>
+0016 fixed = ( sizes &gt;= 0 );
+0017 pixSizes(fixed) = sizes(fixed);
+0018 
+0019 <span class="comment">% Now split the remaining space between any flexible ones</span>
+0020 flexible = ( sizes&lt;0 );
+0021 flexSize = availableSize <span class="keyword">...</span>
+0022     - sum( sizes(fixed) ) <span class="keyword">...</span><span class="comment">     % space taken by fixed components</span>
+0023     - spacing * (nChildren-1) <span class="keyword">...</span><span class="comment"> % space taken by the spacing</span>
+0024     - padding * 2;                <span class="comment">% space around the edge</span>
+0025 pixSizes(flexible) = sizes(flexible) / sum( sizes(flexible) ) * flexSize;
+0026 
+0027 <span class="comment">% Now look for any that are below their minimum size</span>
+0028 tooSmall = (pixSizes &lt; minSizes);
+0029 <span class="keyword">while</span> any( tooSmall )
+0030     flexSize = flexSize - sum( minSizes(tooSmall) );
+0031     flexible(tooSmall) = false;
+0032     pixSizes(tooSmall) = minSizes(tooSmall);
+0033     pixSizes(flexible) = sizes(flexible) / sum( sizes(flexible) ) * flexSize;
+0034     tooSmall = (pixSizes &lt; minSizes);
+0035 <span class="keyword">end</span>
+0036 
+0037 <span class="comment">% If we didn't manage to fit, reduce all sizes by a bit until</span>
+0038 <span class="comment">% we do</span>
+0039 <span class="keyword">if</span> sum( pixSizes ) &gt; availableSize
+0040     reduction = availableSize / sum( pixSizes );
+0041     pixSizes = pixSizes * reduction;
+0042 <span class="keyword">end</span>
+0043 
+0044 <span class="comment">% Finally, to prevent errors, don't allow anything to be smaller than 1 pixel</span>
+0045 pixSizes = max( pixSizes, 1 );
+0046 <span class="keyword">end</span> <span class="comment">% calculatePixelSizes</span></pre></div>
+<hr><address>Generated on Thu 20-Feb-2014 10:46:33 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

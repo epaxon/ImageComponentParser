@@ -1,0 +1,151 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of makeFlexDivider</title>
+  <meta name="keywords" content="makeFlexDivider">
+  <meta name="description" content="makeFlexDivider  Create a divider widget and add markings if desired">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">ImageComponentParser</a> &gt; <a href="../index.html">GUILayout-v1p13</a> &gt; <a href="index.html">+uiextras</a> &gt; makeFlexDivider.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for ImageComponentParser\GUILayout-v1p13\+uiextras&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>makeFlexDivider
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>makeFlexDivider  Create a divider widget and add markings if desired</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function uic = makeFlexDivider( parent, position, bgCol, orientation, showMarks ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">makeFlexDivider  Create a divider widget and add markings if desired
+
+   This function is for internal use only.
+
+   See also: uiextras.<a href="VBoxFlex.html" class="code" title="classdef VBoxFlex < uiextras.VBox">VBoxFlex</a>
+             uiextras.<a href="HBoxFlex.html" class="code" title="classdef HBoxFlex < uiextras.HBox">HBoxFlex</a>
+             uiextras.<a href="GridFlex.html" class="code" title="classdef GridFlex < uiextras.Grid">GridFlex</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>	uiextras.get  Retrieve a default property value from a parent object</li><li><a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>	uiextras.set  Store a default property value in a parent object</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function uic = makeFlexDivider( parent, position, bgCol, orientation, showMarks )</a>
+0002 <span class="comment">%makeFlexDivider  Create a divider widget and add markings if desired</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%   This function is for internal use only.</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">%   See also: uiextras.VBoxFlex</span>
+0007 <span class="comment">%             uiextras.HBoxFlex</span>
+0008 <span class="comment">%             uiextras.GridFlex</span>
+0009 
+0010 <span class="comment">%   Copyright 2010 The MathWorks, Inc.</span>
+0011 <span class="comment">%   $Revision: 354 $</span>
+0012 <span class="comment">%   $Date: 2010-11-01 10:07:13 +0000 (Mon, 01 Nov 2010) $</span>
+0013 
+0014 error( nargchk( 5, 5, nargin, <span class="string">'struct'</span> ) );
+0015 
+0016 <span class="keyword">if</span> strcmpi( showMarks, <span class="string">'off'</span> ) || position(3)&lt;3 || position(4)&lt;3
+0017     <span class="comment">% No amarkings or too small to show them, so draw a blank</span>
+0018     cdata = ones( position(4)-1, position(3)-1 ); <span class="comment">% One less than the space since uicontrols always start with a blank pixel</span>
+0019     cdata = cat( 3, cdata*bgCol(1), cdata*bgCol(2), cdata*bgCol(3) );
+0020 <span class="keyword">else</span>
+0021     
+0022     <span class="comment">% Make the divider slightly darker than it's surroundings</span>
+0023     bgCol = 0.97*bgCol;
+0024     
+0025     <span class="comment">% Determine the highlight and lowlight colors and create an empty image</span>
+0026     hiCol = 1-0.2*(1-bgCol);
+0027     loCol = 0.8*bgCol;
+0028     fgCol = 1-0.7*(1-bgCol);
+0029     cdata = ones( position(4)-1, position(3)-1 ); <span class="comment">% One less than the space since uicontrols always start with a blank pixel</span>
+0030     cdata = cat( 3, cdata*bgCol(1), cdata*bgCol(2), cdata*bgCol(3) );
+0031     
+0032     <span class="comment">% Fill central region with foreground color. Note that the top and left get</span>
+0033     <span class="comment">% a spare pixel anyway, so start at 1,1.</span>
+0034     cdata(1:end-1,1:end-1,1) = fgCol(1);
+0035     cdata(1:end-1,1:end-1,2) = fgCol(2);
+0036     cdata(1:end-1,1:end-1,3) = fgCol(3);
+0037     
+0038     <span class="comment">% Add fletchings if there's space</span>
+0039     <span class="keyword">if</span> strcmpi( orientation, <span class="string">'Vertical'</span> )
+0040         <span class="comment">% Vertical divider requires horizontal fletchings</span>
+0041         numFletches = min( 10, floor( position(4)/6 ) ); <span class="comment">% Fill no more than half the space (3 pixels per mark, so divide by 6)</span>
+0042         y0 = round( (position(4)-numFletches*3 ) / 2 );
+0043         <span class="keyword">for</span> ii=1:numFletches
+0044             y = y0+(ii-1)*3;
+0045             <span class="comment">% Add highlight</span>
+0046             cdata(y,1:end-1,1) = hiCol(1);
+0047             cdata(y,1:end-1,2) = hiCol(2);
+0048             cdata(y,1:end-1,3) = hiCol(3);
+0049             <span class="comment">% Add shadow</span>
+0050             cdata(y+1,1:end-1,1) = loCol(1);
+0051             cdata(y+1,1:end-1,2) = loCol(2);
+0052             cdata(y+1,1:end-1,3) = loCol(3);
+0053         <span class="keyword">end</span>
+0054     <span class="keyword">else</span>
+0055         <span class="comment">% Horizontal divider requires vertical fletchings</span>
+0056         numFletches = min( 10, floor( position(3)/6 ) ); <span class="comment">% Fill no more than half the space (3 pixels per mark, so divide by 6)</span>
+0057         x0 = round( (position(3)-numFletches*3 ) / 2 );
+0058         <span class="keyword">for</span> ii=1:numFletches
+0059             x = x0+(ii-1)*3;
+0060             <span class="comment">% Add highlight</span>
+0061             cdata(1:end-1,x,1) = hiCol(1);
+0062             cdata(1:end-1,x,2) = hiCol(2);
+0063             cdata(1:end-1,x,3) = hiCol(3);
+0064             <span class="comment">% Add shadow</span>
+0065             cdata(1:end-1,x+1,1) = loCol(1);
+0066             cdata(1:end-1,x+1,2) = loCol(2);
+0067             cdata(1:end-1,x+1,3) = loCol(3);
+0068         <span class="keyword">end</span>
+0069         
+0070     <span class="keyword">end</span>
+0071 <span class="keyword">end</span>
+0072 
+0073 <span class="comment">% If the first argument is a divider, we update it, otherwise create from</span>
+0074 <span class="comment">% scratch.</span>
+0075 <span class="keyword">if</span> strcmpi( <a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>( parent, <span class="string">'Type'</span> ), <span class="string">'UIControl'</span> )
+0076     <span class="comment">% Update existing</span>
+0077     <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( parent, <span class="keyword">...</span>
+0078         <span class="string">'BackgroundColor'</span>, bgCol, <span class="keyword">...</span>
+0079         <span class="string">'ForegroundColor'</span>, bgCol, <span class="keyword">...</span>
+0080         <span class="string">'CData'</span>, cdata, <span class="keyword">...</span>
+0081         <span class="string">'Position'</span>, position );
+0082     uic = parent;
+0083 <span class="keyword">else</span>
+0084     <span class="comment">% Create the widget</span>
+0085     uic = uicontrol( <span class="string">'Parent'</span>, parent, <span class="keyword">...</span>
+0086         <span class="string">'Style'</span>, <span class="string">'Checkbox'</span>, <span class="keyword">...</span>
+0087         <span class="string">'BackgroundColor'</span>, bgCol, <span class="keyword">...</span>
+0088         <span class="string">'ForegroundColor'</span>, bgCol, <span class="keyword">...</span>
+0089         <span class="string">'CData'</span>, cdata, <span class="keyword">...</span>
+0090         <span class="string">'HitTest'</span>, <span class="string">'on'</span>, <span class="keyword">...</span>
+0091         <span class="string">'Enable'</span>, <span class="string">'inactive'</span>, <span class="keyword">...</span>
+0092         <span class="string">'Units'</span>, <span class="string">'Pixels'</span>, <span class="keyword">...</span>
+0093         <span class="string">'Position'</span>, position, <span class="keyword">...</span>
+0094         <span class="string">'HandleVisibility'</span>, <span class="string">'off'</span> );
+0095 <span class="keyword">end</span>
+0096 
+0097 <span class="comment">% Store the original position for later</span>
+0098 setappdata( uic, <span class="string">'OriginalPosition'</span>, position );</pre></div>
+<hr><address>Generated on Thu 20-Feb-2014 10:46:33 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

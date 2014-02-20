@@ -1,0 +1,245 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of DecoratedPanel</title>
+  <meta name="keywords" content="DecoratedPanel">
+  <meta name="description" content="DecoratedPanel  Abstract panel class that manages fonts and colors">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">ImageComponentParser</a> &gt; <a href="../index.html">GUILayout-v1p13</a> &gt; <a href="index.html">+uiextras</a> &gt; DecoratedPanel.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for ImageComponentParser\GUILayout-v1p13\+uiextras&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>DecoratedPanel
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>DecoratedPanel  Abstract panel class that manages fonts and colors</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>classdef DecoratedPanel < handle </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">DecoratedPanel  Abstract panel class that manages fonts and colors
+
+   See also: uiextras.<a href="Panel.html" class="code" title="classdef Panel < uiextras.CardPanel & uiextras.DecoratedPanel">Panel</a>
+             uiextras.<a href="BoxPanel.html" class="code" title="classdef BoxPanel < uiextras.CardPanel & uiextras.DecoratedPanel">BoxPanel</a>
+             uiextras.<a href="TabPanel.html" class="code" title="classdef TabPanel < uiextras.CardPanel & uiextras.DecoratedPanel">TabPanel</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>	uiextras.get  Retrieve a default property value from a parent object</li><li><a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>	uiextras.set  Store a default property value in a parent object</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function obj = DecoratedPanel( varargin )</a></li><li><a href="#_sub2" class="code">function set.FontAngle( obj, value )</a></li><li><a href="#_sub3" class="code">function set.FontName( obj, value )</a></li><li><a href="#_sub4" class="code">function set.FontSize( obj, value )</a></li><li><a href="#_sub5" class="code">function set.FontUnits( obj, value )</a></li><li><a href="#_sub6" class="code">function set.FontWeight( obj, value )</a></li><li><a href="#_sub7" class="code">function set.ForegroundColor( obj, value )</a></li><li><a href="#_sub8" class="code">function set.HighlightColor( obj, value )</a></li><li><a href="#_sub9" class="code">function set.ShadowColor( obj, value )</a></li><li><a href="#_sub10" class="code">function setPropertyFromDefaultOrHG( obj, parent, propName )</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 classdef <a href="#_sub1" class="code" title="subfunction obj = DecoratedPanel( varargin )">DecoratedPanel</a> &lt; handle
+0002     <span class="comment">%DecoratedPanel  Abstract panel class that manages fonts and colors</span>
+0003     <span class="comment">%</span>
+0004     <span class="comment">%   See also: uiextras.Panel</span>
+0005     <span class="comment">%             uiextras.BoxPanel</span>
+0006     <span class="comment">%             uiextras.TabPanel</span>
+0007     
+0008     <span class="comment">%   Copyright 2009-2010 The MathWorks, Inc.</span>
+0009     <span class="comment">%   $Revision: 301 $</span>
+0010     <span class="comment">%   $Date: 2010-07-22 16:40:01 +0100 (Thu, 22 Jul 2010) $</span>
+0011     
+0012     properties( SetObservable = true ) <span class="comment">% should also have 'AbortSet' but this is only available on later releases</span>
+0013         FontAngle       <span class="comment">% Title font angle [normal|italic|oblique]</span>
+0014         FontName        <span class="comment">% Title font name</span>
+0015         FontSize        <span class="comment">% Title font size</span>
+0016         FontUnits       <span class="comment">% Title font units [inches|centimeters|normalized|points|pixels]</span>
+0017         FontWeight      <span class="comment">% Title font weight [light|normal|demi|bold]</span>
+0018         ForegroundColor <span class="comment">% Title font color and/or color of 2-D border line</span>
+0019         HighlightColor  <span class="comment">% 3-D frame highlight color [r g b]</span>
+0020         ShadowColor     <span class="comment">% 3-D frame shadow color [r g b]</span>
+0021     <span class="keyword">end</span> <span class="comment">% public properties</span>
+0022     
+0023     properties( Constant, GetAccess = private )
+0024         AllowedFontAngle = <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( 0, <span class="string">'DefaultUIPanelFontAngle'</span> )
+0025         AllowedFontName = listfonts(0)
+0026         AllowedFontUnits = <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( 0, <span class="string">'DefaultUIPanelFontUnits'</span> )
+0027         AllowedFontWeight = <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( 0, <span class="string">'DefaultUIPanelFontWeight'</span> )
+0028     <span class="keyword">end</span> <span class="comment">% private constant properties</span>
+0029     
+0030     methods
+0031         
+0032         <a name="_sub0" href="#_subfunctions" class="code">function obj = DecoratedPanel( varargin )</a>
+0033             <span class="comment">% Find the parent figure</span>
+0034             parent = uiextras.findArg( <span class="string">'Parent'</span>, varargin{:} );
+0035             <span class="keyword">if</span> isempty( parent )
+0036                 parent = gcf();
+0037             <span class="keyword">elseif</span> isa( parent, <span class="string">'uiextras.Container'</span> )
+0038                 parent = double( parent );
+0039             <span class="keyword">end</span>
+0040             <span class="comment">% Set some defaults</span>
+0041             obj.setPropertyFromDefaultOrHG( parent, <span class="string">'FontAngle'</span> );
+0042             obj.setPropertyFromDefaultOrHG( parent, <span class="string">'FontName'</span> );
+0043             obj.setPropertyFromDefaultOrHG( parent, <span class="string">'FontSize'</span> );
+0044             obj.setPropertyFromDefaultOrHG( parent, <span class="string">'FontUnits'</span> );
+0045             obj.setPropertyFromDefaultOrHG( parent, <span class="string">'FontWeight'</span> );
+0046             obj.setPropertyFromDefaultOrHG( parent, <span class="string">'ForegroundColor'</span> );
+0047             obj.setPropertyFromDefaultOrHG( parent, <span class="string">'HighlightColor'</span> );
+0048             obj.setPropertyFromDefaultOrHG( parent, <span class="string">'ShadowColor'</span> );
+0049         <span class="keyword">end</span> <span class="comment">% DecoratedPanel</span>
+0050         
+0051     <span class="keyword">end</span> <span class="comment">% public methods</span>
+0052     
+0053     methods
+0054         
+0055         <a name="_sub1" href="#_subfunctions" class="code">function set.FontAngle( obj, value )</a>
+0056             idx = find( strcmpi( value, obj.AllowedFontAngle ) );
+0057             <span class="keyword">if</span> isempty( idx )
+0058                 list = sprintf( <span class="string">'%s, '</span>, obj.AllowedFontAngle{:} );
+0059                 list(end-1:end) = [];
+0060                 error( <span class="string">'GUILayout:InvalidPropertyValue'</span>, <span class="keyword">...</span>
+0061                     <span class="string">'Property ''FontAngle'' must be one of: %s.'</span>, list );
+0062             <span class="keyword">else</span>
+0063                 obj.FontAngle = obj.AllowedFontAngle{idx};
+0064                 eventData = struct( <span class="keyword">...</span>
+0065                     <span class="string">'Property'</span>, <span class="string">'FontAngle'</span>, <span class="keyword">...</span>
+0066                     <span class="string">'Value'</span>, obj.FontAngle );
+0067                 obj.onPanelFontChanged( obj, eventData );
+0068             <span class="keyword">end</span>
+0069         <span class="keyword">end</span> <span class="comment">% set.FontAngle</span>
+0070         
+0071         <a name="_sub2" href="#_subfunctions" class="code">function set.FontName( obj, value )</a>
+0072             idx = find( strcmpi( value, obj.AllowedFontName ) );
+0073             <span class="keyword">if</span> isempty( idx )
+0074                 error( <span class="string">'GUILayout:InvalidPropertyValue'</span>, <span class="keyword">...</span>
+0075                     <span class="string">'Property ''FontName'' must be a valid font name.  See also ''listfonts''.'</span> );
+0076             <span class="keyword">else</span>
+0077                 obj.FontName = obj.AllowedFontName{idx};
+0078                 eventData = struct( <span class="keyword">...</span>
+0079                     <span class="string">'Property'</span>, <span class="string">'FontName'</span>, <span class="keyword">...</span>
+0080                     <span class="string">'Value'</span>, obj.FontName );
+0081                 obj.onPanelFontChanged( obj, eventData );
+0082             <span class="keyword">end</span>
+0083         <span class="keyword">end</span> <span class="comment">% set.FontName</span>
+0084         
+0085         <a name="_sub3" href="#_subfunctions" class="code">function set.FontSize( obj, value )</a>
+0086             obj.FontSize = value;
+0087             eventData = struct( <span class="keyword">...</span>
+0088                 <span class="string">'Property'</span>, <span class="string">'FontSize'</span>, <span class="keyword">...</span>
+0089                 <span class="string">'Value'</span>, value );
+0090             obj.onPanelFontChanged( obj, eventData );
+0091         <span class="keyword">end</span> <span class="comment">% set.FontSize</span>
+0092         
+0093         <a name="_sub4" href="#_subfunctions" class="code">function set.FontUnits( obj, value )</a>
+0094             idx = find( strcmpi( value, obj.AllowedFontUnits ) );
+0095             <span class="keyword">if</span> isempty( idx )
+0096                 list = sprintf( <span class="string">'%s, '</span>, obj.AllowedFontUnits{:} ); 
+0097                 list(end-1:end) = [];
+0098                 error( <span class="string">'GUILayout:InvalidPropertyValue'</span>, <span class="keyword">...</span>
+0099                     <span class="string">'Property ''FontUnits'' must be one of: %s.'</span>, list );
+0100             <span class="keyword">else</span>
+0101                 obj.FontUnits = obj.AllowedFontUnits{idx};
+0102                 eventData = struct( <span class="keyword">...</span>
+0103                     <span class="string">'Property'</span>, <span class="string">'FontUnits'</span>, <span class="keyword">...</span>
+0104                     <span class="string">'Value'</span>, obj.FontUnits );
+0105                 obj.onPanelFontChanged( obj, eventData );
+0106             <span class="keyword">end</span>
+0107         <span class="keyword">end</span> <span class="comment">% set.FontUnits</span>
+0108         
+0109         <a name="_sub5" href="#_subfunctions" class="code">function set.FontWeight( obj, value )</a>
+0110             idx = find( strcmpi( value, obj.AllowedFontWeight ) );
+0111             <span class="keyword">if</span> isempty( idx )
+0112                 list = sprintf( <span class="string">'%s, '</span>, obj.AllowedFontWeight{:} );
+0113                 list(end-1:end) = [];
+0114                 error( <span class="string">'GUILayout:InvalidPropertyValue'</span>, <span class="keyword">...</span>
+0115                     <span class="string">'Property ''FontWeight'' must be one of: %s.'</span>, list );
+0116             <span class="keyword">else</span>
+0117                 obj.FontWeight = obj.AllowedFontWeight{idx};
+0118                 eventData = struct( <span class="keyword">...</span>
+0119                     <span class="string">'Property'</span>, <span class="string">'FontWeight'</span>, <span class="keyword">...</span>
+0120                     <span class="string">'Value'</span>, obj.FontWeight );
+0121                 obj.onPanelFontChanged( obj, eventData );
+0122             <span class="keyword">end</span>
+0123         <span class="keyword">end</span> <span class="comment">% set.FontWeight</span>
+0124         
+0125         <a name="_sub6" href="#_subfunctions" class="code">function set.ForegroundColor( obj, value )</a>
+0126             obj.ForegroundColor = uiextras.interpretColor( value );
+0127             eventData = struct( <span class="keyword">...</span>
+0128                 <span class="string">'Property'</span>, <span class="string">'ForegroundColor'</span>, <span class="keyword">...</span>
+0129                 <span class="string">'Value'</span>, obj.ForegroundColor );
+0130             obj.onPanelColorChanged( obj, eventData );
+0131         <span class="keyword">end</span> <span class="comment">% set.ForegroundColor</span>
+0132         
+0133         <a name="_sub7" href="#_subfunctions" class="code">function set.HighlightColor( obj, value )</a>
+0134             obj.HighlightColor = uiextras.interpretColor( value );
+0135             eventData = struct( <span class="keyword">...</span>
+0136                 <span class="string">'Property'</span>, <span class="string">'HighlightColor'</span>, <span class="keyword">...</span>
+0137                 <span class="string">'Value'</span>, obj.HighlightColor );
+0138             obj.onPanelColorChanged( obj, eventData );
+0139         <span class="keyword">end</span> <span class="comment">% set.HighlightColor</span>
+0140         
+0141         <a name="_sub8" href="#_subfunctions" class="code">function set.ShadowColor( obj, value )</a>
+0142             obj.ShadowColor = uiextras.interpretColor( value );
+0143             eventData = struct( <span class="keyword">...</span>
+0144                 <span class="string">'Property'</span>, <span class="string">'ShadowColor'</span>, <span class="keyword">...</span>
+0145                 <span class="string">'Value'</span>, obj.ShadowColor );
+0146             obj.onPanelColorChanged( obj, eventData );
+0147         <span class="keyword">end</span> <span class="comment">% set.ShadowColor</span>
+0148         
+0149     <span class="keyword">end</span> <span class="comment">% accessor methods</span>
+0150     
+0151     methods ( Abstract = true, Access = protected )
+0152         onPanelColorChanged( obj, source, eventData );
+0153         onPanelFontChanged( obj, source, eventData );
+0154     <span class="keyword">end</span> <span class="comment">% abstract protected methods</span>
+0155     
+0156     methods ( Access = private )
+0157         
+0158         <a name="_sub9" href="#_subfunctions" class="code">function setPropertyFromDefaultOrHG( obj, parent, propName )</a>
+0159             <span class="comment">%setPropertyDefault  Retrieve a default property value. If the</span>
+0160             <span class="comment">%value is not found in the parent or any of its ancestors the</span>
+0161             <span class="comment">%default UIPanel equivalent in 'parent' is used</span>
+0162             error( nargchk( 3, 3, nargin ) );
+0163             
+0164             myClass = class( obj );
+0165             <span class="keyword">if</span> strncmp( myClass, <span class="string">'uiextras.'</span>, 9 )
+0166                 myClass = myClass(10:end);
+0167             <span class="keyword">end</span>
+0168             defPropName = [<span class="string">'Default'</span>,myClass,propName];
+0169             <span class="keyword">try</span>
+0170                 obj.(propName) = uiextras.get( parent, defPropName );
+0171             <span class="keyword">catch</span> err <span class="comment">%#ok&lt;NASGU&gt;</span>
+0172                 <span class="comment">% Go up the HG tree instead</span>
+0173                 hgPropName = [<span class="string">'DefaultUIPanel'</span>,propName];
+0174                 <span class="comment">% We can't test for default properties, so just try it</span>
+0175                 <span class="keyword">try</span>
+0176                     obj.(propName) = <a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>( parent, hgPropName );
+0177                 <span class="keyword">catch</span> err <span class="comment">%#ok&lt;NASGU&gt;</span>
+0178                     found = false;
+0179                     <span class="keyword">while</span> ~found &amp;&amp; ~isequal( parent, 0 )
+0180                         parent = <a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>( parent, <span class="string">'Parent'</span> );
+0181                         <span class="keyword">try</span> <span class="comment">%#ok&lt;TRYNC&gt;</span>
+0182                             obj.(propName) = <a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>( parent, hgPropName );
+0183                             found = true;
+0184                         <span class="keyword">end</span>
+0185                     <span class="keyword">end</span>
+0186                 <span class="keyword">end</span>
+0187             <span class="keyword">end</span>
+0188         <span class="keyword">end</span> <span class="comment">% setPropertyFromDefaultOrHG</span>
+0189         
+0190     <span class="keyword">end</span> <span class="comment">% private methods</span>
+0191     
+0192 <span class="keyword">end</span> <span class="comment">% classdef</span></pre></div>
+<hr><address>Generated on Thu 20-Feb-2014 10:46:33 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

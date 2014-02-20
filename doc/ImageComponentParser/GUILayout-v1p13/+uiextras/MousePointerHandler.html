@@ -1,0 +1,254 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of MousePointerHandler</title>
+  <meta name="keywords" content="MousePointerHandler">
+  <meta name="description" content="MousePointerHandler  A class to handle mouse-over events">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">ImageComponentParser</a> &gt; <a href="../index.html">GUILayout-v1p13</a> &gt; <a href="index.html">+uiextras</a> &gt; MousePointerHandler.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for ImageComponentParser\GUILayout-v1p13\+uiextras&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>MousePointerHandler
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>MousePointerHandler  A class to handle mouse-over events</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>classdef MousePointerHandler < handle </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">MousePointerHandler  A class to handle mouse-over events
+
+   MousePointerHandler(fig) attaches the handler to the figure FIG
+   so that it will intercept all mouse-over events. The handler is
+   stored in the MousePointerHandler app-data of the figure so that
+   functions can listen in for scroll-events.
+
+   Note that when registering you can supply the name of a standard
+   MATLAB pointer image (e.g. 'timer', 'fleur' etc.) or can supply
+   a custom image. See the 'register' method for details.
+
+   Examples:
+   &gt;&gt; f = figure();
+   &gt;&gt; u = uicontrol();
+   &gt;&gt; mph = uiextras.MousePointerHandler(f);
+   &gt;&gt; mph.register( u, 'fleur' )
+
+   See also: uiextras.ScrollWheelEvent</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>	uiextras.get  Retrieve a default property value from a parent object</li><li><a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>	uiextras.set  Store a default property value in a parent object</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function obj = MousePointerHandler(fig)</a></li><li><a href="#_sub2" class="code">function register( obj, widget, pointer, cdata, hotspot )</a></li><li><a href="#_sub3" class="code">function onMouseMoved( obj, src, evt )</a></li><li><a href="#_sub4" class="code">function onWidgetBeingDestroyedEvent( obj, src,evt )</a></li><li><a href="#_sub5" class="code">function enterWidget( obj, widget, pixpos, pointer, pointerShapeCData, pointerShapeHotSpot )</a></li><li><a href="#_sub6" class="code">function leaveWidget( obj )</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 classdef <a href="#_sub1" class="code" title="subfunction obj = MousePointerHandler(fig)">MousePointerHandler</a> &lt; handle
+0002     <span class="comment">%MousePointerHandler  A class to handle mouse-over events</span>
+0003     <span class="comment">%</span>
+0004     <span class="comment">%   MousePointerHandler(fig) attaches the handler to the figure FIG</span>
+0005     <span class="comment">%   so that it will intercept all mouse-over events. The handler is</span>
+0006     <span class="comment">%   stored in the MousePointerHandler app-data of the figure so that</span>
+0007     <span class="comment">%   functions can listen in for scroll-events.</span>
+0008     <span class="comment">%</span>
+0009     <span class="comment">%   Note that when registering you can supply the name of a standard</span>
+0010     <span class="comment">%   MATLAB pointer image (e.g. 'timer', 'fleur' etc.) or can supply</span>
+0011     <span class="comment">%   a custom image. See the 'register' method for details.</span>
+0012     <span class="comment">%</span>
+0013     <span class="comment">%   Examples:</span>
+0014     <span class="comment">%   &gt;&gt; f = figure();</span>
+0015     <span class="comment">%   &gt;&gt; u = uicontrol();</span>
+0016     <span class="comment">%   &gt;&gt; mph = uiextras.MousePointerHandler(f);</span>
+0017     <span class="comment">%   &gt;&gt; mph.register( u, 'fleur' )</span>
+0018     <span class="comment">%</span>
+0019     <span class="comment">%   See also: uiextras.ScrollWheelEvent</span>
+0020     
+0021     <span class="comment">%   Copyright 2008-2010 The MathWorks Ltd.</span>
+0022     <span class="comment">%   $Revision: 374 $</span>
+0023     <span class="comment">%   $Date: 2012-12-20 09:18:15 +0000 (Thu, 20 Dec 2012) $</span>
+0024     
+0025     properties( SetAccess = private, GetAccess = public )
+0026         CurrentObject
+0027     <span class="keyword">end</span> <span class="comment">% read-only public properties</span>
+0028     
+0029     properties( SetAccess = private , GetAccess = private )
+0030         CurrentObjectPosition
+0031         OldPointer
+0032         Parent
+0033         List
+0034         
+0035     <span class="keyword">end</span> <span class="comment">% private properties</span>
+0036     
+0037     methods
+0038         
+0039         <a name="_sub0" href="#_subfunctions" class="code">function obj = MousePointerHandler(fig)</a>
+0040             
+0041             <span class="comment">% Check that a mouse-pointer-handler is not already there</span>
+0042             <span class="keyword">if</span> ~isa( fig, <span class="string">'figure'</span> )
+0043                 fig = ancestor( fig, <span class="string">'figure'</span> );
+0044             <span class="keyword">end</span>
+0045             <span class="keyword">if</span> isappdata(fig,<span class="string">'MousePointerHandler'</span>)
+0046                 obj = getappdata(fig,<span class="string">'MousePointerHandler'</span>);
+0047             <span class="keyword">else</span>
+0048                 <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>(fig,<span class="string">'WindowButtonMotionFcn'</span>, @obj.onMouseMoved);
+0049                 setappdata(fig,<span class="string">'MousePointerHandler'</span>,obj);
+0050                 obj.Parent = fig;
+0051             <span class="keyword">end</span>
+0052             
+0053         <span class="keyword">end</span> <span class="comment">% MousePointerHandler</span>
+0054         
+0055         <a name="_sub1" href="#_subfunctions" class="code">function register( obj, widget, pointer, cdata, hotspot )</a>
+0056             <span class="comment">%REGISTER  Register a pointer to use when over the supplied widget</span>
+0057             <span class="comment">%</span>
+0058             <span class="comment">%   handler.register(widget, pointer) register using a built-in</span>
+0059             <span class="comment">%   MATLAB pointer.</span>
+0060             <span class="comment">%</span>
+0061             <span class="comment">%   handler.register(widget, name, cdata, hotspot) register a</span>
+0062             <span class="comment">%   custom image and hotspot.</span>
+0063             <span class="keyword">if</span> nargin &gt; 3
+0064                 pointerShapeCData = cdata;
+0065                 <span class="keyword">if</span> nargin &gt; 4
+0066                     pointerShapeHotSpot = hotspot;
+0067                 <span class="keyword">else</span>
+0068                     <span class="comment">% Default to [1 1]</span>
+0069                     pointerShapeHotSpot = [1 1];
+0070                 <span class="keyword">end</span>
+0071             <span class="keyword">else</span>
+0072                 pointerShapeCData = [];
+0073                 pointerShapeHotSpot = [];
+0074             <span class="keyword">end</span>
+0075             
+0076             <span class="comment">% We need to be sure to remove the entry if it dies</span>
+0077             <span class="keyword">if</span> isHGUsingMATLABClasses()
+0078                 <span class="comment">% New style</span>
+0079                 l = event.listener( widget, <span class="string">'ObjectBeingDestroyed'</span>, @obj.onWidgetBeingDestroyedEvent );
+0080             <span class="keyword">else</span>
+0081                 <span class="comment">% Old school</span>
+0082                 l = handle.listener( widget, <span class="string">'ObjectBeingDestroyed'</span>, @obj.onWidgetBeingDestroyedEvent );
+0083             <span class="keyword">end</span>
+0084             entry = struct( <span class="keyword">...</span>
+0085                 <span class="string">'Widget'</span>, widget, <span class="keyword">...</span>
+0086                 <span class="string">'Pointer'</span>, pointer, <span class="keyword">...</span>
+0087                 <span class="string">'PointerShapeCData'</span>, pointerShapeCData, <span class="keyword">...</span>
+0088                 <span class="string">'PointerShapeHotSpot'</span>, pointerShapeHotSpot, <span class="keyword">...</span>
+0089                 <span class="string">'Listener'</span>, l );
+0090             
+0091             <span class="comment">% Update obj.List</span>
+0092             <span class="keyword">if</span> isempty(obj.List)
+0093                 <span class="comment">% Create obj.List from entry if empty</span>
+0094                 obj.List = entry;
+0095             <span class="keyword">else</span>
+0096                 <span class="comment">% Make sure we don't put the same widget in the list twice</span>
+0097                 matches = (widget == [obj.List.Widget]);
+0098                 <span class="keyword">if</span> any(matches)
+0099                     <span class="comment">% Update obj.List if there is a match</span>
+0100                     obj.List(matches,1) = entry;
+0101                 <span class="keyword">else</span>
+0102                     <span class="comment">% Otherwise, append</span>
+0103                     obj.List(end+1,1) = entry;
+0104                 <span class="keyword">end</span>
+0105             <span class="keyword">end</span>
+0106         <span class="keyword">end</span> <span class="comment">% register</span>
+0107         
+0108     <span class="keyword">end</span> <span class="comment">% public methods</span>
+0109     
+0110     methods( Access = private )
+0111         
+0112         <a name="_sub2" href="#_subfunctions" class="code">function onMouseMoved( obj, src, evt ) </a><span class="comment">%#ok&lt;INUSD&gt;</span>
+0113             <span class="keyword">if</span> isempty( obj.List )
+0114                 <span class="keyword">return</span>;
+0115             <span class="keyword">end</span>
+0116             figh = obj.Parent;
+0117             figUnits = <a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>( figh, <span class="string">'Units'</span> );
+0118             currpos = <a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>( figh, <span class="string">'CurrentPoint'</span> );
+0119             <span class="keyword">if</span> ~strcmpi( figUnits, <span class="string">'Pixels'</span> )
+0120                 currpos = hgconvertunits( figh, [currpos,0,0], figUnits, <span class="string">'pixels'</span>, 0 );
+0121             <span class="keyword">end</span>
+0122             <span class="keyword">if</span> ~isempty( obj.CurrentObjectPosition )
+0123                 cop = obj.CurrentObjectPosition;
+0124                 <span class="keyword">if</span> currpos(1) &gt;= cop(1) <span class="keyword">...</span>
+0125                         &amp;&amp; currpos(1) &lt; cop(1)+cop(3) <span class="keyword">...</span>
+0126                         &amp;&amp; currpos(2) &gt;= cop(2) <span class="keyword">...</span>
+0127                         &amp;&amp; currpos(2) &lt; cop(2)+cop(4)
+0128                     <span class="comment">% Still inside, so do nothing</span>
+0129                     <span class="keyword">return</span>;
+0130                 <span class="keyword">else</span>
+0131                     <span class="comment">% Left the object</span>
+0132                     obj.leaveWidget()
+0133                 <span class="keyword">end</span>
+0134             <span class="keyword">end</span>
+0135             <span class="comment">% OK, now scan the objects to see if we're inside</span>
+0136             <span class="keyword">for</span> ii=1:numel(obj.List)
+0137                 <span class="comment">% We need to be careful of widgets that aren't capable of</span>
+0138                 <span class="comment">% returning a PixelPosition</span>
+0139                 <span class="keyword">try</span>
+0140                     widgetpos = getpixelposition( obj.List(ii).Widget, true );
+0141                     <span class="keyword">if</span> currpos(1) &gt;= widgetpos(1) <span class="keyword">...</span>
+0142                             &amp;&amp; currpos(1) &lt; widgetpos(1)+widgetpos(3) <span class="keyword">...</span>
+0143                             &amp;&amp; currpos(2) &gt;= widgetpos(2) <span class="keyword">...</span>
+0144                             &amp;&amp; currpos(2) &lt; widgetpos(2)+widgetpos(4)
+0145                         <span class="comment">% Inside</span>
+0146                         obj.enterWidget( obj.List(ii).Widget, widgetpos, obj.List(ii).Pointer, <span class="keyword">...</span>
+0147                             obj.List(ii).PointerShapeCData, obj.List(ii).PointerShapeHotSpot)
+0148                         <span class="keyword">break</span>; <span class="comment">% we don't need to carry on looking</span>
+0149                     <span class="keyword">end</span>
+0150                 <span class="keyword">catch</span> err <span class="comment">%#ok&lt;NASGU&gt;</span>
+0151                     warning( <span class="string">'MousePointerHandler:BadWidget'</span>, <span class="string">'GETPIXELPOSITION failed for widget %d'</span>, ii )
+0152                 <span class="keyword">end</span>
+0153             <span class="keyword">end</span>
+0154             
+0155         <span class="keyword">end</span> <span class="comment">% onMouseMoved</span>
+0156         
+0157         <a name="_sub3" href="#_subfunctions" class="code">function onWidgetBeingDestroyedEvent( obj, src,evt ) </a><span class="comment">%#ok&lt;INUSD&gt;</span>
+0158             idx = cellfun( @isequal, {obj.List.Widget}, repmat( {double(src)}, 1,numel(obj.List) ) );
+0159             obj.List(idx) = [];
+0160             <span class="comment">% Also take care if it's the active object</span>
+0161             <span class="keyword">if</span> isequal( src, obj.CurrentObject )
+0162                 obj.leaveWidget()
+0163             <span class="keyword">end</span>
+0164         <span class="keyword">end</span> <span class="comment">% onWidgetBeingDestroyedEvent</span>
+0165         
+0166         <a name="_sub4" href="#_subfunctions" class="code">function enterWidget( obj, widget, pixpos, pointer, pointerShapeCData, pointerShapeHotSpot )</a>
+0167             <span class="comment">% Mouse has moved onto a widget</span>
+0168             obj.CurrentObjectPosition = pixpos;
+0169             obj.CurrentObject = widget;
+0170             obj.OldPointer = <a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>( obj.Parent, <span class="string">'Pointer'</span> );
+0171             <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( obj.Parent, <span class="string">'Pointer'</span>, pointer );
+0172             <span class="comment">% For custom pointers, supply the CData and HotSpot information</span>
+0173             <span class="keyword">if</span> strcmpi(pointer,<span class="string">'custom'</span>)
+0174                 <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( obj.Parent, <span class="string">'PointerShapeCData'</span>, pointerShapeCData, <span class="keyword">...</span>
+0175                     <span class="string">'PointerShapeHotSpot'</span>, pointerShapeHotSpot);
+0176             <span class="keyword">end</span>
+0177         <span class="keyword">end</span> <span class="comment">% enterWidget</span>
+0178         
+0179         <a name="_sub5" href="#_subfunctions" class="code">function leaveWidget( obj )</a>
+0180             <span class="comment">% Mouse has moved off a widget</span>
+0181             obj.CurrentObjectPosition = [];
+0182             obj.CurrentObject = [];
+0183             <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( obj.Parent, <span class="string">'Pointer'</span>, obj.OldPointer );
+0184         <span class="keyword">end</span> <span class="comment">% leaveWidget</span>
+0185         
+0186     <span class="keyword">end</span> <span class="comment">% private methods</span>
+0187     
+0188 <span class="keyword">end</span> <span class="comment">% classdef</span></pre></div>
+<hr><address>Generated on Thu 20-Feb-2014 10:46:33 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

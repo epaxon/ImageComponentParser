@@ -1,0 +1,619 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of Container</title>
+  <meta name="keywords" content="Container">
+  <meta name="description" content="Container  Container base class">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">ImageComponentParser</a> &gt; <a href="../index.html">GUILayout-v1p13</a> &gt; <a href="index.html">+uiextras</a> &gt; Container.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for ImageComponentParser\GUILayout-v1p13\+uiextras&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>Container
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>Container  Container base class</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>classdef Container < hgsetget </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">Container  Container base class
+
+   c = uiextras.Container() creates a new container object. Container
+   is an abstract class and can only be constructed as the first
+   actual of a descendent class.
+
+   c = uiextras.Container(param,value,...) creates a new container
+   object and sets one or more property values.
+
+   See also: uiextras.<a href="Box.html" class="code" title="classdef Box < uiextras.Container">Box</a>
+             uiextras.<a href="ButtonBox.html" class="code" title="classdef ButtonBox < uiextras.Container">ButtonBox</a>
+             uiextras.<a href="CardPanel.html" class="code" title="classdef CardPanel < uiextras.Container">CardPanel</a>
+             uiextras.<a href="Grid.html" class="code" title="classdef Grid < uiextras.Container">Grid</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>	uiextras.get  Retrieve a default property value from a parent object</li><li><a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>	uiextras.set  Store a default property value in a parent object</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function obj = Container( varargin )</a></li><li><a href="#_sub2" class="code">function container = double( obj )</a></li><li><a href="#_sub3" class="code">function pos = getpixelposition( obj )</a></li><li><a href="#_sub4" class="code">function tf = isprop( obj, name )</a></li><li><a href="#_sub5" class="code">function p = ancestor(obj,varargin)</a></li><li><a href="#_sub6" class="code">function delete( obj )</a></li><li><a href="#_sub7" class="code">function set.Position( obj, value )</a></li><li><a href="#_sub8" class="code">function value = get.Position( obj )</a></li><li><a href="#_sub9" class="code">function set.Children( obj, value )</a></li><li><a href="#_sub10" class="code">function value = get.Children( obj )</a></li><li><a href="#_sub11" class="code">function set.Enable( obj, value )</a></li><li><a href="#_sub12" class="code">function value = get.Enable( obj )</a></li><li><a href="#_sub13" class="code">function set.Units( obj, value )</a></li><li><a href="#_sub14" class="code">function value = get.Units( obj )</a></li><li><a href="#_sub15" class="code">function set.Parent( obj, value )</a></li><li><a href="#_sub16" class="code">function value = get.Parent( obj )</a></li><li><a href="#_sub17" class="code">function set.Tag( obj, value )</a></li><li><a href="#_sub18" class="code">function value = get.Tag( obj )</a></li><li><a href="#_sub19" class="code">function value = get.Type( obj )</a></li><li><a href="#_sub20" class="code">function value = get.BeingDeleted( obj )</a></li><li><a href="#_sub21" class="code">function set.Visible( obj, value )</a></li><li><a href="#_sub22" class="code">function value = get.Visible( obj )</a></li><li><a href="#_sub23" class="code">function set.BackgroundColor( obj, value )</a></li><li><a href="#_sub24" class="code">function value = get.BackgroundColor( obj )</a></li><li><a href="#_sub25" class="code">function onResized( obj, source, eventData )</a></li><li><a href="#_sub26" class="code">function onContainerBeingDestroyed( obj, source, eventData )</a></li><li><a href="#_sub27" class="code">function onChildAdded( obj, source, eventData )</a></li><li><a href="#_sub28" class="code">function onChildRemoved( obj, source, eventData )</a></li><li><a href="#_sub29" class="code">function onBackgroundColorChanged( obj, source, eventData )</a></li><li><a href="#_sub30" class="code">function onEnable( obj, source, eventData )</a></li><li><a href="#_sub31" class="code">function c = getValidChildren( obj )</a></li><li><a href="#_sub32" class="code">function repositionChild( obj, child, position )</a></li><li><a href="#_sub33" class="code">function setPropertyFromDefault( obj, propName )</a></li><li><a href="#_sub34" class="code">function helpSetChildEnable( ~, child, state )</a></li><li><a href="#_sub35" class="code">function onChildAddedEvent( obj, source, eventData )</a></li><li><a href="#_sub36" class="code">function onChildBeingDestroyedEvent( obj, source, eventData )</a></li><li><a href="#_sub37" class="code">function onChildParentChangedEvent( obj, source, eventData )</a></li><li><a href="#_sub38" class="code">function result = isLegendOrColorbar( child )</a></li><li><a href="#_sub39" class="code">function ok = isBeforeR2009b()</a></li><li><a href="#_sub40" class="code">function helpDeleteChild( src, evt, obj )</a></li><li><a href="#_sub41" class="code">function helpReparentChild( src, evt, obj )</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 classdef <a href="#_sub1" class="code" title="subfunction obj = Container( varargin )">Container</a> &lt; hgsetget
+0002     <span class="comment">%Container  Container base class</span>
+0003     <span class="comment">%</span>
+0004     <span class="comment">%   c = uiextras.Container() creates a new container object. Container</span>
+0005     <span class="comment">%   is an abstract class and can only be constructed as the first</span>
+0006     <span class="comment">%   actual of a descendent class.</span>
+0007     <span class="comment">%</span>
+0008     <span class="comment">%   c = uiextras.Container(param,value,...) creates a new container</span>
+0009     <span class="comment">%   object and sets one or more property values.</span>
+0010     <span class="comment">%</span>
+0011     <span class="comment">%   See also: uiextras.Box</span>
+0012     <span class="comment">%             uiextras.ButtonBox</span>
+0013     <span class="comment">%             uiextras.CardPanel</span>
+0014     <span class="comment">%             uiextras.Grid</span>
+0015     
+0016     <span class="comment">%   Copyright 2009-2010 The MathWorks, Inc.</span>
+0017     
+0018     properties
+0019         DeleteFcn       <span class="comment">% function to call when the layout is being deleted [function handle]</span>
+0020     <span class="keyword">end</span> <span class="comment">% Public properties</span>
+0021     
+0022     properties( Dependent, Transient )
+0023         BackgroundColor <span class="comment">% background color [r g b]</span>
+0024         BeingDeleted    <span class="comment">% is the object in the process of being deleted [on|off]</span>
+0025         Children        <span class="comment">% list of the children of the layout [handle array]</span>
+0026         Enable          <span class="comment">% allow interaction with the contents of this layout [on|off]</span>
+0027         Parent          <span class="comment">% handle of the parent container or figure [handle]</span>
+0028         Position        <span class="comment">% position [left bottom width height]</span>
+0029         Tag             <span class="comment">% tag [string]</span>
+0030         Type            <span class="comment">% the object type (class) [string]</span>
+0031         Units           <span class="comment">% position units [inches|centimeters|normalized|points|pixels|characters]</span>
+0032         Visible         <span class="comment">% is the layout visible on-screen [on|off]</span>
+0033     <span class="keyword">end</span> <span class="comment">% dependent properties</span>
+0034     
+0035     properties( Access = protected, Hidden, Transient )
+0036         Listeners = cell( 0, 1 ) <span class="comment">% array of listeners</span>
+0037     <span class="keyword">end</span> <span class="comment">% protected properties</span>
+0038     
+0039     properties( SetAccess = private, GetAccess = protected, Hidden, Transient )
+0040         UIContainer <span class="comment">% associated uicontainer</span>
+0041     <span class="keyword">end</span> <span class="comment">% read-only protected properties</span>
+0042     
+0043     properties( Access = private, Hidden, Transient )
+0044         Children_ = zeros( 0, 1 )     <span class="comment">% private copy of the children list</span>
+0045         ChildListeners = cell( 0, 2 ) <span class="comment">% listeners for changes to children</span>
+0046         Enable_ = <span class="string">'on'</span>                <span class="comment">% private copy of the enabled state</span>
+0047         CurrentSize_ = [0 0]          <span class="comment">% private copy of the size</span>
+0048     <span class="keyword">end</span> <span class="comment">% private properties</span>
+0049     
+0050     methods
+0051         
+0052         <a name="_sub0" href="#_subfunctions" class="code">function obj = Container( varargin )</a>
+0053             <span class="comment">%Container  Container base class constructor</span>
+0054             <span class="comment">%</span>
+0055             <span class="comment">%   obj = Container(param,value,...) creates a new Container</span>
+0056             <span class="comment">%   object using the (optional) property values specified. This</span>
+0057             <span class="comment">%   may only be called by child classes.</span>
+0058             
+0059             <span class="comment">% Check that we're using the right graphics version</span>
+0060             <span class="keyword">if</span> isHGUsingMATLABClasses()
+0061                 error( <span class="string">'GUILayout:WrongHGVersion'</span>, <span class="string">'Trying to run using double-handle MATLAB graphics against the new graphics system. Please re-install.'</span> );
+0062             <span class="keyword">end</span>
+0063             
+0064             <span class="comment">% Find if parent has been supplied</span>
+0065             parent = uiextras.findArg( <span class="string">'Parent'</span>, varargin{:} );
+0066             <span class="keyword">if</span> isempty( parent )
+0067                 parent = gcf();
+0068             <span class="keyword">end</span>
+0069             units = uiextras.findArg( <span class="string">'Units'</span>, varargin{:} );
+0070             <span class="keyword">if</span> isempty( units )
+0071                 units = <span class="string">'Normalized'</span>;
+0072             <span class="keyword">end</span>
+0073             
+0074             <span class="comment">% Create container</span>
+0075             args = {
+0076                 <span class="string">'Parent'</span>, parent, <span class="keyword">...</span>
+0077                 <span class="string">'Units'</span>, units, <span class="keyword">...</span>
+0078                 <span class="string">'BorderType'</span>, <span class="string">'none'</span>
+0079                 };
+0080             obj.UIContainer = uipanel( args{:} );
+0081                         
+0082             <span class="comment">% Set the background color</span>
+0083             obj.setPropertyFromDefault( <span class="string">'BackgroundColor'</span> );
+0084             
+0085             <span class="comment">% Tag it!</span>
+0086             <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( obj.UIContainer, <span class="string">'Tag'</span>, strrep( class( obj ), <span class="string">'.'</span>, <span class="string">':'</span> ) );
+0087             
+0088             <span class="comment">% Create listeners to resizing of container</span>
+0089             containerObj = handle( obj.UIContainer );
+0090             obj.Listeners{end+1,1} = handle.listener( containerObj, findprop( containerObj, <span class="string">'PixelBounds'</span> ), <span class="string">'PropertyPostSet'</span>, @obj.onResized );
+0091             
+0092             <span class="comment">% Create listeners to addition of container children</span>
+0093             obj.Listeners{end+1,1} = handle.listener( containerObj, <span class="string">'ObjectChildAdded'</span>, @obj.onChildAddedEvent );
+0094             
+0095             <span class="comment">% Watch out for the graphics being destroyed</span>
+0096             obj.Listeners{end+1,1} = handle.listener( containerObj, <span class="string">'ObjectBeingDestroyed'</span>, @obj.onContainerBeingDestroyed );
+0097             
+0098             <span class="comment">% Store Container in container</span>
+0099             setappdata( obj.UIContainer, <span class="string">'Container'</span>, obj );
+0100 
+0101         <span class="keyword">end</span> <span class="comment">% constructor</span>
+0102         
+0103         <a name="_sub1" href="#_subfunctions" class="code">function container = double( obj )</a>
+0104             <span class="comment">%double  Convert a container to an HG double handle.</span>
+0105             <span class="comment">%</span>
+0106             <span class="comment">%  D = double(C) converts a container C to an HG handle D.</span>
+0107             container = obj.UIContainer;
+0108         <span class="keyword">end</span> <span class="comment">% double</span>
+0109         
+0110         <a name="_sub2" href="#_subfunctions" class="code">function pos = getpixelposition( obj )</a>
+0111             <span class="comment">%getpixelposition  get the absolute pixel position</span>
+0112             <span class="comment">%</span>
+0113             <span class="comment">%   POS = GETPIXELPOSITION(C) gets the absolute position of the container C</span>
+0114             <span class="comment">%   within its parent window. The returned position is in pixels.</span>
+0115             pos = <a href="#_sub3" class="code" title="subfunction pos = getpixelposition( obj )">getpixelposition</a>( obj.UIContainer );
+0116         <span class="keyword">end</span> <span class="comment">% getpixelposition</span>
+0117         
+0118         <a name="_sub3" href="#_subfunctions" class="code">function tf = isprop( obj, name )</a>
+0119             <span class="comment">%isprop  does this object have the specified property</span>
+0120             <span class="comment">%</span>
+0121             <span class="comment">%   TF = ISPROP(C,NAME) checks whether the object C has a</span>
+0122             <span class="comment">%   property named NAME. The result, TF, is true if the</span>
+0123             <span class="comment">%   property exists, false otherwise.</span>
+0124             tf = ismember( name, properties( obj ) );
+0125             
+0126         <span class="keyword">end</span> <span class="comment">% isprop</span>
+0127         
+0128         <a name="_sub4" href="#_subfunctions" class="code">function p = ancestor(obj,varargin)</a>
+0129             <span class="comment">%ancestor  Get object ancestor</span>
+0130             <span class="comment">%</span>
+0131             <span class="comment">%   P = ancestor(H,TYPE) returns the handle of the closest ancestor of h</span>
+0132             <span class="comment">%   that matches one of the types in TYPE, or empty if there is no matching</span>
+0133             <span class="comment">%   ancestor.  TYPE may be a single string (single type) or cell array of</span>
+0134             <span class="comment">%   strings (types). If H is a vector of handles then P is a cell array the</span>
+0135             <span class="comment">%   same length as H and P{n} is the ancestor of H(n). If H is one of the</span>
+0136             <span class="comment">%   specified types then ancestor returns H.</span>
+0137             <span class="comment">%</span>
+0138             <span class="comment">%   P = ANCESTOR(H,TYPE,'TOPLEVEL') finds the highest level ancestor of one</span>
+0139             <span class="comment">%   of the types in TYPE</span>
+0140             <span class="comment">%</span>
+0141             <span class="comment">%   If H is not an Handle Graphics object, ANCESTOR returns empty.</span>
+0142             p = <a href="#_sub5" class="code" title="subfunction p = ancestor(obj,varargin)">ancestor</a>( obj.UIContainer, varargin{:} );
+0143         <span class="keyword">end</span> <span class="comment">%ancestor</span>
+0144         
+0145         <a name="_sub5" href="#_subfunctions" class="code">function delete( obj )</a>
+0146             <span class="comment">%delete  destroy this layout</span>
+0147             <span class="comment">%</span>
+0148             <span class="comment">% If the user destroys the object, we *must* also remove any</span>
+0149             <span class="comment">% graphics</span>
+0150             <span class="keyword">if</span> ~isempty( obj.DeleteFcn )
+0151                 uiextras.callCallback( obj.DeleteFcn, obj, [] );
+0152             <span class="keyword">end</span>
+0153             <span class="keyword">if</span> ishandle( obj.UIContainer ) <span class="keyword">...</span>
+0154                     &amp;&amp; ~strcmpi( <a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>( obj.UIContainer, <span class="string">'BeingDeleted'</span> ), <span class="string">'on'</span> )
+0155                 <a href="#_sub6" class="code" title="subfunction delete( obj )">delete</a>( obj.UIContainer );
+0156             <span class="keyword">end</span>
+0157         <span class="keyword">end</span> <span class="comment">% delete</span>
+0158         
+0159     <span class="keyword">end</span> <span class="comment">% public methods</span>
+0160     
+0161     methods
+0162         
+0163         <a name="_sub6" href="#_subfunctions" class="code">function set.Position( obj, value )</a>
+0164             <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( obj.UIContainer, <span class="string">'Position'</span>, value );
+0165         <span class="keyword">end</span> <span class="comment">% set.Position</span>
+0166         
+0167         <a name="_sub7" href="#_subfunctions" class="code">function value = get.Position( obj )</a>
+0168             value = <a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>( obj.UIContainer, <span class="string">'Position'</span> );
+0169         <span class="keyword">end</span> <span class="comment">% get.Position</span>
+0170         
+0171         <a name="_sub8" href="#_subfunctions" class="code">function set.Children( obj, value )</a>
+0172             <span class="comment">% Check</span>
+0173             oldChildren = obj.Children_;
+0174             newChildren = value;
+0175             [tf, loc] = ismember( oldChildren, newChildren );
+0176             <span class="keyword">if</span> ~isequal( size( oldChildren ), size( newChildren ) ) || any( ~tf )
+0177                 error( <span class="string">'GUILayout:Container:InvalidPropertyValue'</span>, <span class="keyword">...</span>
+0178                     <span class="string">'Property ''Children'' may only be set to a permutation of itself.'</span> )
+0179             <span class="keyword">end</span>
+0180             
+0181             <span class="comment">% Set</span>
+0182             obj.Children_ = newChildren;
+0183             
+0184             <span class="comment">% Reorder ChildListeners</span>
+0185             obj.ChildListeners(loc,:) = obj.ChildListeners;
+0186             
+0187             <span class="comment">% Redraw</span>
+0188             obj.redraw();
+0189         <span class="keyword">end</span> <span class="comment">% set.Children</span>
+0190         
+0191         <a name="_sub9" href="#_subfunctions" class="code">function value = get.Children( obj )</a>
+0192             value = obj.Children_;
+0193         <span class="keyword">end</span> <span class="comment">% get.Children</span>
+0194         
+0195         <a name="_sub10" href="#_subfunctions" class="code">function set.Enable( obj, value )</a>
+0196             <span class="comment">% Check</span>
+0197             <span class="keyword">if</span> ~ischar( value ) || ~ismember( lower( value ), {<span class="string">'on'</span>,<span class="string">'off'</span>} )
+0198                 error( <span class="string">'GUILayout:Container:InvalidPropertyValue'</span>, <span class="keyword">...</span>
+0199                     <span class="string">'Property ''Enable'' may only be set to ''on'' or ''off''.'</span> )
+0200             <span class="keyword">end</span>
+0201             <span class="comment">% Apply</span>
+0202             value = lower( value );
+0203             <span class="comment">% If we want to switch on but our parent is off, just store</span>
+0204             <span class="comment">% in the app data.</span>
+0205             <span class="keyword">if</span> strcmp( value, <span class="string">'on'</span> )
+0206                 <span class="keyword">if</span> isappdata( obj.Parent, <span class="string">'Container'</span> )
+0207                     parentObj = getappdata( obj.Parent, <span class="string">'Container'</span> );
+0208                     <span class="keyword">if</span> strcmpi( parentObj.Enable, <span class="string">'off'</span> )
+0209                         setappdata( obj.UIContainer, <span class="string">'OldEnableState'</span>, value );
+0210                         value = <span class="string">'off'</span>;
+0211                     <span class="keyword">end</span>
+0212                 <span class="keyword">end</span>
+0213             <span class="keyword">end</span>
+0214             obj.Enable_ = value;
+0215             
+0216             <span class="comment">% Apply to children</span>
+0217             ch = obj.Children_;
+0218             <span class="keyword">for</span> ii=1:numel( ch )
+0219                 obj.helpSetChildEnable( ch(ii), obj.Enable_ );
+0220             <span class="keyword">end</span>
+0221             
+0222             <span class="comment">% Do the work</span>
+0223             obj.onEnable( obj, value );
+0224         <span class="keyword">end</span> <span class="comment">% set.Enable</span>
+0225         
+0226         <a name="_sub11" href="#_subfunctions" class="code">function value = get.Enable( obj )</a>
+0227             value = obj.Enable_;
+0228         <span class="keyword">end</span> <span class="comment">% get.Enable</span>
+0229         
+0230         <a name="_sub12" href="#_subfunctions" class="code">function set.Units( obj, value )</a>
+0231             <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( obj.UIContainer, <span class="string">'Units'</span>, value );
+0232         <span class="keyword">end</span> <span class="comment">% set.Units</span>
+0233         
+0234         <a name="_sub13" href="#_subfunctions" class="code">function value = get.Units( obj )</a>
+0235             value = <a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>( obj.UIContainer, <span class="string">'Units'</span> );
+0236         <span class="keyword">end</span> <span class="comment">% get.Units</span>
+0237         
+0238         <a name="_sub14" href="#_subfunctions" class="code">function set.Parent( obj, value )</a>
+0239             <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( obj.UIContainer, <span class="string">'Parent'</span>, <a href="#_sub2" class="code" title="subfunction container = double( obj )">double</a>( value ) );
+0240         <span class="keyword">end</span> <span class="comment">% set.Parent</span>
+0241         
+0242         <a name="_sub15" href="#_subfunctions" class="code">function value = get.Parent( obj )</a>
+0243             value = <a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>( obj.UIContainer, <span class="string">'Parent'</span> );
+0244         <span class="keyword">end</span> <span class="comment">% get.Parent</span>
+0245         
+0246         <a name="_sub16" href="#_subfunctions" class="code">function set.Tag( obj, value )</a>
+0247             <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( obj.UIContainer, <span class="string">'Tag'</span>, value );
+0248         <span class="keyword">end</span> <span class="comment">% set.Tag</span>
+0249         
+0250         <a name="_sub17" href="#_subfunctions" class="code">function value = get.Tag( obj )</a>
+0251             value = <a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>( obj.UIContainer, <span class="string">'Tag'</span> );
+0252         <span class="keyword">end</span> <span class="comment">% get.Tag</span>
+0253         
+0254         <a name="_sub18" href="#_subfunctions" class="code">function value = get.Type( obj )</a>
+0255             value = class( obj );
+0256         <span class="keyword">end</span> <span class="comment">% get.Type</span>
+0257         
+0258         <a name="_sub19" href="#_subfunctions" class="code">function value = get.BeingDeleted( obj )</a>
+0259             value = <a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>( obj.UIContainer, <span class="string">'BeingDeleted'</span> );
+0260         <span class="keyword">end</span> <span class="comment">% get.BeingDeleted</span>
+0261         
+0262         <a name="_sub20" href="#_subfunctions" class="code">function set.Visible( obj, value )</a>
+0263             <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( obj.UIContainer, <span class="string">'Visible'</span>, value );
+0264         <span class="keyword">end</span> <span class="comment">% set.Visible</span>
+0265         
+0266         <a name="_sub21" href="#_subfunctions" class="code">function value = get.Visible( obj )</a>
+0267             value = <a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>( obj.UIContainer, <span class="string">'Visible'</span> );
+0268         <span class="keyword">end</span> <span class="comment">% get.Visible</span>
+0269         
+0270         <a name="_sub22" href="#_subfunctions" class="code">function set.BackgroundColor( obj, value )</a>
+0271             <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( obj.UIContainer, <span class="string">'BackgroundColor'</span>, value );
+0272             obj.onBackgroundColorChanged( obj, value );
+0273         <span class="keyword">end</span> <span class="comment">% set.BackgroundColor</span>
+0274         
+0275         <a name="_sub23" href="#_subfunctions" class="code">function value = get.BackgroundColor( obj )</a>
+0276             value = <a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>( obj.UIContainer, <span class="string">'BackgroundColor'</span> );
+0277         <span class="keyword">end</span> <span class="comment">% get.BackgroundColor</span>
+0278         
+0279     <span class="keyword">end</span> <span class="comment">% accessor methods</span>
+0280     
+0281     methods( Access = protected )
+0282         
+0283         <a name="_sub24" href="#_subfunctions" class="code">function onResized( obj, source, eventData ) </a><span class="comment">%#ok&lt;INUSD&gt;</span>
+0284             <span class="comment">%onResized  Callback that fires when a container is resized.</span>
+0285             newSize = <a href="#_sub3" class="code" title="subfunction pos = getpixelposition( obj )">getpixelposition</a>( obj );
+0286             newSize = newSize([3,4]);
+0287             <span class="keyword">if</span> any(newSize ~= obj.CurrentSize_)
+0288                 <span class="comment">% Size has changed, so must redraw</span>
+0289                 obj.CurrentSize_ = newSize;
+0290                 obj.redraw();
+0291             <span class="keyword">end</span>
+0292         <span class="keyword">end</span> <span class="comment">% onResized</span>
+0293         
+0294         <a name="_sub25" href="#_subfunctions" class="code">function onContainerBeingDestroyed( obj, source, eventData ) </a><span class="comment">%#ok&lt;INUSD&gt;</span>
+0295             <span class="comment">%onContainerBeingDestroyed  Callback that fires when the container dies</span>
+0296             <a href="#_sub6" class="code" title="subfunction delete( obj )">delete</a>( obj );
+0297         <span class="keyword">end</span> <span class="comment">% onContainerBeingDestroyed</span>
+0298         
+0299         <a name="_sub26" href="#_subfunctions" class="code">function onChildAdded( obj, source, eventData ) </a><span class="comment">%#ok&lt;INUSD&gt;</span>
+0300             <span class="comment">%onChildAdded  Callback that fires when a child is added to a container.</span>
+0301             obj.redraw();
+0302         <span class="keyword">end</span> <span class="comment">% onChildAdded</span>
+0303         
+0304         <a name="_sub27" href="#_subfunctions" class="code">function onChildRemoved( obj, source, eventData ) </a><span class="comment">%#ok&lt;INUSD&gt;</span>
+0305             <span class="comment">%onChildRemoved  Callback that fires when a container child is destroyed or reparented.</span>
+0306             obj.redraw();
+0307         <span class="keyword">end</span> <span class="comment">% onChildRemoved</span>
+0308         
+0309         <a name="_sub28" href="#_subfunctions" class="code">function onBackgroundColorChanged( obj, source, eventData ) </a><span class="comment">%#ok&lt;INUSD,MANU&gt;</span>
+0310             <span class="comment">%onBackgroundColorChanged  Callback that fires when the container background color is changed</span>
+0311         <span class="keyword">end</span> <span class="comment">% onChildRemoved</span>
+0312         
+0313         <a name="_sub29" href="#_subfunctions" class="code">function onEnable( obj, source, eventData ) </a><span class="comment">%#ok&lt;INUSD,MANU&gt;</span>
+0314             <span class="comment">%onEnable  Callback that fires when the enable state is changed</span>
+0315         <span class="keyword">end</span> <span class="comment">% onChildRemoved</span>
+0316         
+0317         <a name="_sub30" href="#_subfunctions" class="code">function c = getValidChildren( obj )</a>
+0318             <span class="comment">%getValidChildren  Return a list of only those children not being deleted</span>
+0319             c = obj.Children;
+0320             c( strcmpi( <a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>( c, <span class="string">'BeingDeleted'</span> ), <span class="string">'on'</span> ) ) = [];
+0321         <span class="keyword">end</span> <span class="comment">% getValidChildren</span>
+0322         
+0323         <a name="_sub31" href="#_subfunctions" class="code">function repositionChild( obj, child, position )</a>
+0324             <span class="comment">%repositionChild  adjust the position and visibility of a child</span>
+0325 
+0326             <span class="comment">% First determine whether to use &quot;Position&quot; or &quot;OuterPosition&quot;</span>
+0327             <span class="keyword">if</span> <a href="#_sub4" class="code" title="subfunction tf = isprop( obj, name )">isprop</a>( child, <span class="string">'ActivePositionProperty'</span> )
+0328                 propname = <a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>( child, <span class="string">'ActivePositionProperty'</span> );
+0329             <span class="keyword">else</span>
+0330                 propname = <span class="string">'Position'</span>;
+0331             <span class="keyword">end</span>
+0332             <span class="keyword">if</span> position(3)&lt;=0 || position(4)&lt;=0
+0333                 <span class="comment">% Not enough space, so move offscreen instead</span>
+0334                 position = [-100 -100 10 10];
+0335             <span class="keyword">end</span>
+0336             <span class="comment">% Now set the position in pixels, changing the units first if</span>
+0337             <span class="comment">% necessary</span>
+0338             oldunits = <a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>( child, <span class="string">'Units'</span> );
+0339             <span class="keyword">if</span> strcmpi( oldunits, <span class="string">'Pixels'</span> )
+0340                 <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( child, propname, position );
+0341             <span class="keyword">else</span>
+0342                 <span class="comment">% Other units, so switch to pixels before setting</span>
+0343                 <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( child, <span class="string">'Units'</span>, <span class="string">'pixels'</span> );
+0344                 <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( child, propname, position );
+0345                 <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( child, <span class="string">'Units'</span>, oldunits );
+0346             <span class="keyword">end</span>
+0347         <span class="keyword">end</span> <span class="comment">% repositionChild</span>
+0348         
+0349         <a name="_sub32" href="#_subfunctions" class="code">function setPropertyFromDefault( obj, propName )</a>
+0350             <span class="comment">%getPropertyDefault  Retrieve a default property value. If the</span>
+0351             <span class="comment">%value is not found in the parent or any of its ancestors the</span>
+0352             <span class="comment">%supplied defValue is used.</span>
+0353             error( nargchk( 2, 2, nargin ) );
+0354             
+0355             parent = <a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>( obj.UIContainer, <span class="string">'Parent'</span> );
+0356             myClass = class(obj);
+0357             <span class="keyword">if</span> strncmp( myClass, <span class="string">'uiextras.'</span>, 9 )
+0358                 myClass = myClass(10:end);
+0359             <span class="keyword">end</span>
+0360             defPropName = [<span class="string">'Default'</span>,myClass,propName];
+0361             
+0362             <span class="comment">% Getting the default will fail if the default does not exist</span>
+0363             <span class="comment">% of has an invalid value. In that case we leave the current</span>
+0364             <span class="comment">% value as it is.</span>
+0365             <span class="keyword">try</span>
+0366                 obj.(propName) = uiextras.get( parent, defPropName );
+0367             <span class="keyword">catch</span> err <span class="comment">%#ok&lt;NASGU&gt;</span>
+0368                 <span class="comment">% Failed, so leave it alone</span>
+0369             <span class="keyword">end</span>
+0370         <span class="keyword">end</span> <span class="comment">% setPropertyFromDefault</span>
+0371         
+0372         <a name="_sub33" href="#_subfunctions" class="code">function helpSetChildEnable( ~, child, state )</a>
+0373             <span class="comment">% Set the enabled state of one child widget</span>
+0374             <span class="keyword">if</span> strcmpi( <a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>( child, <span class="string">'Type'</span> ), <span class="string">'uipanel'</span> )
+0375                 <span class="comment">% Might be another layout</span>
+0376                 <span class="keyword">if</span> isappdata( child, <span class="string">'Container'</span> )
+0377                     child = getappdata( child, <span class="string">'Container'</span> );
+0378                 <span class="keyword">else</span>
+0379                     <span class="comment">% Can't enable a panel</span>
+0380                     child = [];
+0381                 <span class="keyword">end</span>
+0382             <span class="keyword">elseif</span> <a href="#_sub4" class="code" title="subfunction tf = isprop( obj, name )">isprop</a>( child, <span class="string">'Enable'</span> )
+0383                 <span class="comment">% It supports enabling directly</span>
+0384             <span class="keyword">else</span>
+0385                 <span class="comment">% Doesn't support enabling</span>
+0386                 child = [];
+0387             <span class="keyword">end</span>
+0388             
+0389             <span class="keyword">if</span> ~isempty( child )
+0390             
+0391             <span class="comment">% We will use a piece of app data</span>
+0392             <span class="comment">% to track the original state to ensure we don't</span>
+0393             <span class="comment">% re-enable something that shouldn't be.</span>
+0394             <span class="keyword">if</span> strcmpi( state, <span class="string">'On'</span> )
+0395                 <span class="keyword">if</span> isappdata( child, <span class="string">'OldEnableState'</span> )
+0396                     <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( child, <span class="string">'Enable'</span>, getappdata( child, <span class="string">'OldEnableState'</span> ) );
+0397                     rmappdata( child, <span class="string">'OldEnableState'</span> );
+0398                 <span class="keyword">else</span>
+0399                     <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( child, <span class="string">'Enable'</span>, <span class="string">'on'</span> );
+0400                 <span class="keyword">end</span>
+0401             <span class="keyword">else</span>
+0402                 <span class="keyword">if</span> ~isappdata( child, <span class="string">'OldEnableState'</span> )
+0403                     setappdata( child, <span class="string">'OldEnableState'</span>, <a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>( child, <span class="string">'Enable'</span> ) );
+0404                 <span class="keyword">end</span>
+0405                 <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( child, <span class="string">'Enable'</span>, <span class="string">'off'</span> );
+0406             <span class="keyword">end</span>
+0407             <span class="keyword">end</span>
+0408         <span class="keyword">end</span> <span class="comment">% helpSetChildEnable</span>
+0409         
+0410     <span class="keyword">end</span> <span class="comment">% protected methods</span>
+0411     
+0412     methods( Abstract = true, Access = protected )
+0413         
+0414         redraw( obj )
+0415         
+0416     <span class="keyword">end</span> <span class="comment">% abstract methods</span>
+0417     
+0418     methods( Access = private, Sealed = true )
+0419         
+0420         <a name="_sub34" href="#_subfunctions" class="code">function onChildAddedEvent( obj, source, eventData ) </a><span class="comment">%#ok&lt;INUSL&gt;</span>
+0421             <span class="comment">%onChildAddedEvent  Callback that fires when a child is added to a container.</span>
+0422             
+0423             <span class="comment">% Find child in Children</span>
+0424             child = eventData.Child;
+0425             <span class="keyword">if</span> ismember( <a href="#_sub2" class="code" title="subfunction container = double( obj )">double</a>( child ), obj.Children_ )
+0426                 <span class="keyword">return</span> <span class="comment">% not *really* being added</span>
+0427             <span class="keyword">end</span>
+0428             
+0429             <span class="comment">% Only hook up internally if not a &quot;hidden&quot; child.</span>
+0430             <span class="keyword">if</span> ~<a href="#_sub4" class="code" title="subfunction tf = isprop( obj, name )">isprop</a>( child, <span class="string">'HandleVisibility'</span> ) <span class="keyword">...</span>
+0431                     || strcmpi( <a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>( child, <span class="string">'HandleVisibility'</span> ), <span class="string">'off'</span> )
+0432                 <span class="keyword">return</span>;
+0433             <span class="keyword">end</span>
+0434             
+0435             <span class="comment">% We don't want to do anything to the panel title</span>
+0436             <span class="keyword">if</span> isappdata( obj.UIContainer, <span class="string">'PanelTitleCreate'</span> ) <span class="keyword">...</span>
+0437                     &amp;&amp; getappdata( obj.UIContainer, <span class="string">'PanelTitleCreate'</span> )
+0438                 <span class="comment">% This child is the panel label. Set its visibility off so</span>
+0439                 <span class="comment">% we don't see it again.</span>
+0440                 <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( child, <span class="string">'HandleVisibility'</span>, <span class="string">'off'</span> );
+0441                 <span class="keyword">return</span>;
+0442             <span class="keyword">end</span>
+0443             
+0444             <span class="comment">% We also need to ignore legends as they are positioned by</span>
+0445             <span class="comment">% their associated axes.</span>
+0446             <span class="keyword">if</span> <a href="#_sub38" class="code" title="subfunction result = isLegendOrColorbar( child )">isLegendOrColorbar</a>( eventData.Child )
+0447                 <span class="keyword">return</span>;
+0448             <span class="keyword">end</span>
+0449             
+0450             <span class="comment">% Add element to Children</span>
+0451             obj.Children_(end+1,:) = child;
+0452             
+0453             <span class="comment">% Add elements to ChildListeners. A bug in R2009a and</span>
+0454             <span class="comment">% earlier means we have to be careful about this</span>
+0455             <span class="keyword">if</span> <a href="#_sub39" class="code" title="subfunction ok = isBeforeR2009b()">isBeforeR2009b</a>()
+0456                 obj.ChildListeners(end+1,:) = <span class="keyword">...</span>
+0457                     {handle.listener( child, <span class="string">'ObjectBeingDestroyed'</span>, {@<a href="#_sub40" class="code" title="subfunction helpDeleteChild( src, evt, obj )">helpDeleteChild</a>,obj} ), <span class="keyword">...</span>
+0458                     handle.listener( child, <span class="string">'ObjectParentChanged'</span>, {@<a href="#_sub41" class="code" title="subfunction helpReparentChild( src, evt, obj )">helpReparentChild</a>,obj} )};
+0459             <span class="keyword">else</span>
+0460                 obj.ChildListeners(end+1,:) = <span class="keyword">...</span>
+0461                     {handle.listener( child, <span class="string">'ObjectBeingDestroyed'</span>, @obj.onChildBeingDestroyedEvent ), <span class="keyword">...</span>
+0462                     handle.listener( child, <span class="string">'ObjectParentChanged'</span>, @obj.onChildParentChangedEvent )};
+0463             <span class="keyword">end</span>
+0464             
+0465             <span class="comment">% We are taking over management of position and will do it</span>
+0466             <span class="comment">% in either pixel or normalized units.</span>
+0467             units = lower( <a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>( child, <span class="string">'Units'</span> ) );
+0468             <span class="keyword">if</span> ~ismember( units, {<span class="string">'pixels'</span> ,<span class="string">'normalized'</span>} )
+0469                 <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( child, <span class="string">'Units'</span>, <span class="string">'Pixels'</span> );
+0470             <span class="keyword">end</span>
+0471             
+0472             <span class="comment">% If we are disabled, make sure the children are too</span>
+0473             <span class="keyword">if</span> strcmpi( obj.Enable_, <span class="string">'off'</span> )
+0474                 <a href="#_sub34" class="code" title="subfunction helpSetChildEnable( ~, child, state )">helpSetChildEnable</a>( obj, child, obj.Enable_ );
+0475             <span class="keyword">end</span>
+0476             
+0477             <span class="comment">% Call onChildAdded</span>
+0478             eventData = uiextras.ChildEvent( child, numel( obj.Children_ ) );
+0479             
+0480             obj.onChildAdded( obj, eventData );
+0481         <span class="keyword">end</span> <span class="comment">% onChildAddedEvent</span>
+0482         
+0483         <a name="_sub35" href="#_subfunctions" class="code">function onChildBeingDestroyedEvent( obj, source, eventData ) </a><span class="comment">%#ok&lt;INUSD&gt;</span>
+0484             <span class="comment">%onChildBeingDestroyedEvent  Callback that fires when a container child is destroyed.</span>
+0485             
+0486             <span class="comment">% Find child in Children</span>
+0487             [dummy, loc] = ismember( <a href="#_sub2" class="code" title="subfunction container = double( obj )">double</a>( source ), obj.Children_ ); <span class="comment">%#ok&lt;ASGLU&gt;</span>
+0488             
+0489             <span class="comment">% Remove element from Children</span>
+0490             obj.Children_(loc,:) = [];
+0491             
+0492             <span class="comment">% Remove elements from ChildListeners</span>
+0493             obj.ChildListeners(loc,:) = [];
+0494             
+0495             <span class="comment">% If we are in our death throes, don't start calling callbacks</span>
+0496             <span class="keyword">if</span> ishandle( obj.UIContainer ) &amp;&amp; ~strcmpi( <a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>( obj.UIContainer, <span class="string">'BeingDeleted'</span> ), <span class="string">'ON'</span> )
+0497                 <span class="comment">% Call onChildRemoved</span>
+0498                 eventData = uiextras.ChildEvent( source, loc );
+0499                 obj.onChildRemoved( obj, eventData );
+0500             <span class="keyword">end</span>
+0501             
+0502         <span class="keyword">end</span> <span class="comment">% onChildBeingDestroyedEvent</span>
+0503         
+0504         <a name="_sub36" href="#_subfunctions" class="code">function onChildParentChangedEvent( obj, source, eventData )</a>
+0505             <span class="comment">%onChildParentChangedEvent  Callback that fires when a container child is reparented.</span>
+0506             
+0507             <span class="keyword">if</span> isempty( eventData.NewParent ) <span class="keyword">...</span>
+0508                     || eventData.NewParent == obj.UIContainer
+0509                 <span class="keyword">return</span> <span class="comment">% not being reparented *away*</span>
+0510             <span class="keyword">end</span>
+0511             
+0512             <span class="comment">% Find child in Children</span>
+0513             [dummy, loc] = ismember( <a href="#_sub2" class="code" title="subfunction container = double( obj )">double</a>( source ), obj.Children_ ); <span class="comment">%#ok&lt;ASGLU&gt;</span>
+0514             
+0515             <span class="comment">% Remove element from Children</span>
+0516             obj.Children_(loc,:) = [];
+0517             
+0518             <span class="comment">% Remove elements from ChildListeners</span>
+0519             obj.ChildListeners(loc,:) = [];
+0520             
+0521             <span class="comment">% Call onChildRemoved</span>
+0522             eventData = uiextras.ChildEvent( source, loc );
+0523             obj.onChildRemoved( obj, eventData );
+0524             
+0525         <span class="keyword">end</span> <span class="comment">% onChildParentChangedEvent</span>
+0526         
+0527     <span class="keyword">end</span> <span class="comment">% private sealed methods</span>
+0528     
+0529 <span class="keyword">end</span> <span class="comment">% classdef</span>
+0530 
+0531 <span class="comment">% -------------------------------------------------------------------------</span>
+0532 
+0533 <a name="_sub37" href="#_subfunctions" class="code">function result = isLegendOrColorbar( child )</a>
+0534 <span class="comment">% Determine whether an object is a legend or colorbar</span>
+0535 tag = lower(<a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>( child, <span class="string">'Tag'</span> ));
+0536 result = (isa( child, <span class="string">'axes'</span> ) &amp;&amp; ismember(tag, {<span class="string">'legend'</span>, <span class="string">'colorbar'</span>}) );
+0537 <span class="keyword">end</span> <span class="comment">% isLegendOrColorbar</span>
+0538 
+0539 
+0540 <span class="comment">% Helper functions to work around a bug in R2009a and earlier</span>
+0541 
+0542 <a name="_sub38" href="#_subfunctions" class="code">function ok = isBeforeR2009b()</a>
+0543 <span class="keyword">persistent</span> matlabVersionDate;
+0544 <span class="keyword">if</span> isempty( matlabVersionDate )
+0545     v = ver( <span class="string">'MATLAB'</span> );
+0546     matlabVersionDate = datenum( v.Date );
+0547 <span class="comment">%     uiwait( msgbox( sprintf( 'Got MATLAB version date: %s', v.Date ) ) )</span>
+0548 <span class="keyword">end</span>
+0549 ok = ( matlabVersionDate &lt;= datenum( <span class="string">'15-Jan-2009'</span>, <span class="string">'dd-mmm-yyyy'</span> ) );
+0550 <span class="keyword">end</span>
+0551 
+0552 <a name="_sub39" href="#_subfunctions" class="code">function helpDeleteChild( src, evt, obj )</a>
+0553 obj.onChildBeingDestroyedEvent( src, evt );
+0554 <span class="keyword">end</span> <span class="comment">% helpDeleteChild</span>
+0555 
+0556 <a name="_sub40" href="#_subfunctions" class="code">function helpReparentChild( src, evt, obj )</a>
+0557 obj.onChildParentChangedEvent( src, evt );
+0558 <span class="keyword">end</span> <span class="comment">% helpReparentChild</span></pre></div>
+<hr><address>Generated on Thu 20-Feb-2014 10:46:33 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

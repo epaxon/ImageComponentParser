@@ -1,0 +1,106 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of set</title>
+  <meta name="keywords" content="set">
+  <meta name="description" content="uiextras.set  Store a default property value in a parent object">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">ImageComponentParser</a> &gt; <a href="../index.html">GUILayout-v1p13</a> &gt; <a href="index.html">+uiextras</a> &gt; set.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for ImageComponentParser\GUILayout-v1p13\+uiextras&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>set
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>uiextras.set  Store a default property value in a parent object</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function set( hObj, propName, propValue ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">uiextras.set  Store a default property value in a parent object
+
+   uiextras.set(hObj,propName,propValue) stores a default property value
+   in the object hObj such that children created inside it of the correct
+   class will use the specified value (propValue) for the specified
+   property by default. The property name should take the form
+   &quot;DefaultClassProperty&quot;, for example to set the default &quot;TitleColor&quot; for
+   the class &quot;uiextras.BoxPanel&quot;, use &quot;DefaultBoxPanelTitleColor&quot;. Note
+   that using the special object handle 0 sets the default for all new
+   figures.
+
+   Examples:
+   &gt;&gt; uiextras.set( gcf(), 'DefaultBoxPanelTitleColor', 'g' )
+   &gt;&gt; uiextras.set( 0, 'DefaultHBoxPadding', 5 )
+
+   See also: uiextras.<a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>
+             uiextras.<a href="unset.html" class="code" title="function unset( hObj, propName )">unset</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="BoxPanel.html" class="code" title="classdef BoxPanel < uiextras.CardPanel & uiextras.DecoratedPanel">BoxPanel</a>	BoxPanel  Show one element inside a box panel</li><li><a href="CardPanel.html" class="code" title="classdef CardPanel < uiextras.Container">CardPanel</a>	CardPanel  Show one element (card) from a list</li><li><a href="Container.html" class="code" title="classdef Container < hgsetget">Container</a>	Container  Container base class</li><li><a href="DecoratedPanel.html" class="code" title="classdef DecoratedPanel < handle">DecoratedPanel</a>	DecoratedPanel  Abstract panel class that manages fonts and colors</li><li><a href="Empty.html" class="code" title="classdef Empty < hgsetget">Empty</a>	Empty  Create an empty space</li><li><a href="Grid.html" class="code" title="classdef Grid < uiextras.Container">Grid</a>	Grid  Container with contents arranged in a grid</li><li><a href="GridFlex.html" class="code" title="classdef GridFlex < uiextras.Grid">GridFlex</a>	GridFlex  Container with contents arranged in a resizable grid</li><li><a href="HBox.html" class="code" title="classdef HBox < uiextras.Box">HBox</a>	HBox  Arrange elements in a single horizontal row</li><li><a href="HBoxFlex.html" class="code" title="classdef HBoxFlex < uiextras.HBox">HBoxFlex</a>	HBoxFlex  A dynamically resizable horizontal layout</li><li><a href="HButtonBox.html" class="code" title="classdef HButtonBox < uiextras.ButtonBox">HButtonBox</a>	HButtonBox  Arrange buttons horizontally in a single row</li><li><a href="MousePointerHandler.html" class="code" title="classdef MousePointerHandler < handle">MousePointerHandler</a>	MousePointerHandler  A class to handle mouse-over events</li><li><a href="Panel.html" class="code" title="classdef Panel < uiextras.CardPanel & uiextras.DecoratedPanel">Panel</a>	Panel  Show one element inside a panel</li><li><a href="TabPanel.html" class="code" title="classdef TabPanel < uiextras.CardPanel & uiextras.DecoratedPanel">TabPanel</a>	TabPanel  Show one element inside a tabbed panel</li><li><a href="VBox.html" class="code" title="classdef VBox < uiextras.Box">VBox</a>	VBox  Arrange elements vertically in a single column</li><li><a href="VBoxFlex.html" class="code" title="classdef VBoxFlex < uiextras.VBox">VBoxFlex</a>	VBoxFlex  A dynamically resizable vertical layout</li><li><a href="VButtonBox.html" class="code" title="classdef VButtonBox < uiextras.ButtonBox">VButtonBox</a>	VButtonBox  Arrange buttons vertically in a single column</li><li><a href="makeFlexDivider.html" class="code" title="function uic = makeFlexDivider( parent, position, bgCol, orientation, showMarks )">makeFlexDivider</a>	makeFlexDivider  Create a divider widget and add markings if desired</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function set( hObj, propName, propValue )</a>
+0002 <span class="comment">%uiextras.set  Store a default property value in a parent object</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%   uiextras.set(hObj,propName,propValue) stores a default property value</span>
+0005 <span class="comment">%   in the object hObj such that children created inside it of the correct</span>
+0006 <span class="comment">%   class will use the specified value (propValue) for the specified</span>
+0007 <span class="comment">%   property by default. The property name should take the form</span>
+0008 <span class="comment">%   &quot;DefaultClassProperty&quot;, for example to set the default &quot;TitleColor&quot; for</span>
+0009 <span class="comment">%   the class &quot;uiextras.BoxPanel&quot;, use &quot;DefaultBoxPanelTitleColor&quot;. Note</span>
+0010 <span class="comment">%   that using the special object handle 0 sets the default for all new</span>
+0011 <span class="comment">%   figures.</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">%   Examples:</span>
+0014 <span class="comment">%   &gt;&gt; uiextras.set( gcf(), 'DefaultBoxPanelTitleColor', 'g' )</span>
+0015 <span class="comment">%   &gt;&gt; uiextras.set( 0, 'DefaultHBoxPadding', 5 )</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">%   See also: uiextras.get</span>
+0018 <span class="comment">%             uiextras.unset</span>
+0019 
+0020 <span class="comment">%   Copyright 2010 The MathWorks, Inc.</span>
+0021 <span class="comment">%   $Revision: 1$</span>
+0022 <span class="comment">%   $Date: 2010-05-18$</span>
+0023 
+0024 <span class="comment">% Check inputs</span>
+0025 error( nargchk( 3, 3, nargin, <span class="string">'struct'</span> ) )
+0026 
+0027 <span class="keyword">if</span> isa( hObj, <span class="string">'uiextras.Container'</span> )
+0028     hObj = double( hObj );
+0029 <span class="keyword">end</span>
+0030 <span class="keyword">if</span> ~isequal( hObj, 0 ) &amp;&amp; ~ishghandle( hObj )
+0031     error( <span class="string">'GUILayout:InvalidArgument'</span>, <span class="string">'Object must be a valid Handle Graphics object.'</span> )
+0032 <span class="keyword">end</span>
+0033 <span class="keyword">if</span> ~ischar( propName )
+0034     error( <span class="string">'GUILayout:InvalidArgument'</span>, <span class="string">'Property name must be a string.'</span> )
+0035 <span class="keyword">end</span>
+0036 
+0037 <span class="comment">% Make sure the property requested is a default</span>
+0038 <span class="keyword">if</span> ~strncmp( propName, <span class="string">'Default'</span>, 7 )
+0039     error( <span class="string">'GUILayout:InvalidArgument'</span>, <span class="string">'Property name must begin with ''Default''.'</span> )
+0040 <span class="keyword">end</span>
+0041 
+0042 <span class="comment">% All OK, so set it</span>
+0043 setappdata( hObj, propName, propValue );</pre></div>
+<hr><address>Generated on Thu 20-Feb-2014 10:46:33 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

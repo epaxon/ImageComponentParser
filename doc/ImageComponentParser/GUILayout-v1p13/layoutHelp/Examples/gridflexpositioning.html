@@ -1,0 +1,72 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of gridflexpositioning</title>
+  <meta name="keywords" content="gridflexpositioning">
+  <meta name="description" content="Copyright 2009-2013 The MathWorks Ltd.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">ImageComponentParser</a> &gt; <a href="../../index.html">GUILayout-v1p13</a> &gt; <a href="../index.html">layoutHelp</a> &gt; <a href="index.html">Examples</a> &gt; gridflexpositioning.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for ImageComponentParser\GUILayout-v1p13\layoutHelp\Examples&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>gridflexpositioning
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>Copyright 2009-2013 The MathWorks Ltd.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Copyright 2009-2013 The MathWorks Ltd.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% Copyright 2009-2013 The MathWorks Ltd.</span>
+0002 
+0003 f = figure(); 
+0004 
+0005 <span class="comment">% Box Panel</span>
+0006 p = uiextras.BoxPanel( <span class="string">'Parent'</span>, f, <span class="string">'Title'</span>, <span class="string">'A BoxPanel'</span>, <span class="string">'Padding'</span>, 5 ); 
+0007 
+0008 <span class="comment">% HBox</span>
+0009 b = uiextras.HBox( <span class="string">'Parent'</span>, p, <span class="string">'Spacing'</span>, 5, <span class="string">'Padding'</span>, 5 ); 
+0010 
+0011 <span class="comment">% uicontrol</span>
+0012 uicontrol( <span class="string">'Style'</span>, <span class="string">'listbox'</span>, <span class="string">'Parent'</span>, b, <span class="string">'String'</span>, {<span class="string">'Item 1'</span>,<span class="string">'Item 2'</span>} ); 
+0013 
+0014 <span class="comment">% Grid Flex</span>
+0015 g = uiextras.GridFlex( <span class="string">'Parent'</span>, b, <span class="string">'Spacing'</span>, 5 ); 
+0016 uicontrol( <span class="string">'Parent'</span>, g, <span class="string">'Background'</span>, <span class="string">'r'</span> );
+0017 uicontrol( <span class="string">'Parent'</span>, g, <span class="string">'Background'</span>, <span class="string">'b'</span> );
+0018 uicontrol( <span class="string">'Parent'</span>, g, <span class="string">'Background'</span>, <span class="string">'g'</span> );
+0019 uiextras.Empty( <span class="string">'Parent'</span>, g );
+0020 uicontrol( <span class="string">'Parent'</span>, g, <span class="string">'Background'</span>, <span class="string">'c'</span> );
+0021 uicontrol( <span class="string">'Parent'</span>, g, <span class="string">'Background'</span>, <span class="string">'y'</span> );
+0022 set( g, <span class="string">'ColumnSizes'</span>, [-1 100 -2], <span class="string">'RowSizes'</span>, [-1 -2] ); 
+0023 
+0024 <span class="comment">% set HBox elements sizes</span>
+0025 set( b, <span class="string">'Sizes'</span>, [100 -1] );</pre></div>
+<hr><address>Generated on Thu 20-Feb-2014 10:46:33 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

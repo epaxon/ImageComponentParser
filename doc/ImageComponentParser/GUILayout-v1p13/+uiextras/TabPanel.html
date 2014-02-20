@@ -1,0 +1,550 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of TabPanel</title>
+  <meta name="keywords" content="TabPanel">
+  <meta name="description" content="TabPanel  Show one element inside a tabbed panel">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">ImageComponentParser</a> &gt; <a href="../index.html">GUILayout-v1p13</a> &gt; <a href="index.html">+uiextras</a> &gt; TabPanel.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for ImageComponentParser\GUILayout-v1p13\+uiextras&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>TabPanel
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>TabPanel  Show one element inside a tabbed panel</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>classdef TabPanel < uiextras.CardPanel & uiextras.DecoratedPanel </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">TabPanel  Show one element inside a tabbed panel
+
+   obj = uiextras.TabPanel() creates a panel with tabs along one edge
+   to allow selection between the different child objects contained.
+
+   obj = uiextras.TabPanel(param,value,...) also sets one or more
+   property values.
+
+   See the &lt;a href=&quot;matlab:doc uiextras.TabPanel&quot;&gt;documentation&lt;/a&gt; for more detail and the list of properties.
+
+   Examples:
+   &gt;&gt; f = figure();
+   &gt;&gt; p = uiextras.TabPanel( 'Parent', f, 'Padding', 5 );
+   &gt;&gt; uicontrol( 'Style', 'frame', 'Parent', p, 'Background', 'r' );
+   &gt;&gt; uicontrol( 'Style', 'frame', 'Parent', p, 'Background', 'b' );
+   &gt;&gt; uicontrol( 'Style', 'frame', 'Parent', p, 'Background', 'g' );
+   &gt;&gt; p.TabNames = {'Red', 'Blue', 'Green'};
+   &gt;&gt; p.SelectedChild = 2;
+
+   See also: uiextras.<a href="Panel.html" class="code" title="classdef Panel < uiextras.CardPanel & uiextras.DecoratedPanel">Panel</a>
+             uiextras.<a href="BoxPanel.html" class="code" title="classdef BoxPanel < uiextras.CardPanel & uiextras.DecoratedPanel">BoxPanel</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>	uiextras.get  Retrieve a default property value from a parent object</li><li><a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>	uiextras.set  Store a default property value in a parent object</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function obj = TabPanel(varargin)</a></li><li><a href="#_sub2" class="code">function set.TabSize(obj,value)</a></li><li><a href="#_sub3" class="code">function set.TabPosition(obj,value)</a></li><li><a href="#_sub4" class="code">function value = get.TabNames( obj )</a></li><li><a href="#_sub5" class="code">function set.TabNames(obj,value)</a></li><li><a href="#_sub6" class="code">function value = get.TabEnable(obj)</a></li><li><a href="#_sub7" class="code">function set.TabEnable(obj,value)</a></li><li><a href="#_sub8" class="code">function redraw(obj)</a></li><li><a href="#_sub9" class="code">function onChildAdded( obj, source, eventData )</a></li><li><a href="#_sub10" class="code">function onChildRemoved( obj, source, eventData )</a></li><li><a href="#_sub11" class="code">function onBackgroundColorChanged( obj, source, eventData )</a></li><li><a href="#_sub12" class="code">function onPanelColorChanged( obj, source, eventData )</a></li><li><a href="#_sub13" class="code">function onPanelFontChanged( obj, source, eventData )</a></li><li><a href="#_sub14" class="code">function onEnable( obj, source, eventData )</a></li><li><a href="#_sub15" class="code">function reloadImages( obj )</a></li><li><a href="#_sub16" class="code">function im = iLoadIcon(imagefilename, backgroundcolor, highlightcolor, shadowcolor )</a></li><li><a href="#_sub17" class="code">function iTabClicked( src, evt, obj, idx )</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 classdef <a href="#_sub1" class="code" title="subfunction obj = TabPanel(varargin)">TabPanel</a> &lt; uiextras.CardPanel &amp; uiextras.DecoratedPanel
+0002     <span class="comment">%TabPanel  Show one element inside a tabbed panel</span>
+0003     <span class="comment">%</span>
+0004     <span class="comment">%   obj = uiextras.TabPanel() creates a panel with tabs along one edge</span>
+0005     <span class="comment">%   to allow selection between the different child objects contained.</span>
+0006     <span class="comment">%</span>
+0007     <span class="comment">%   obj = uiextras.TabPanel(param,value,...) also sets one or more</span>
+0008     <span class="comment">%   property values.</span>
+0009     <span class="comment">%</span>
+0010     <span class="comment">%   See the &lt;a href=&quot;matlab:doc uiextras.TabPanel&quot;&gt;documentation&lt;/a&gt; for more detail and the list of properties.</span>
+0011     <span class="comment">%</span>
+0012     <span class="comment">%   Examples:</span>
+0013     <span class="comment">%   &gt;&gt; f = figure();</span>
+0014     <span class="comment">%   &gt;&gt; p = uiextras.TabPanel( 'Parent', f, 'Padding', 5 );</span>
+0015     <span class="comment">%   &gt;&gt; uicontrol( 'Style', 'frame', 'Parent', p, 'Background', 'r' );</span>
+0016     <span class="comment">%   &gt;&gt; uicontrol( 'Style', 'frame', 'Parent', p, 'Background', 'b' );</span>
+0017     <span class="comment">%   &gt;&gt; uicontrol( 'Style', 'frame', 'Parent', p, 'Background', 'g' );</span>
+0018     <span class="comment">%   &gt;&gt; p.TabNames = {'Red', 'Blue', 'Green'};</span>
+0019     <span class="comment">%   &gt;&gt; p.SelectedChild = 2;</span>
+0020     <span class="comment">%</span>
+0021     <span class="comment">%   See also: uiextras.Panel</span>
+0022     <span class="comment">%             uiextras.BoxPanel</span>
+0023     
+0024     <span class="comment">%   Copyright 2009-2010 The MathWorks, Inc.</span>
+0025     <span class="comment">%   $Revision: 373 $</span>
+0026     <span class="comment">%   $Date: 2011-07-14 13:24:10 +0100 (Thu, 14 Jul 2011) $</span>
+0027     
+0028     properties
+0029         TabSize = 50
+0030         TabPosition = <span class="string">'top'</span> <span class="comment">% which side of the contents to put the tabs [top|bottom]</span>
+0031     <span class="keyword">end</span> <span class="comment">% public properties</span>
+0032     
+0033     properties( Dependent = true )
+0034         TabNames          <span class="comment">% The title string for each tab</span>
+0035         TabEnable = {}    <span class="comment">% The enable state of individual tabs</span>
+0036     <span class="keyword">end</span> <span class="comment">% dependent properties</span>
+0037     
+0038     properties( SetAccess = private, GetAccess = private, Hidden = true )
+0039         Images_ = struct()
+0040         TabImage_ = []
+0041         PageLabels = []
+0042         PageEnable_ = {}
+0043     <span class="keyword">end</span> <span class="comment">% private properties</span>
+0044     
+0045     
+0046     methods
+0047         
+0048         <a name="_sub0" href="#_subfunctions" class="code">function obj = TabPanel(varargin)</a>
+0049             <span class="comment">% First step is to create the parent class. We pass the</span>
+0050             <span class="comment">% arguments (if any) just incase the parent needs setting</span>
+0051             obj = obj@uiextras.CardPanel( varargin{:} );
+0052             obj = obj@uiextras.DecoratedPanel( varargin{:} );
+0053             
+0054             <span class="comment">% Get some defaults</span>
+0055             bgcol = obj.BackgroundColor;
+0056             obj.HighlightColor = ( 2*[1 1 1] + bgcol )/3;
+0057             obj.ShadowColor    = 0.5*bgcol;
+0058 
+0059             <span class="comment">% Add a UIControl for drawing the tabs</span>
+0060             obj.TabImage_ = uicontrol( <span class="keyword">...</span>
+0061                 <span class="string">'Visible'</span>, <span class="string">'on'</span>, <span class="keyword">...</span>
+0062                 <span class="string">'units'</span>, <span class="string">'pixels'</span>, <span class="keyword">...</span>
+0063                 <span class="string">'Parent'</span>, obj.UIContainer, <span class="keyword">...</span>
+0064                 <span class="string">'HandleVisibility'</span>, <span class="string">'off'</span>, <span class="keyword">...</span>
+0065                 <span class="string">'Position'</span>, [1 1 1 1], <span class="keyword">...</span>
+0066                 <span class="string">'style'</span>, <span class="string">'checkbox'</span>, <span class="keyword">...</span>
+0067                 <span class="string">'Tag'</span>, <span class="string">'uiextras.TabPanel:TabImage'</span>);
+0068             
+0069             <span class="comment">% Make sure the images are loaded</span>
+0070             obj.reloadImages();
+0071             
+0072             <span class="comment">% Set some defaults</span>
+0073             obj.setPropertyFromDefault( <span class="string">'HighlightColor'</span> );
+0074             obj.setPropertyFromDefault( <span class="string">'ShadowColor'</span> );            
+0075             obj.setPropertyFromDefault( <span class="string">'TabPosition'</span> );
+0076             obj.setPropertyFromDefault( <span class="string">'TabSize'</span> );
+0077 
+0078             <span class="comment">% Parse any input arguments</span>
+0079             <span class="keyword">if</span> nargin&gt;0
+0080                 <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( obj, varargin{:} );
+0081             <span class="keyword">end</span>
+0082             obj.redraw();
+0083         <span class="keyword">end</span> <span class="comment">% TabPanel</span>
+0084         
+0085     <span class="keyword">end</span> <span class="comment">% public methods</span>
+0086     
+0087     methods
+0088         
+0089         <a name="_sub1" href="#_subfunctions" class="code">function set.TabSize(obj,value)</a>
+0090             obj.TabSize = value;
+0091             obj.redraw();
+0092         <span class="keyword">end</span> <span class="comment">% set.TabSize</span>
+0093         
+0094         <a name="_sub2" href="#_subfunctions" class="code">function set.TabPosition(obj,value)</a>
+0095             <span class="keyword">if</span> ~ischar( value ) || ~ismember( lower( value ), {<span class="string">'top'</span>,<span class="string">'bottom'</span>} )
+0096                 error( <span class="string">'GUILayout:InvalidPropertyValue'</span>, <span class="keyword">...</span>
+0097                     <span class="string">'Property ''TabPosition'' must be ''top'' or ''bottom''.'</span> );
+0098             <span class="keyword">end</span>
+0099             obj.TabPosition = [upper( value(1) ),lower( value(2:end) )];
+0100             obj.redraw();
+0101         <span class="keyword">end</span> <span class="comment">% set.TabPosition</span>
+0102         
+0103         <a name="_sub3" href="#_subfunctions" class="code">function value = get.TabNames( obj )</a>
+0104             <span class="keyword">if</span> isempty( obj.PageLabels )
+0105                 value = {};
+0106             <span class="keyword">elseif</span> numel( obj.PageLabels ) == 1
+0107                 value = {<a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>( obj.PageLabels, <span class="string">'String'</span> )};
+0108             <span class="keyword">else</span>
+0109                 value = <a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>( obj.PageLabels, <span class="string">'String'</span> )';
+0110             <span class="keyword">end</span>
+0111         <span class="keyword">end</span> <span class="comment">% get.TabNames</span>
+0112         
+0113         <a name="_sub4" href="#_subfunctions" class="code">function set.TabNames(obj,value)</a>
+0114             <span class="keyword">if</span> ~iscell( value ) || numel( value )~=numel( obj.Children )
+0115                 error( <span class="string">'GUILayout:InvalidPropertyValue'</span>, <span class="keyword">...</span>
+0116                     <span class="string">'Property ''TabNames'' must be a cell array of strings the same size as property ''Children''.'</span> )
+0117             <span class="keyword">end</span>
+0118             <span class="keyword">for</span> ii=1:numel( obj.Children )
+0119                 <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( obj.PageLabels(ii), <span class="string">'String'</span>, value{ii} );
+0120             <span class="keyword">end</span>
+0121         <span class="keyword">end</span> <span class="comment">% set.TabNames</span>
+0122 
+0123         <a name="_sub5" href="#_subfunctions" class="code">function value = get.TabEnable(obj)</a>
+0124             value = obj.PageEnable_;
+0125         <span class="keyword">end</span> <span class="comment">% get.TabEnable</span>
+0126 
+0127         <a name="_sub6" href="#_subfunctions" class="code">function set.TabEnable(obj,value)</a>
+0128             <span class="keyword">if</span> ~iscell( value ) || numel( value )~=numel( obj.Children ) <span class="keyword">...</span>
+0129                     || any( ~ismember( lower(value), {<span class="string">'on'</span>,<span class="string">'off'</span>} ) )
+0130                 error( <span class="string">'GUILayout:InvalidPropertyValue'</span>, <span class="keyword">...</span>
+0131                     <span class="string">'Property ''TabEnable'' must be a cell array of ''on''/''off'' the same size as property ''Children''.'</span> )
+0132             <span class="keyword">end</span>
+0133             obj.PageEnable_ = lower( value );
+0134             <span class="keyword">if</span> strcmpi( obj.Enable, <span class="string">'on'</span> )
+0135                 obj.onEnable();
+0136             <span class="keyword">end</span>
+0137         <span class="keyword">end</span> <span class="comment">% set.TabEnable</span>
+0138         
+0139     <span class="keyword">end</span> <span class="comment">% accessor methods</span>
+0140     
+0141     methods ( Access = protected )
+0142         
+0143         <a name="_sub7" href="#_subfunctions" class="code">function redraw(obj)</a>
+0144             <span class="comment">%redraw  Redraw the tabs and contents</span>
+0145             
+0146             <span class="comment">% Check the object exists (may be being deleted!)</span>
+0147             <span class="keyword">if</span> isempty(obj.TabImage_) || ~ishandle(obj.TabImage_)
+0148                 <span class="keyword">return</span>;
+0149             <span class="keyword">end</span>
+0150             
+0151             C = obj.Children;
+0152             T = obj.TabNames;
+0153             
+0154             <span class="comment">% Make sure label array is right size</span>
+0155             nC = numel(C);
+0156             nT = numel(T);
+0157             
+0158             <span class="keyword">if</span> nC==0 || nT~=nC
+0159                 <span class="keyword">return</span>
+0160             <span class="keyword">end</span>
+0161             pos = getpixelposition( obj.UIContainer );
+0162             
+0163             pad = obj.Padding;
+0164             
+0165             <span class="comment">% Calculate the required height from the font size</span>
+0166             oldFontUnits = <a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>( obj.PageLabels(1), <span class="string">'FontUnits'</span> );
+0167             <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( obj.PageLabels(1), <span class="string">'FontUnits'</span>, <span class="string">'Pixels'</span> );
+0168             fontHeightPix = <a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>( obj.PageLabels(1), <span class="string">'FontSize'</span> );
+0169             <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( obj.PageLabels(1), <span class="string">'FontUnits'</span>, oldFontUnits );
+0170             tabHeight = ceil( 1.5*fontHeightPix + 4 );
+0171             
+0172             <span class="comment">% Work out where the tabs labels and contents go</span>
+0173             <span class="keyword">if</span> strcmpi( obj.TabPosition, <span class="string">'Top'</span> )
+0174                 tabPos = [1 1+pos(4)-tabHeight, pos(3), tabHeight+2];
+0175                 contentPos = [pad+1 pad+1 pos(3)-2*pad pos(4)-2*pad-tabHeight];
+0176             <span class="keyword">else</span>
+0177                 tabPos = [1 1, pos(3), tabHeight+2];
+0178                 contentPos = [pad+1 tabHeight+pad+1 pos(3)-2*pad pos(4)-2*pad-tabHeight];
+0179             <span class="keyword">end</span>
+0180             
+0181             <span class="comment">% Shorthand for colouring things in</span>
+0182             fgCol = obj.BackgroundColor;
+0183             bgCol = obj.BackgroundColor;
+0184             shCol = 0.9*obj.BackgroundColor;
+0185             
+0186             totalWidth = round( tabPos(3)-1 );
+0187             divWidth = 8;
+0188             textWidth = obj.TabSize;
+0189             <span class="keyword">if</span> textWidth&lt;0
+0190                 <span class="comment">% This means we should fill the space</span>
+0191                 textWidth = floor( (totalWidth - (nC+1)*divWidth) / nC );
+0192             <span class="keyword">end</span>
+0193             textPos = [tabPos(1:2), textWidth, tabHeight - 4];
+0194             
+0195             <span class="keyword">if</span> ~isempty( obj.SelectedChild )
+0196                 <span class="comment">% The tabs are drawn as a single image</span>
+0197                 tabCData(:,:,1) = bgCol(1)*ones(20,totalWidth);
+0198                 tabCData(:,:,2) = bgCol(2)*ones(20,totalWidth);
+0199                 tabCData(:,:,3) = bgCol(3)*ones(20,totalWidth);
+0200                 <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( obj.TabImage_, <span class="string">'Position'</span>, [tabPos(1:2),totalWidth,tabHeight] );
+0201                 
+0202                 <span class="comment">% Use the CardLayout function to put the right child onscreen</span>
+0203                 obj.showSelectedChild( contentPos )
+0204                 
+0205                 <span class="comment">% Now update the tab image</span>
+0206                 tabCData(:,1:divWidth,:) = obj.Images_.NonNot;
+0207                 <span class="keyword">for</span> ii=1:nC
+0208                     x = divWidth+(divWidth+textWidth)*(ii-1)+1;
+0209                     <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( obj.PageLabels(ii), <span class="keyword">...</span>
+0210                         <span class="string">'Position'</span>, textPos+[x,0,0,0] );
+0211                     <span class="comment">% BJT: Fix bug where text renders off edge of container</span>
+0212                     <span class="keyword">if</span> (textPos(1)+x &gt;= totalWidth )
+0213                         <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( obj.PageLabels(ii), <span class="string">'Visible'</span>, <span class="string">'off'</span> );
+0214                     <span class="keyword">else</span>
+0215                         <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( obj.PageLabels(ii), <span class="string">'Visible'</span>, <span class="string">'on'</span> );
+0216                         rhs = textPos(1)+x+textPos(3);
+0217                         <span class="keyword">if</span> ( rhs &gt; totalWidth )
+0218                             <span class="comment">% Text is partially off the edge</span>
+0219                             <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( obj.PageLabels(ii), <span class="string">'Position'</span>, textPos+[x,0,totalWidth-rhs,0] );
+0220                         <span class="keyword">end</span>
+0221                     <span class="keyword">end</span>
+0222                     
+0223                     <span class="keyword">if</span> ii==obj.SelectedChild,
+0224                         <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( obj.PageLabels(ii), <span class="keyword">...</span>
+0225                             <span class="string">'ForegroundColor'</span>, obj.ForegroundColor, <span class="keyword">...</span>
+0226                             <span class="string">'BackgroundColor'</span>, fgCol);
+0227                         <span class="comment">% Set the dividers to show the right image</span>
+0228                         tabCData(:,x:x+textWidth-1,:) = repmat(obj.Images_.SelBack,1,textWidth);
+0229                         <span class="keyword">if</span> ii==1
+0230                             tabCData(:,x-divWidth:x-1,:) = obj.Images_.NonSel;
+0231                         <span class="keyword">else</span>
+0232                             tabCData(:,x-divWidth:x-1,:) = obj.Images_.NotSel;
+0233                         <span class="keyword">end</span>
+0234                         <span class="keyword">if</span> ii==nC
+0235                             tabCData(:,x+textWidth:x+textWidth+divWidth-1,:) = obj.Images_.SelNon;
+0236                         <span class="keyword">else</span>
+0237                             tabCData(:,x+textWidth:x+textWidth+divWidth-1,:) = obj.Images_.SelNot;
+0238                         <span class="keyword">end</span>
+0239                     <span class="keyword">else</span>
+0240                         <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( obj.PageLabels(ii), <span class="keyword">...</span>
+0241                             <span class="string">'ForegroundColor'</span>, 0.6*obj.ForegroundColor + 0.4*shCol, <span class="keyword">...</span>
+0242                             <span class="string">'BackgroundColor'</span>, shCol );
+0243                         tabCData(:,x:x+textWidth-1,:) = repmat(obj.Images_.NotBack,1,textWidth);
+0244                         <span class="keyword">if</span> ii==nC
+0245                             tabCData(:,x+textWidth:x+textWidth+divWidth-1,:) = obj.Images_.NotNon;
+0246                         <span class="keyword">else</span>
+0247                             tabCData(:,x+textWidth:x+textWidth+divWidth-1,:) = obj.Images_.NotNot;
+0248                         <span class="keyword">end</span>
+0249                     <span class="keyword">end</span>
+0250                 <span class="keyword">end</span> <span class="comment">% For</span>
+0251                 
+0252                 <span class="comment">% Stretch the CData to match the fontsize</span>
+0253                 <span class="keyword">if</span> tabHeight ~= 20
+0254                     topbot = min( round( tabHeight/2 ), 5 );
+0255                     midsz = tabHeight - 2*topbot;
+0256                     topData = tabCData(1:topbot,:,:);
+0257                     bottomData = tabCData(end-topbot+1:<span class="keyword">end</span>,:,:);
+0258                     midData = repmat( tabCData(10,:,:), [midsz,1,1] );
+0259                     tabCData = [ topData ; midData ; bottomData ];
+0260                 <span class="keyword">end</span>
+0261                 
+0262                 <span class="keyword">if</span> strcmpi( obj.TabPosition, <span class="string">'Top'</span> )
+0263                     <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( obj.TabImage_, <span class="string">'CData'</span>, tabCData );
+0264                 <span class="keyword">else</span>
+0265                     <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( obj.TabImage_, <span class="string">'CData'</span>, flipdim( tabCData, 1 ) );
+0266                 <span class="keyword">end</span>
+0267             <span class="keyword">end</span>
+0268             
+0269             
+0270             <span class="comment">% Make sure the text labels are top of the stack</span>
+0271             <span class="comment">%             ch = get( obj.TabContainer_, 'Children' );</span>
+0272             <span class="comment">%             if numel( ch ) &gt; 1</span>
+0273             <span class="comment">%                 labs = ismember( get(ch,'Style'), 'text' );</span>
+0274             <span class="comment">%             else</span>
+0275             <span class="comment">%                 labs = strcmpi( get(ch,'Style'), 'text' );</span>
+0276             <span class="comment">%             end</span>
+0277             <span class="comment">%             set( obj.TabContainer_, 'Children', [flipud(ch(labs));ch(~labs)] ); % Note the flip is needed so that the text always redraws</span>
+0278         <span class="keyword">end</span> <span class="comment">% redraw</span>
+0279         
+0280         <a name="_sub8" href="#_subfunctions" class="code">function onChildAdded( obj, source, eventData ) </a><span class="comment">%#ok&lt;INUSD&gt;</span>
+0281             <span class="comment">%onChildAdded: Callback that fires when a child is added to a container.</span>
+0282             <span class="comment">% Select the new addition</span>
+0283             C = obj.Children;
+0284             N = numel( C );
+0285             visible = obj.Visible;
+0286             title = sprintf( <span class="string">'Page %d'</span>, N );
+0287             
+0288             obj.PageLabels(end+1,1) = uicontrol( <span class="keyword">...</span>
+0289                 <span class="string">'Visible'</span>, visible, <span class="keyword">...</span>
+0290                 <span class="string">'style'</span>, <span class="string">'text'</span>, <span class="keyword">...</span>
+0291                 <span class="string">'enable'</span>, <span class="string">'inactive'</span>, <span class="keyword">...</span>
+0292                 <span class="string">'string'</span>, title, <span class="keyword">...</span>
+0293                 <span class="string">'FontName'</span>, obj.FontName, <span class="keyword">...</span>
+0294                 <span class="string">'FontUnits'</span>, obj.FontUnits, <span class="keyword">...</span>
+0295                 <span class="string">'FontSize'</span>, obj.FontSize, <span class="keyword">...</span>
+0296                 <span class="string">'FontAngle'</span>, obj.FontAngle, <span class="keyword">...</span>
+0297                 <span class="string">'FontWeight'</span>, obj.FontWeight, <span class="keyword">...</span>
+0298                 <span class="string">'ForegroundColor'</span>, obj.ForegroundColor, <span class="keyword">...</span>
+0299                 <span class="string">'parent'</span>, obj.UIContainer, <span class="keyword">...</span>
+0300                 <span class="string">'HandleVisibility'</span>, <span class="string">'off'</span>, <span class="keyword">...</span>
+0301                 <span class="string">'ButtonDownFcn'</span>, {@<a href="#_sub17" class="code" title="subfunction iTabClicked( src, evt, obj, idx ) ">iTabClicked</a>, obj, N});
+0302             obj.PageEnable_{1,end+1} = <span class="string">'on'</span>;
+0303             <span class="keyword">if</span> strcmpi( obj.Enable, <span class="string">'off'</span> )
+0304                 <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( obj.PageLabels(end), <span class="string">'Enable'</span>, <span class="string">'off'</span> );
+0305             <span class="keyword">end</span>
+0306             obj.SelectedChild = N;
+0307         <span class="keyword">end</span> <span class="comment">% onChildAdded</span>
+0308         
+0309         <a name="_sub9" href="#_subfunctions" class="code">function onChildRemoved( obj, source, eventData ) </a><span class="comment">%#ok&lt;INUSL&gt;</span>
+0310             <span class="comment">%onChildAdded: Callback that fires when a container child is destroyed or reparented.</span>
+0311             <span class="comment">% If the missing child is the selected one, select something else</span>
+0312             obj.TabNames( eventData.ChildIndex ) = [];
+0313             obj.PageEnable_( eventData.ChildIndex ) = [];
+0314             delete( obj.PageLabels(end) );
+0315             obj.PageLabels(end) = [];
+0316             <span class="keyword">if</span> obj.SelectedChild &gt;= eventData.ChildIndex
+0317                 <span class="comment">% Changing the selection will force a redraw</span>
+0318                 <span class="keyword">if</span> isempty( obj.Children )
+0319                     obj.SelectedChild = [];
+0320                 <span class="keyword">else</span>
+0321                     obj.SelectedChild = max( 1, obj.SelectedChild - 1 );
+0322                 <span class="keyword">end</span>
+0323             <span class="keyword">else</span>
+0324                 <span class="comment">% We don't need to change the selection, so explicitly</span>
+0325                 <span class="comment">% redraw</span>
+0326                 obj.redraw();
+0327             <span class="keyword">end</span>
+0328         <span class="keyword">end</span> <span class="comment">% onChildRemoved</span>
+0329         
+0330         <a name="_sub10" href="#_subfunctions" class="code">function onBackgroundColorChanged( obj, source, eventData ) </a><span class="comment">%#ok&lt;INUSD&gt;</span>
+0331             <span class="comment">%onBackgroundColorChanged  Callback that fires when the container background color is changed</span>
+0332             <span class="comment">%</span>
+0333             <span class="comment">% We need to make the panel match the container background</span>
+0334             obj.reloadImages();
+0335             obj.redraw();
+0336         <span class="keyword">end</span> <span class="comment">% onBackgroundColorChanged</span>
+0337         
+0338         <a name="_sub11" href="#_subfunctions" class="code">function onPanelColorChanged( obj, source, eventData ) </a><span class="comment">%#ok&lt;INUSD&gt;</span>
+0339             <span class="comment">% Colors have changed. This requires the images to be reset and</span>
+0340             <span class="comment">% redrawn.</span>
+0341             obj.reloadImages();
+0342             obj.redraw();
+0343         <span class="keyword">end</span> <span class="comment">% onPanelColorChanged</span>
+0344         
+0345         <a name="_sub12" href="#_subfunctions" class="code">function onPanelFontChanged( obj, source, eventData ) </a><span class="comment">%#ok&lt;INUSL&gt;</span>
+0346             <span class="comment">% Font has changed. Since the font size and shape affects the</span>
+0347             <span class="comment">% space available for the contents, we need to redraw.</span>
+0348             <span class="keyword">for</span> ii=1:numel( obj.PageLabels )
+0349                 <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( obj.PageLabels(ii), eventData.Property, eventData.Value );
+0350             <span class="keyword">end</span>
+0351             obj.redraw();
+0352         <span class="keyword">end</span> <span class="comment">% onPanelFontChanged</span>
+0353         
+0354         <a name="_sub13" href="#_subfunctions" class="code">function onEnable( obj, source, eventData ) </a><span class="comment">%#ok&lt;INUSD&gt;</span>
+0355             <span class="comment">% We use &quot;inactive&quot; to be the &quot;on&quot; state</span>
+0356             <span class="keyword">if</span> strcmpi( obj.Enable, <span class="string">'on'</span> )
+0357                 <span class="comment">% Take notice of the individual enable states. Where the</span>
+0358                 <span class="comment">% page is to be enabled we set the title uicontrol to be</span>
+0359                 <span class="comment">% inactive rather than on to avoid mouse-over problems.</span>
+0360                 hittest = obj.PageEnable_;
+0361                 enable = strrep( obj.PageEnable_, <span class="string">'on'</span>, <span class="string">'inactive'</span> );
+0362                 <span class="keyword">for</span> jj=1:numel( obj.PageLabels )
+0363                     <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( obj.PageLabels(jj), <span class="keyword">...</span>
+0364                         <span class="string">'Enable'</span>, enable{jj}, <span class="keyword">...</span>
+0365                         <span class="string">'HitTest'</span>, hittest{jj} ); 
+0366                     <span class="comment">% Since the panel as a whole is on, we may need to</span>
+0367                     <span class="comment">% switch off some children</span>
+0368                     obj.helpSetChildEnable( obj.Children(jj), hittest{jj} );
+0369                 <span class="keyword">end</span>
+0370             <span class="keyword">else</span>
+0371                 <span class="keyword">for</span> jj=1:numel( obj.PageLabels )
+0372                     <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( obj.PageLabels(jj), <span class="string">'Enable'</span>, <span class="string">'off'</span>, <span class="string">'HitTest'</span>, <span class="string">'off'</span> );
+0373                 <span class="keyword">end</span>
+0374             <span class="keyword">end</span>
+0375         <span class="keyword">end</span> <span class="comment">% onEnable</span>
+0376         
+0377         <a name="_sub14" href="#_subfunctions" class="code">function reloadImages( obj )</a>
+0378             <span class="comment">% Reload tab images</span>
+0379             
+0380             <span class="comment">% If any of the colours are not yet constructed, stop now</span>
+0381             <span class="keyword">if</span> isempty( obj.TabImage_ ) <span class="keyword">...</span>
+0382                     || isempty( obj.HighlightColor ) <span class="keyword">...</span>
+0383                     || isempty( obj.ShadowColor )
+0384                 <span class="keyword">return</span>;
+0385             <span class="keyword">end</span>
+0386             
+0387             <span class="comment">% First part of the name says which type of right-hand edge is needed</span>
+0388             <span class="comment">% (non = no edge, not = not selected, sel = selected), second gives</span>
+0389             <span class="comment">% left-hand</span>
+0390             obj.Images_.NonSel = <a href="#_sub16" class="code" title="subfunction im = iLoadIcon(imagefilename, backgroundcolor, highlightcolor, shadowcolor )">iLoadIcon</a>( <span class="string">'tab_NoEdge_Selected.png'</span>, <span class="keyword">...</span>
+0391                 obj.BackgroundColor, obj.HighlightColor, obj.ShadowColor );
+0392             obj.Images_.SelNon = <a href="#_sub16" class="code" title="subfunction im = iLoadIcon(imagefilename, backgroundcolor, highlightcolor, shadowcolor )">iLoadIcon</a>( <span class="string">'tab_Selected_NoEdge.png'</span>, <span class="keyword">...</span>
+0393                 obj.BackgroundColor, obj.HighlightColor, obj.ShadowColor );
+0394             obj.Images_.NonNot = <a href="#_sub16" class="code" title="subfunction im = iLoadIcon(imagefilename, backgroundcolor, highlightcolor, shadowcolor )">iLoadIcon</a>( <span class="string">'tab_NoEdge_NotSelected.png'</span>, <span class="keyword">...</span>
+0395                 obj.BackgroundColor, obj.HighlightColor, obj.ShadowColor );
+0396             obj.Images_.NotNon = <a href="#_sub16" class="code" title="subfunction im = iLoadIcon(imagefilename, backgroundcolor, highlightcolor, shadowcolor )">iLoadIcon</a>( <span class="string">'tab_NotSelected_NoEdge.png'</span>, <span class="keyword">...</span>
+0397                 obj.BackgroundColor, obj.HighlightColor, obj.ShadowColor );
+0398             obj.Images_.NotSel = <a href="#_sub16" class="code" title="subfunction im = iLoadIcon(imagefilename, backgroundcolor, highlightcolor, shadowcolor )">iLoadIcon</a>( <span class="string">'tab_NotSelected_Selected.png'</span>, <span class="keyword">...</span>
+0399                 obj.BackgroundColor, obj.HighlightColor, obj.ShadowColor );
+0400             obj.Images_.SelNot = <a href="#_sub16" class="code" title="subfunction im = iLoadIcon(imagefilename, backgroundcolor, highlightcolor, shadowcolor )">iLoadIcon</a>( <span class="string">'tab_Selected_NotSelected.png'</span>, <span class="keyword">...</span>
+0401                 obj.BackgroundColor, obj.HighlightColor, obj.ShadowColor );
+0402             obj.Images_.NotNot = <a href="#_sub16" class="code" title="subfunction im = iLoadIcon(imagefilename, backgroundcolor, highlightcolor, shadowcolor )">iLoadIcon</a>( <span class="string">'tab_NotSelected_NotSelected.png'</span>, <span class="keyword">...</span>
+0403                 obj.BackgroundColor, obj.HighlightColor, obj.ShadowColor );
+0404             obj.Images_.SelBack = <a href="#_sub16" class="code" title="subfunction im = iLoadIcon(imagefilename, backgroundcolor, highlightcolor, shadowcolor )">iLoadIcon</a>( <span class="string">'tab_Background_Selected.png'</span>, <span class="keyword">...</span>
+0405                 obj.BackgroundColor, obj.HighlightColor, obj.ShadowColor );
+0406             obj.Images_.NotBack = <a href="#_sub16" class="code" title="subfunction im = iLoadIcon(imagefilename, backgroundcolor, highlightcolor, shadowcolor )">iLoadIcon</a>( <span class="string">'tab_Background_NotSelected.png'</span>, <span class="keyword">...</span>
+0407                 obj.BackgroundColor, obj.HighlightColor, obj.ShadowColor );
+0408             
+0409         <span class="keyword">end</span> <span class="comment">% reloadImages</span>
+0410         
+0411     <span class="keyword">end</span> <span class="comment">% protected methods</span>
+0412     
+0413 <span class="keyword">end</span> <span class="comment">% classdef</span>
+0414 
+0415 <span class="comment">%-------------------------------------------------------------------------%</span>
+0416 
+0417 <a name="_sub15" href="#_subfunctions" class="code">function im = iLoadIcon(imagefilename, backgroundcolor, highlightcolor, shadowcolor )</a>
+0418 <span class="comment">% Special image loader that turns various primary colours into background</span>
+0419 <span class="comment">% colours.</span>
+0420 
+0421 error( nargchk( 4, 4, nargin, <span class="string">'struct'</span> ) );
+0422 
+0423 <span class="comment">% Load an icon and set the transparent color</span>
+0424 this_dir = fileparts( mfilename( <span class="string">'fullpath'</span> ) );
+0425 icon_dir = fullfile( this_dir, <span class="string">'Resources'</span> );
+0426 im8 = imread( fullfile( icon_dir, imagefilename ) );
+0427 im = double(im8)/255;
+0428 rows = size(im,1);
+0429 cols = size(im,2);
+0430 
+0431 <span class="comment">% Anything that's pure green goes to transparent</span>
+0432 f=find((im8(:,:,1)==0) &amp; (im8(:,:,2)==255) &amp; (im8(:,:,3)==0));
+0433 im(f) = nan;
+0434 im(f + rows*cols) = nan;
+0435 im(f + 2*rows*cols) = nan;
+0436 
+0437 <span class="comment">% Anything pure red goes to selected background</span>
+0438 f=find((im8(:,:,1)==255) &amp; (im8(:,:,2)==0) &amp; (im8(:,:,3)==0));
+0439 im(f) = backgroundcolor(1);
+0440 im(f + rows*cols) = backgroundcolor(2);
+0441 im(f + 2*rows*cols) = backgroundcolor(3);
+0442 
+0443 <span class="comment">% Anything pure blue goes to background background</span>
+0444 f=find((im8(:,:,1)==0) &amp; (im8(:,:,2)==0) &amp; (im8(:,:,3)==255));
+0445 im(f) = backgroundcolor(1);
+0446 im(f + rows*cols) = backgroundcolor(2);
+0447 im(f + 2*rows*cols) = backgroundcolor(3);
+0448 
+0449 <span class="comment">% Anything pure yellow goes to deselected background</span>
+0450 f=find((im8(:,:,1)==255) &amp; (im8(:,:,2)==255) &amp; (im8(:,:,3)==0));
+0451 im(f) = 0.9*backgroundcolor(1);
+0452 im(f + rows*cols) = 0.9*backgroundcolor(2);
+0453 im(f + 2*rows*cols) = 0.9*backgroundcolor(3);
+0454 
+0455 <span class="comment">% Anything pure white goes to highlight</span>
+0456 f=find((im8(:,:,1)==255) &amp; (im8(:,:,2)==255) &amp; (im8(:,:,3)==255));
+0457 im(f) = highlightcolor(1);
+0458 im(f + rows*cols) = highlightcolor(2);
+0459 im(f + 2*rows*cols) = highlightcolor(3);
+0460 
+0461 <span class="comment">% Anything pure black goes to shadow</span>
+0462 f=find((im8(:,:,1)==0) &amp; (im8(:,:,2)==0) &amp; (im8(:,:,3)==0));
+0463 im(f) = shadowcolor(1);
+0464 im(f + rows*cols) = shadowcolor(2);
+0465 im(f + 2*rows*cols) = shadowcolor(3);
+0466 
+0467 <span class="keyword">end</span> <span class="comment">% iLoadIcon</span>
+0468 
+0469 <span class="comment">%-------------------------------------------------------------------------%</span>
+0470 
+0471 <a name="_sub16" href="#_subfunctions" class="code">function iTabClicked( src, evt, obj, idx ) </a><span class="comment">%#ok&lt;INUSL&gt;</span>
+0472 
+0473 <span class="comment">% Call the user callback before selecting the tab</span>
+0474 evt = struct( <span class="keyword">...</span>
+0475     <span class="string">'Source'</span>, obj, <span class="keyword">...</span>
+0476     <span class="string">'PreviousChild'</span>, obj.SelectedChild, <span class="keyword">...</span>
+0477     <span class="string">'SelectedChild'</span>, idx );
+0478 uiextras.callCallback( obj.Callback, obj, evt );
+0479 obj.SelectedChild = idx;
+0480 
+0481 <span class="keyword">end</span> <span class="comment">% iTabClicked</span></pre></div>
+<hr><address>Generated on Thu 20-Feb-2014 10:46:33 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

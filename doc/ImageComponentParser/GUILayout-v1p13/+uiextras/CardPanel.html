@@ -1,0 +1,270 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of CardPanel</title>
+  <meta name="keywords" content="CardPanel">
+  <meta name="description" content="CardPanel  Show one element (card) from a list">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">ImageComponentParser</a> &gt; <a href="../index.html">GUILayout-v1p13</a> &gt; <a href="index.html">+uiextras</a> &gt; CardPanel.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for ImageComponentParser\GUILayout-v1p13\+uiextras&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>CardPanel
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>CardPanel  Show one element (card) from a list</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>classdef CardPanel < uiextras.Container </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">CardPanel  Show one element (card) from a list
+
+   obj = uiextras.CardPanel() creates a new card panel which allows
+   selection between the different child objects contained, making the
+   selected child fill the space available and all other children
+   invisible. This is commonly used for creating wizards or quick
+   switching between different views of a single data-set.
+
+   obj = uiextras.CardPanel(param,value,...) also sets one or more
+   property values.
+
+   See the &lt;a href=&quot;matlab:doc uiextras.CardPanel&quot;&gt;documentation&lt;/a&gt; for more detail and the list of properties.
+
+   Examples:
+   &gt;&gt; f = figure();
+   &gt;&gt; p = uiextras.CardPanel( 'Parent', f, 'Padding', 5 );
+   &gt;&gt; uicontrol( 'Style', 'frame', 'Parent', p, 'Background', 'r' );
+   &gt;&gt; uicontrol( 'Style', 'frame', 'Parent', p, 'Background', 'b' );
+   &gt;&gt; uicontrol( 'Style', 'frame', 'Parent', p, 'Background', 'g' );
+   &gt;&gt; p.SelectedChild = 2;
+
+   See also: uiextras.<a href="Panel.html" class="code" title="classdef Panel < uiextras.CardPanel & uiextras.DecoratedPanel">Panel</a>
+             uiextras.<a href="BoxPanel.html" class="code" title="classdef BoxPanel < uiextras.CardPanel & uiextras.DecoratedPanel">BoxPanel</a>
+             uiextras.<a href="TabPanel.html" class="code" title="classdef TabPanel < uiextras.CardPanel & uiextras.DecoratedPanel">TabPanel</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>	uiextras.get  Retrieve a default property value from a parent object</li><li><a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>	uiextras.set  Store a default property value in a parent object</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function obj = CardPanel(varargin)</a></li><li><a href="#_sub2" class="code">function value = get.SelectedChild( obj )</a></li><li><a href="#_sub3" class="code">function set.SelectedChild( obj, value )</a></li><li><a href="#_sub4" class="code">function set.Padding( obj, value )</a></li><li><a href="#_sub5" class="code">function redraw(obj)</a></li><li><a href="#_sub6" class="code">function showSelectedChild( obj, contentPos )</a></li><li><a href="#_sub7" class="code">function onChildAdded( obj, source, eventData )</a></li><li><a href="#_sub8" class="code">function onChildRemoved( obj, source, eventData )</a></li><li><a href="#_sub9" class="code">function iWiggleAxes(parent)</a></li><li><a href="#_sub10" class="code">function result = isLegendOrColorbar( child )</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 classdef <a href="#_sub1" class="code" title="subfunction obj = CardPanel(varargin)">CardPanel</a> &lt; uiextras.Container
+0002     <span class="comment">%CardPanel  Show one element (card) from a list</span>
+0003     <span class="comment">%</span>
+0004     <span class="comment">%   obj = uiextras.CardPanel() creates a new card panel which allows</span>
+0005     <span class="comment">%   selection between the different child objects contained, making the</span>
+0006     <span class="comment">%   selected child fill the space available and all other children</span>
+0007     <span class="comment">%   invisible. This is commonly used for creating wizards or quick</span>
+0008     <span class="comment">%   switching between different views of a single data-set.</span>
+0009     <span class="comment">%</span>
+0010     <span class="comment">%   obj = uiextras.CardPanel(param,value,...) also sets one or more</span>
+0011     <span class="comment">%   property values.</span>
+0012     <span class="comment">%</span>
+0013     <span class="comment">%   See the &lt;a href=&quot;matlab:doc uiextras.CardPanel&quot;&gt;documentation&lt;/a&gt; for more detail and the list of properties.</span>
+0014     <span class="comment">%</span>
+0015     <span class="comment">%   Examples:</span>
+0016     <span class="comment">%   &gt;&gt; f = figure();</span>
+0017     <span class="comment">%   &gt;&gt; p = uiextras.CardPanel( 'Parent', f, 'Padding', 5 );</span>
+0018     <span class="comment">%   &gt;&gt; uicontrol( 'Style', 'frame', 'Parent', p, 'Background', 'r' );</span>
+0019     <span class="comment">%   &gt;&gt; uicontrol( 'Style', 'frame', 'Parent', p, 'Background', 'b' );</span>
+0020     <span class="comment">%   &gt;&gt; uicontrol( 'Style', 'frame', 'Parent', p, 'Background', 'g' );</span>
+0021     <span class="comment">%   &gt;&gt; p.SelectedChild = 2;</span>
+0022     <span class="comment">%</span>
+0023     <span class="comment">%   See also: uiextras.Panel</span>
+0024     <span class="comment">%             uiextras.BoxPanel</span>
+0025     <span class="comment">%             uiextras.TabPanel</span>
+0026     
+0027     <span class="comment">%   Copyright 2009-2010 The MathWorks, Inc.</span>
+0028     <span class="comment">%   $Revision: 380 $</span>
+0029     <span class="comment">%   $Date: 2013-02-27 10:29:08 +0000 (Wed, 27 Feb 2013) $</span>
+0030     
+0031     
+0032     properties
+0033         Callback = []
+0034         Padding = 0 <span class="comment">% padding around contents (pixels)</span>
+0035     <span class="keyword">end</span> <span class="comment">% public properties</span>
+0036     
+0037     properties ( Dependent = true, SetObservable = true )
+0038         SelectedChild   <span class="comment">% Which child is visible [+ve integer or empty]</span>
+0039     <span class="keyword">end</span> <span class="comment">% dependent properties</span>
+0040     
+0041     properties ( SetAccess = private, GetAccess = private, Hidden = true )
+0042         SelectedChild_ = [] <span class="comment">% the index of the child that is currently being shown</span>
+0043     <span class="keyword">end</span> <span class="comment">% private properties</span>
+0044     
+0045     methods
+0046         
+0047         <a name="_sub0" href="#_subfunctions" class="code">function obj = CardPanel(varargin)</a>
+0048             <span class="comment">% First step is to create the parent class. We pass the</span>
+0049             <span class="comment">% arguments (if any) just incase the parent needs setting</span>
+0050             obj = obj@uiextras.Container( varargin{:} );
+0051             
+0052             <span class="comment">% Set some defaults</span>
+0053             obj.setPropertyFromDefault( <span class="string">'Padding'</span> );
+0054             
+0055             <span class="comment">% Set user-supplied property values (only if this is the leaf class)</span>
+0056             <span class="keyword">if</span> nargin&gt;0 &amp;&amp; isequal( class( obj ), <span class="string">'uiextras.CardPanel'</span> )
+0057                 <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( obj, varargin{:} );
+0058             <span class="keyword">end</span>
+0059             obj.redraw();
+0060         <span class="keyword">end</span> <span class="comment">% CardPanel</span>
+0061         
+0062     <span class="keyword">end</span> <span class="comment">% public methods</span>
+0063     
+0064     methods
+0065         
+0066         <a name="_sub1" href="#_subfunctions" class="code">function value = get.SelectedChild( obj )</a>
+0067             value = obj.SelectedChild_;
+0068         <span class="keyword">end</span> <span class="comment">% get.SelectedChild</span>
+0069         
+0070         <a name="_sub2" href="#_subfunctions" class="code">function set.SelectedChild( obj, value )</a>
+0071             <span class="comment">% Check</span>
+0072             <span class="keyword">if</span> isempty( obj.Children )
+0073                 obj.SelectedChild_ = [];
+0074             <span class="keyword">else</span>
+0075                 <span class="keyword">if</span> ~isscalar( value ) || (round( value ) ~= value) || value &lt; 0
+0076                     error( <span class="string">'GUILayout:InvalidPropertyValue'</span>, <span class="keyword">...</span>
+0077                         <span class="string">'Property ''SelectedChild'' must be a positive integer.'</span> )
+0078                 <span class="keyword">elseif</span> value &gt; numel( obj.Children )
+0079                     error( <span class="string">'GUILayout:InvalidPropertyValue'</span>, <span class="keyword">...</span>
+0080                         <span class="string">'Cannot select child %d of %d.'</span>, value, numel( obj.Children ) )
+0081                 <span class="keyword">end</span>
+0082                 
+0083                 <span class="comment">% Set</span>
+0084                 obj.SelectedChild_ = value;
+0085             <span class="keyword">end</span>
+0086             
+0087             <span class="comment">% Redraw</span>
+0088             obj.redraw();
+0089         <span class="keyword">end</span> <span class="comment">% set.SelectedChild</span>
+0090         
+0091         <a name="_sub3" href="#_subfunctions" class="code">function set.Padding( obj, value )</a>
+0092             <span class="comment">% Check input</span>
+0093             <span class="keyword">if</span> ~isnumeric( value ) || ~isscalar( value ) || <span class="keyword">...</span>
+0094                     ~isreal( value ) || isnan( value ) || ~isfinite( value ) || <span class="keyword">...</span>
+0095                     value &lt; 0 || rem( value, 1 ) ~= 0
+0096                 error( <span class="string">'GUILayout:InvalidPropertyValue'</span>, <span class="keyword">...</span>
+0097                     <span class="string">'Property ''Padding'' must be a nonnegative integer.'</span> )
+0098             <span class="keyword">end</span>
+0099             <span class="comment">% All OK, so set it and redraw using the new value</span>
+0100             obj.Padding = value;
+0101             obj.redraw();
+0102         <span class="keyword">end</span> <span class="comment">% set.Padding</span>
+0103         
+0104     <span class="keyword">end</span> <span class="comment">% accessor methods</span>
+0105     
+0106     methods ( Access = protected )
+0107         
+0108         <a name="_sub4" href="#_subfunctions" class="code">function redraw(obj)</a>
+0109             <span class="comment">%REDRAW redraw the contents</span>
+0110             <span class="comment">%</span>
+0111             <span class="comment">% Fort a card layout the only thing we really need to do is</span>
+0112             <span class="comment">% show one of the children filling the view</span>
+0113             pos = getpixelposition( obj.UIContainer );
+0114             contentPos = [1 1 pos(3) pos(4)] + obj.Padding*[1 1 -2 -2];
+0115             obj.showSelectedChild( contentPos );
+0116         <span class="keyword">end</span> <span class="comment">% redraw</span>
+0117         
+0118         <a name="_sub5" href="#_subfunctions" class="code">function showSelectedChild( obj, contentPos )</a>
+0119             <span class="comment">% Generic function for showing just one child</span>
+0120             
+0121             page_offset = 2500; <span class="comment">% The amount by which widgets are moved when making invisible</span>
+0122             C = obj.Children;
+0123             nC = numel(C);
+0124             <span class="keyword">if</span> ~isempty( obj.SelectedChild )
+0125                 <span class="comment">% Set all to be invisible except current page</span>
+0126                 <span class="comment">% We also have to move them offscreen to avoid problems with invisible</span>
+0127                 <span class="comment">% panels and things blocking out visible ones (an HG bug?)</span>
+0128                 otherPages = 1:nC;
+0129                 otherPages( otherPages==obj.SelectedChild ) = [];
+0130                 <span class="keyword">for</span> page=otherPages
+0131                     oldunits = <a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>( C(page), <span class="string">'Units'</span> );
+0132                     <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( C(page), <span class="string">'Units'</span>, <span class="string">'pixels'</span> );
+0133                     p = <a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>(C(page), <span class="string">'Position'</span>);
+0134                     <span class="keyword">if</span> p(1)&lt;page_offset || p(2)&lt;page_offset
+0135                         newPosition = p + [page_offset page_offset 0 0];
+0136                         obj.repositionChild( C(page), newPosition )
+0137                     <span class="keyword">end</span>
+0138                     <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>( C(page), <span class="string">'Units'</span>, oldunits );
+0139                 <span class="keyword">end</span>
+0140                 
+0141                 <span class="comment">% And put the selected one on view</span>
+0142                 obj.repositionChild( C(obj.SelectedChild), contentPos );
+0143                 <span class="comment">% Hack: to fix problems with axes, give them a wiggle</span>
+0144                 <a href="#_sub9" class="code" title="subfunction iWiggleAxes(parent)">iWiggleAxes</a>(C(obj.SelectedChild));
+0145             <span class="keyword">end</span>
+0146         <span class="keyword">end</span> <span class="comment">% showSelectedChild</span>
+0147         
+0148         <a name="_sub6" href="#_subfunctions" class="code">function onChildAdded( obj, source, eventData ) </a><span class="comment">%#ok&lt;INUSD&gt;</span>
+0149             <span class="comment">%onChildAdded: Callback that fires when a child is added to a container.</span>
+0150             <span class="comment">% Select the new addition</span>
+0151             C = obj.Children;
+0152             N = numel( C );
+0153             obj.SelectedChild = N;
+0154         <span class="keyword">end</span> <span class="comment">% onChildAdded</span>
+0155         
+0156         <a name="_sub7" href="#_subfunctions" class="code">function onChildRemoved( obj, source, eventData ) </a><span class="comment">%#ok&lt;INUSL&gt;</span>
+0157             <span class="comment">%onChildAdded: Callback that fires when a container child is destroyed or reparented.</span>
+0158             <span class="comment">% If the missing child is the selected one, select something else</span>
+0159             <span class="keyword">if</span> obj.SelectedChild &gt;= eventData.ChildIndex
+0160                 <span class="comment">% Changing the selection will force a redraw</span>
+0161                 <span class="keyword">if</span> isempty( obj.Children )
+0162                     obj.SelectedChild = [];
+0163                 <span class="keyword">else</span>
+0164                     obj.SelectedChild = max( 1, obj.SelectedChild - 1 );
+0165                 <span class="keyword">end</span>
+0166             <span class="keyword">else</span>
+0167                 <span class="comment">% We don't need to change the selection, so explicitly</span>
+0168                 <span class="comment">% redraw</span>
+0169                 obj.redraw();
+0170             <span class="keyword">end</span>
+0171         <span class="keyword">end</span> <span class="comment">% onChildRemoved</span>
+0172         
+0173     <span class="keyword">end</span> <span class="comment">% protected methods</span>
+0174     
+0175 <span class="keyword">end</span> <span class="comment">% classdef</span>
+0176 
+0177 <a name="_sub8" href="#_subfunctions" class="code">function iWiggleAxes(parent)</a>
+0178 <span class="comment">% Helper to give any axes inside the specified parent a &quot;wiggle&quot; (i.e.</span>
+0179 <span class="comment">% resize then resize back again).</span>
+0180 ax = findall(parent, <span class="string">'type'</span>, <span class="string">'axes'</span>);
+0181 <span class="comment">% Be careful to ignore legends and colorbars</span>
+0182 
+0183 <span class="keyword">for</span> ii=1:numel(ax)
+0184     <span class="keyword">if</span> ~<a href="#_sub10" class="code" title="subfunction result = isLegendOrColorbar( child )">isLegendOrColorbar</a>(ax(ii))
+0185         propname = <a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>(ax(ii),<span class="string">'ActivePositionProperty'</span>);
+0186         <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>(ax(ii),propname, <a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>(ax(ii), propname)+[0 0 1 0]);
+0187         <a href="set.html" class="code" title="function set( hObj, propName, propValue )">set</a>(ax(ii),propname, <a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>(ax(ii), propname)-[0 0 1 0]);
+0188     <span class="keyword">end</span>
+0189 <span class="keyword">end</span>
+0190 <span class="keyword">end</span>
+0191 
+0192 <a name="_sub9" href="#_subfunctions" class="code">function result = isLegendOrColorbar( child )</a>
+0193 <span class="comment">% Determine whether an object is a legend or colorbar</span>
+0194 child = handle(child);
+0195 result = (isa( child, <span class="string">'axes'</span> ) <span class="keyword">...</span>
+0196     &amp;&amp; ismember(lower(<a href="get.html" class="code" title="function propValue = get( hObj, propName )">get</a>( child, <span class="string">'Tag'</span> )), {<span class="string">'legend'</span>, <span class="string">'colorbar'</span>}) );
+0197 <span class="keyword">end</span> <span class="comment">% isLegendOrColorbar</span>
+0198</pre></div>
+<hr><address>Generated on Thu 20-Feb-2014 10:46:33 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>
