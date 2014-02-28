@@ -229,8 +229,8 @@ classdef ImageComponentParser < hgsetget
                 'String', 'Run ICA', 'Callback', @self.runica_button_cb);
             self.h.which_pcs_label = uicontrol('Style', 'text', 'String', 'PCs:');
             self.h.which_pcs_edit = uicontrol('Style', 'edit', 'Callback', @self.which_pcs_edit_cb);
-            self.h.calc_rois_button = uicontrol('Style', 'pushbutton', ...
-                'String', 'Calc ROIs', 'Callback', @self.calc_rois_cb);
+            %self.h.calc_rois_button = uicontrol('Style', 'pushbutton', ...
+            %    'String', 'Calc ROIs', 'Callback', @self.calc_rois_cb);
             
             % Visualization tab
             self.h.viz_button = uicontrol('Style', 'pushbutton', ...
@@ -449,7 +449,7 @@ classdef ImageComponentParser < hgsetget
             set(self.h.which_pcs_label, 'Parent', self.h.ica_which_pcs_hbox.double());
             set(self.h.which_pcs_edit, 'Parent', self.h.ica_which_pcs_hbox.double());
             set(self.h.runica_button, 'Parent', self.h.ica_button_vbox.double());
-            set(self.h.calc_rois_button, 'Parent', self.h.ica_button_vbox.double());
+            %set(self.h.calc_rois_button, 'Parent', self.h.ica_button_vbox.double());
             
             % Viz tab
             set(self.h.viz_main_hbox, 'Parent', self.h.viz_tab);
