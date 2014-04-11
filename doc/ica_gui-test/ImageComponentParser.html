@@ -1,0 +1,2234 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of ImageComponentParser</title>
+  <meta name="keywords" content="ImageComponentParser">
+  <meta name="description" content="class ImageComponentParser: gui to analyze the component ...">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">ica_gui-test</a> &gt; ImageComponentParser.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for ica_gui-test&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>ImageComponentParser
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>class ImageComponentParser: gui to analyze the component ...</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>classdef ImageComponentParser < hgsetget </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> class ImageComponentParser: gui to analyze the component ...
+ decompositions of imaging data.
+
+ @file: ImageComponentParser.m
+ @author: Paxon Frady
+ @created: 8/20/2013</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="FigureEventNotifier.html" class="code" title="classdef FigureEventNotifier < handle">FigureEventNotifier</a>	class FigureEventNotifier: sends out event notifications during</li><li><a href="RoiEditor.html" class="code" title="classdef RoiEditor < hgsetget">RoiEditor</a>	class RoiEditor: interactive gui to edit rois for image processing</li><li><a href="align_im_stack.html" class="code" title="function [im_stack, warp] = align_im_stack(im, n_iters, n_levels, transform, viz)">align_im_stack</a>	im_stack = align_im_stack(im): Aligns an image stack using image</li><li><a href="calc_rois_from_components.html" class="code" title="function rois = calc_rois_from_components(comp, x, y)">calc_rois_from_components</a>	rois = calc_rois_from_components(comp): Estimates ROI positions from the</li><li><a href="make_feature_matrix.html" class="code" title="function [feature_matrix, feature_weights] = make_feature_matrix(ics, im_data)">make_feature_matrix</a>	[feature_matrix, feature_weights] = make_feature_matrix(icp): creates a</li><li><a href="mean_roi.html" class="code" title="function data = mean_roi(ccd_movie, roi_data, im_x, im_y)">mean_roi</a>	This function uses the roi_data and takes the mean value for the pixels</li><li><a href="segment_ics.html" class="code" title="function [segment_masks, segment_info] = segment_ics(comp, x, y)">segment_ics</a>	[segment_mask, segment_info] = segment_ics(comp): Segments ics into</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="icp_basics.html" class="code" title="">icp_basics</a>	A quick overview of ICP and the data</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function self = ImageComponentParser(parent, im_data)</a></li><li><a href="#_sub2" class="code">function self = init_state(self)</a></li><li><a href="#_sub3" class="code">function self = init_gui(self, parent)</a></li><li><a href="#_sub4" class="code">function self = uiextras_layout(self)</a></li><li><a href="#_sub5" class="code">function self = reset_layout(self)</a></li><li><a href="#_sub6" class="code">function window_key_press_cb(self, source_h, eventdata)</a></li><li><a href="#_sub7" class="code">function reset_button_cb(self, source_h, eventdata)</a></li><li><a href="#_sub8" class="code">function motion_correct_button_cb(self, source_h, eventdata)</a></li><li><a href="#_sub9" class="code">function preprocess_button_cb(self, source_h, eventdata)</a></li><li><a href="#_sub10" class="code">function wavelets_check_cb(self, source_h, eventdata)</a></li><li><a href="#_sub11" class="code">function runpca_button_cb(self, source_h, eventdata)</a></li><li><a href="#_sub12" class="code">function runica_button_cb(self, source_h, eventdata)</a></li><li><a href="#_sub13" class="code">function segment_ics_cb(self, source_h, eventdata)</a></li><li><a href="#_sub14" class="code">function estimate_clusters_cb(self, source_h, eventdata)</a></li><li><a href="#_sub15" class="code">function set_cluster_button_cb(self, source_h, eventdata)</a></li><li><a href="#_sub16" class="code">function uncluster_button_cb(self, source_h, eventdata)</a></li><li><a href="#_sub17" class="code">function stage_tab_panel_cb(self, source_h, eventdata)</a></li><li><a href="#_sub18" class="code">function x_popup_cb(self, sh, ed)</a></li><li><a href="#_sub19" class="code">function y_popup_cb(self, sh, ed)</a></li><li><a href="#_sub20" class="code">function z_popup_cb(self, sh, ed)</a></li><li><a href="#_sub21" class="code">function xy_button_cb(self, sh, ed)</a></li><li><a href="#_sub22" class="code">function yz_button_cb(self, sh, ed)</a></li><li><a href="#_sub23" class="code">function zx_button_cb(self, sh, ed)</a></li><li><a href="#_sub24" class="code">function rotate_toggle_cb(self, sh, ed)</a></li><li><a href="#_sub25" class="code">function rotate_timer_cb(self, sh, ed)</a></li><li><a href="#_sub26" class="code">function re_selection_changed_cb(self, source_h, eventdata)</a></li><li><a href="#_sub27" class="code">function re_new_rois_cb(self, source_h, eventdata)</a></li><li><a href="#_sub28" class="code">function re_altered_rois_cb(self, source_h, eventdata)</a></li><li><a href="#_sub29" class="code">function re_deleted_rois_cb(self, source_h, eventdata)</a></li><li><a href="#_sub30" class="code">function re_frame_changed_cb(self, source_h, eventdata)</a></li><li><a href="#_sub31" class="code">function load_settings_cb(self, source_h, eventdata)</a></li><li><a href="#_sub32" class="code">function save_settings_cb(self, source_h, eventdata)</a></li><li><a href="#_sub33" class="code">function edit_preprocessing_cb(self, source_h, eventdata)</a></li><li><a href="#_sub34" class="code">function edit_pca_cb(self, source_h, eventdata)</a></li><li><a href="#_sub35" class="code">function edit_ica_cb(self, source_h, eventdata)</a></li><li><a href="#_sub36" class="code">function pp_settings_ok_cb(self, source_h, eventdata)</a></li><li><a href="#_sub37" class="code">function pp_settings_cancel_cb(self, source_h, eventdata)</a></li><li><a href="#_sub38" class="code">function lock_component_button_cb(self, source_h, eventdata)</a></li><li><a href="#_sub39" class="code">function clear_locked_button_cb(self, source_h, eventdata)</a></li><li><a href="#_sub40" class="code">function component_label_cb(self, source_h, eventdata)</a></li><li><a href="#_sub41" class="code">function trial_listbox_cb(self, source_h, eventdata)</a></li><li><a href="#_sub42" class="code">function add_trial_button_cb(self, source_h, eventdata)</a></li><li><a href="#_sub43" class="code">function delete_trial_button_cb(self, source_h, eventdata)</a></li><li><a href="#_sub44" class="code">function roi_listbox_cb(self, source_h, eventdata)</a></li><li><a href="#_sub45" class="code">function add_rois_button_cb(self, source_h, eventdata)</a></li><li><a href="#_sub46" class="code">function delete_rois_button_cb(self, source_h, eventdata)</a></li><li><a href="#_sub47" class="code">function calc_rois_cb(self, source_h, eventdata)</a></li><li><a href="#_sub48" class="code">function save_rois_cb(self, source_h, eventdata)</a></li><li><a href="#_sub49" class="code">function load_rois_cb(self, source_h, eventdata)</a></li><li><a href="#_sub50" class="code">function update(self)</a></li><li><a href="#_sub51" class="code">function warp = run_motion_correction(self)</a></li><li><a href="#_sub52" class="code">function run_filters(self)</a></li><li><a href="#_sub53" class="code">function run_preprocessing(self)</a></li><li><a href="#_sub54" class="code">function run_pca(self)</a></li><li><a href="#_sub55" class="code">function run_ica(self)</a></li><li><a href="#_sub56" class="code">function run_segmentation(self)</a></li><li><a href="#_sub57" class="code">function rois = calc_rois(self)</a></li><li><a href="#_sub58" class="code">function estimate_clusters(self)</a></li><li><a href="#_sub59" class="code">function load_settings(self, filename)</a></li><li><a href="#_sub60" class="code">function save_settings(self, filename)</a></li><li><a href="#_sub61" class="code">function edit_preprocessing_settings(self)</a></li><li><a href="#_sub62" class="code">function set_pp_smooth_window(self, smM, smN, smT)</a></li><li><a href="#_sub63" class="code">function set_pp_down_sample(self, dsM, dsN, dsT)</a></li><li><a href="#_sub64" class="code">function edit_pca_settings(self)</a></li><li><a href="#_sub65" class="code">function edit_ica_settings(self)</a></li><li><a href="#_sub66" class="code">function set.Parent(self, val)</a></li><li><a href="#_sub67" class="code">function component = get_current_component(self)</a></li><li><a href="#_sub68" class="code">function lock_current_component(self)</a></li><li><a href="#_sub69" class="code">function clear_locked_components(self)</a></li><li><a href="#_sub70" class="code">function top_idxs = show_best_selected_components(self, rois)</a></li><li><a href="#_sub71" class="code">function create_new_roi_set(self, name, is_component_set)</a></li><li><a href="#_sub72" class="code">function delete_roi_set(self, idx)</a></li><li><a href="#_sub73" class="code">function select_roi_set(self, idx)</a></li><li><a href="#_sub74" class="code">function set_ica_spatial_guess(self, masks, which_pcs)</a></li><li><a href="#_sub75" class="code">function save_rois(self, filename)</a></li><li><a href="#_sub76" class="code">function load_rois(self, filename)</a></li><li><a href="#_sub77" class="code">function set_cluster(self, ic_idxs)</a></li><li><a href="#_sub78" class="code">function uncluster(self, idxs)</a></li><li><a href="#_sub79" class="code">function clear_clusters(self)</a></li><li><a href="#_sub80" class="code">function set_data(self, im, trial_idx)</a></li><li><a href="#_sub81" class="code">function add_trial(self, im_data)</a></li><li><a href="#_sub82" class="code">function delete_trial(self, idx)</a></li><li><a href="#_sub83" class="code">function align_trials(self)</a></li><li><a href="#_sub84" class="code">function set_selected_trial(self, idx)</a></li><li><a href="#_sub85" class="code">function set_use_wavelets(self, val)</a></li><li><a href="#_sub86" class="code">function reset(self)</a></li><li><a href="#_sub87" class="code">function default_settings(self)</a></li><li><a href="#_sub88" class="code">function plot_locked_components(self)</a></li><li><a href="#_sub89" class="code">function plot_3d(self)</a></li><li><a href="#_sub90" class="code">function build_3d_gui_components(self, stage)</a></li><li><a href="#_sub91" class="code">function build_roi_listbox(self)</a></li><li><a href="#_sub92" class="code">function update_current_roi_set(self)</a></li><li><a href="#_sub93" class="code">function draw_clustered_rois(self)</a></li></ul>
+<h2><a name="_download"></a>DOWNLOAD <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<p><a href="ImageComponentParser.m">ImageComponentParser.m</a></p>
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 classdef <a href="#_sub1" class="code" title="subfunction self = ImageComponentParser(parent, im_data)">ImageComponentParser</a> &lt; hgsetget
+0002     <span class="comment">% class ImageComponentParser: gui to analyze the component ...</span>
+0003     <span class="comment">% decompositions of imaging data.</span>
+0004     <span class="comment">%</span>
+0005     <span class="comment">% @file: ImageComponentParser.m</span>
+0006     <span class="comment">% @author: Paxon Frady</span>
+0007     <span class="comment">% @created: 8/20/2013</span>
+0008     
+0009     properties
+0010         <span class="comment">% gui properties</span>
+0011         h; <span class="comment">% graphic object handles.</span>
+0012         gui; <span class="comment">% settings for the gui.</span>
+0013         
+0014         <span class="comment">% hgsetget properties</span>
+0015         Position; <span class="comment">% The size and position of the object</span>
+0016         Parent; <span class="comment">% The parent of the object</span>
+0017         
+0018         <span class="comment">% object properties</span>
+0019         im_data; <span class="comment">% The original image data</span>
+0020 
+0021         rois; <span class="comment">% Cell array containing the sets of rois</span>
+0022         
+0023         settings; <span class="comment">% struct containing settings for each stage.</span>
+0024         pp;  <span class="comment">% struct containing preprocessing data</span>
+0025         pca; <span class="comment">% struct containing pca data</span>
+0026         ica; <span class="comment">% struct containing ica data</span>
+0027         post; <span class="comment">% struct containing postprocessing data</span>
+0028         cluster; <span class="comment">% struct containing clustering data</span>
+0029         
+0030         stage; <span class="comment">% Keeps track of which stage the analysis is in.</span>
+0031     <span class="keyword">end</span>
+0032     
+0033     properties (Constant)
+0034         <span class="comment">% The stage values need to go in increasing order</span>
+0035         InitStage = 0;
+0036         PreProcessingStage = 1;
+0037         PcaStage = 2;
+0038         IcaStage = 3;
+0039         PostProcessingStage = 4;
+0040     <span class="keyword">end</span>
+0041     
+0042     events
+0043         
+0044     <span class="keyword">end</span>
+0045     
+0046     methods
+0047         <span class="comment">%%%%%%%%%% Initialization %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0048         <a name="_sub0" href="#_subfunctions" class="code">function self = ImageComponentParser(parent, im_data)</a>
+0049             <span class="comment">% self = ImageComponentParser(parent, im_data): parses the</span>
+0050             <span class="comment">% components of imaging data.</span>
+0051             <span class="comment">%</span>
+0052             <span class="comment">% @param: parent the parent handle of the gui object. If no</span>
+0053             <span class="comment">% parent is given a new figure will be created and used as the</span>
+0054             <span class="comment">% parent.</span>
+0055             <span class="comment">% @param: im_data MxNxt matrix of image data. Or cell array of</span>
+0056             <span class="comment">% several trials of image data.</span>
+0057             <span class="comment">% @return: self handle to the ImageComponentParser instance</span>
+0058             <span class="comment">%</span>
+0059             
+0060             <span class="keyword">if</span> nargin &lt; 1
+0061                 parent = [];
+0062             <span class="keyword">end</span>
+0063             <span class="keyword">if</span> nargin &lt; 2
+0064                 im_data = rand(128, 128, 10);
+0065             <span class="keyword">end</span>
+0066             
+0067             <span class="keyword">if</span> iscell(im_data)
+0068                 self.im_data = im_data;
+0069             <span class="keyword">else</span>
+0070                 self.im_data{1} = im_data;
+0071             <span class="keyword">end</span>
+0072             
+0073             self = self.init_state();
+0074             self = self.init_gui(parent);
+0075             
+0076             self.update();
+0077         <span class="keyword">end</span>
+0078         
+0079         <a name="_sub1" href="#_subfunctions" class="code">function self = init_state(self)</a>
+0080             <span class="comment">% init_state: initializes the gui state variables.</span>
+0081             
+0082             self.Position = [0 0 1200 800];
+0083             
+0084             self.default_settings();
+0085             
+0086             self.rois{1} = [];
+0087             self.gui.current_roi_set = 1;
+0088             self.gui.roi_names{1} = <span class="string">'ROI_set_1'</span>;
+0089             self.gui.is_component_set = false;
+0090             self.gui.current_trial = 1;
+0091             self.gui.trial_names{1} = <span class="string">'Trial 1'</span>;
+0092             self.gui.use_wavelets = false;
+0093             
+0094             self.gui.MARGIN = 10;
+0095             self.gui.CAX_H = 240;
+0096             self.gui.BUTTON_H = 30;
+0097             self.gui.CONTROL_H = 150;
+0098             self.gui.PC_PANEL_ITEM_W = 20;
+0099             
+0100             <span class="comment">% 3d-axis state variables</span>
+0101             self.gui.x_pc = 1; <span class="comment">% The PC scores to plot on the x-axis</span>
+0102             self.gui.y_pc = 2; <span class="comment">% The PC scores to plot on the y-axis</span>
+0103             self.gui.z_pc = 3; <span class="comment">% The PC scores to plot on the z-axis</span>
+0104             
+0105             self.gui.rotate_rate = 0.05;
+0106             self.gui.rotate_angle_step = 2;
+0107             self.gui.rotate_timer = timer(<span class="string">'TimerFcn'</span>, @self.rotate_timer_cb, <span class="keyword">...</span>
+0108                                           <span class="string">'ExecutionMode'</span>, <span class="string">'fixedRate'</span>, <span class="keyword">...</span>
+0109                                           <span class="string">'Period'</span>, self.gui.rotate_rate);
+0110                                       
+0111             self.gui.locked_components = {};
+0112             self.gui.locked_colors = lines(7);
+0113             
+0114             self.gui.display = 1;
+0115             self.gui.last_display = 0; 
+0116             
+0117             self.gui.data_norm_frame = 20; <span class="comment">% Data normalized to this frame</span>
+0118             
+0119             self.stage = self.InitStage;
+0120         <span class="keyword">end</span>
+0121         
+0122         <a name="_sub2" href="#_subfunctions" class="code">function self = init_gui(self, parent)</a>
+0123             <span class="comment">% init_gui: initializes the gui objects.</span>
+0124             <span class="comment">%</span>
+0125             <span class="comment">% @param: parent the parent handle of this object. Default is</span>
+0126             <span class="comment">% to create a new figure. Use [] for default.</span>
+0127             
+0128             <span class="keyword">if</span> nargin &lt; 2 || isempty(parent)
+0129                 <span class="comment">% No parent given, then make a new figure as the parent.</span>
+0130                 parent = figure();
+0131                 clf(parent);
+0132                 set(parent, <span class="string">'Position'</span>, [100, 100, self.Position(3), self.Position(4)]);
+0133             <span class="keyword">end</span>
+0134             
+0135             self.h.Parent = parent;
+0136             
+0137             <span class="comment">% We must use a figure event notifier, which is attached to the</span>
+0138             <span class="comment">% top-most figure. Go up until we get the figure.</span>
+0139             self.h.fh = self.h.Parent;
+0140             <span class="keyword">while</span> ~strcmp(get(self.h.fh, <span class="string">'Type'</span>), <span class="string">'figure'</span>)
+0141                 <span class="comment">% Then the fh object is not a figure, so go up.</span>
+0142                 self.h.fh = get(self.h.fh, <span class="string">'Parent'</span>);
+0143             <span class="keyword">end</span>
+0144             
+0145             <span class="comment">% Now fh is the parent figure. Set its event notifier.</span>
+0146             self.gui.fen = <a href="FigureEventNotifier.html" class="code" title="classdef FigureEventNotifier < handle">FigureEventNotifier</a>(self.h.fh);
+0147             addlistener(self.gui.fen, <span class="string">'WindowKeyPress'</span>, @self.window_key_press_cb);
+0148             set(self.h.fh, <span class="string">'Toolbar'</span>, <span class="string">'figure'</span>);
+0149             
+0150             <span class="comment">%self.h.panel = uipanel(self.Parent, 'Units', 'pixels');</span>
+0151             self.h.panel = uiextras.BoxPanel(<span class="string">'Parent'</span>, self.h.Parent, <span class="keyword">...</span>
+0152                 <span class="string">'Title'</span>, <span class="string">'Image Component Parser'</span>);
+0153             
+0154             <span class="comment">% RoiEditor</span>
+0155             self.h.roi_editor = <a href="RoiEditor.html" class="code" title="classdef RoiEditor < hgsetget">RoiEditor</a>([], self.im_data{self.gui.current_trial});
+0156             <span class="comment">%self.h.roi_editor.is_editing_enabled = false;</span>
+0157             
+0158             addlistener(self.h.roi_editor, <span class="string">'SelectionChanged'</span>, @self.re_selection_changed_cb);
+0159             addlistener(self.h.roi_editor, <span class="string">'NewRois'</span>, @self.re_new_rois_cb);
+0160             addlistener(self.h.roi_editor, <span class="string">'AlteredRois'</span>, @self.re_altered_rois_cb);
+0161             addlistener(self.h.roi_editor, <span class="string">'DeletedRois'</span>, @self.re_deleted_rois_cb);
+0162             <span class="comment">%%%</span>
+0163             addlistener(self.h.roi_editor, <span class="string">'FrameChanged'</span>, @self.re_frame_changed_cb);
+0164             
+0165             <span class="comment">% Roi Management</span>
+0166             self.h.roi_listbox = uicontrol(<span class="string">'Style'</span>, <span class="string">'listbox'</span>, <span class="keyword">...</span>
+0167                 <span class="string">'String'</span>, self.gui.roi_names, <span class="string">'Min'</span>, 1, <span class="string">'Max'</span>, 1, <span class="string">'Callback'</span>, @self.roi_listbox_cb);
+0168             self.h.add_rois_button = uicontrol(<span class="string">'Style'</span>, <span class="string">'pushbutton'</span>, <span class="keyword">...</span>
+0169                 <span class="string">'String'</span>, <span class="string">'+'</span>, <span class="string">'Callback'</span>, @self.add_rois_button_cb);
+0170             self.h.delete_rois_button = uicontrol(<span class="string">'Style'</span>, <span class="string">'pushbutton'</span>, <span class="keyword">...</span>
+0171                 <span class="string">'String'</span>, <span class="string">'-'</span>, <span class="string">'Callback'</span>, @self.delete_rois_button_cb);
+0172             
+0173             <span class="comment">% Trial Management</span>
+0174             self.h.trial_listbox = uicontrol(<span class="string">'Style'</span>, <span class="string">'listbox'</span>, <span class="keyword">...</span>
+0175                 <span class="string">'String'</span>, self.gui.trial_names, <span class="string">'Min'</span>, 1, <span class="string">'Max'</span>, 1, <span class="string">'Callback'</span>, @self.trial_listbox_cb);
+0176             self.h.add_trial_button = uicontrol(<span class="string">'Style'</span>, <span class="string">'pushbutton'</span>, <span class="keyword">...</span>
+0177                 <span class="string">'String'</span>, <span class="string">'+'</span>, <span class="string">'Callback'</span>, @self.add_trial_button_cb);
+0178             self.h.delete_trial_button = uicontrol(<span class="string">'Style'</span>, <span class="string">'pushbutton'</span>, <span class="keyword">...</span>
+0179                 <span class="string">'String'</span>, <span class="string">'-'</span>, <span class="string">'Callback'</span>, @self.delete_trial_button_cb);
+0180             
+0181             <span class="comment">% Component axes</span>
+0182             self.h.component_axes = axes(<span class="string">'Units'</span>, <span class="string">'pixels'</span>);
+0183             self.h.lock_component_button = uicontrol(<span class="string">'Style'</span>, <span class="string">'pushbutton'</span>,<span class="keyword">...</span>
+0184                 <span class="string">'String'</span>, <span class="string">'Lock'</span>, <span class="string">'Callback'</span>, @self.lock_component_button_cb);
+0185             self.h.clear_locked_button = uicontrol(<span class="string">'Style'</span>, <span class="string">'pushbutton'</span>, <span class="keyword">...</span>
+0186                 <span class="string">'String'</span>, <span class="string">'Clear'</span>, <span class="string">'Callback'</span>, @self.clear_locked_button_cb);
+0187             
+0188             <span class="comment">% Data axes</span>
+0189             self.h.data_axes = axes(<span class="string">'Units'</span>, <span class="string">'pixels'</span>);
+0190                         
+0191              
+0192             self.h.stage_tab_panel = uiextras.TabPanel(<span class="string">'Callback'</span>, @self.stage_tab_panel_cb);
+0193             self.h.data_tab = uiextras.Panel(<span class="string">'Parent'</span>, self.h.stage_tab_panel);
+0194             self.h.pp_tab = uiextras.Panel(<span class="string">'Parent'</span>, self.h.stage_tab_panel);
+0195             self.h.pca_tab = uiextras.Panel(<span class="string">'Parent'</span>, self.h.stage_tab_panel);
+0196             self.h.ica_tab = uiextras.Panel(<span class="string">'Parent'</span>, self.h.stage_tab_panel);
+0197             self.h.post_tab = uiextras.Panel(<span class="string">'Parent'</span>, self.h.stage_tab_panel);
+0198             self.h.cluster_tab = uiextras.Panel(<span class="string">'Parent'</span>, self.h.stage_tab_panel);
+0199             self.h.stage_tab_panel.TabNames = {<span class="string">'Data'</span>, <span class="string">'Pre-Processing'</span>, <span class="string">'PCA'</span>, <span class="string">'ICA'</span>, <span class="string">'Segment'</span>, <span class="string">'Cluster'</span>};
+0200             self.h.stage_tab_panel.SelectedChild = self.gui.display;
+0201             
+0202             self.h.stage_status = uicontrol(<span class="string">'Style'</span>, <span class="string">'text'</span>, <span class="string">'String'</span>, <span class="string">'...'</span>);
+0203             
+0204             <span class="comment">% Data tab</span>
+0205             self.h.reset_button = uicontrol(<span class="string">'Style'</span>, <span class="string">'pushbutton'</span>, <span class="keyword">...</span>
+0206                 <span class="string">'String'</span>, <span class="string">'Reset'</span>, <span class="string">'Callback'</span>, @self.reset_button_cb);
+0207             
+0208             <span class="comment">% PP tab</span>
+0209             self.h.motion_correct_button = uicontrol(<span class="string">'Style'</span>, <span class="string">'pushbutton'</span>,<span class="keyword">...</span>
+0210                 <span class="string">'String'</span>, <span class="string">'Motion Correct'</span>, <span class="string">'Callback'</span>, @self.motion_correct_button_cb);
+0211             self.h.preprocess_button = uicontrol(<span class="string">'Style'</span>, <span class="string">'pushbutton'</span>, <span class="keyword">...</span>
+0212                 <span class="string">'String'</span>, <span class="string">'Pre Process'</span>, <span class="string">'Callback'</span>, @self.preprocess_button_cb);
+0213             self.h.wavelets_check = uicontrol(<span class="string">'Style'</span>, <span class="string">'checkbox'</span>, <span class="string">'Value'</span>, 0, <span class="keyword">...</span>
+0214                 <span class="string">'String'</span>, <span class="string">'Use Wavelets'</span>, <span class="string">'Callback'</span>, @self.wavelets_check_cb);
+0215             
+0216             <span class="comment">% PCA tab</span>
+0217             self.h.runpca_button = uicontrol(<span class="string">'Style'</span>, <span class="string">'pushbutton'</span>, <span class="keyword">...</span>
+0218                 <span class="string">'String'</span>, <span class="string">'Run PCA'</span>, <span class="string">'Callback'</span>, @self.runpca_button_cb);            
+0219             
+0220             <span class="comment">% ICA tab</span>
+0221             self.h.runica_button = uicontrol(<span class="string">'Style'</span>, <span class="string">'pushbutton'</span>, <span class="keyword">...</span>
+0222                 <span class="string">'String'</span>, <span class="string">'Run ICA'</span>, <span class="string">'Callback'</span>, @self.runica_button_cb);
+0223 
+0224             <span class="comment">% Post tab</span>
+0225             self.h.calc_rois_button = uicontrol(<span class="string">'Style'</span>, <span class="string">'pushbutton'</span>, <span class="keyword">...</span>
+0226                 <span class="string">'String'</span>, <span class="string">'Calc ROIs'</span>, <span class="string">'Callback'</span>, @self.calc_rois_cb);
+0227             self.h.segment_ics_button = uicontrol(<span class="string">'Style'</span>, <span class="string">'pushbutton'</span>, <span class="keyword">...</span>
+0228                 <span class="string">'String'</span>, <span class="string">'Segment ICs'</span>, <span class="string">'Callback'</span>, @self.segment_ics_cb);
+0229             
+0230             <span class="comment">% Cluster tab</span>
+0231             self.h.estimate_clusters_button = uicontrol(<span class="string">'Style'</span>, <span class="string">'pushbutton'</span>, <span class="keyword">...</span>
+0232                 <span class="string">'String'</span>, <span class="string">'Estimate Clusters'</span>, <span class="string">'Callback'</span>, @self.estimate_clusters_cb);
+0233             self.h.set_cluster_button = uicontrol(<span class="string">'Style'</span>, <span class="string">'pushbutton'</span>, <span class="keyword">...</span>
+0234                 <span class="string">'String'</span>, <span class="string">'Set Cluster'</span>, <span class="string">'Callback'</span>, @self.set_cluster_button_cb);
+0235             self.h.uncluster_button = uicontrol(<span class="string">'Style'</span>, <span class="string">'pushbutton'</span>, <span class="keyword">...</span>
+0236                 <span class="string">'String'</span>, <span class="string">'Uncluster'</span>, <span class="string">'Callback'</span>, @self.uncluster_button_cb);
+0237             
+0238             
+0239             <span class="comment">% Axes to display three PCs</span>
+0240             self.h.pc3_axes = axes(<span class="string">'Units'</span>, <span class="string">'pixels'</span>);  
+0241             <span class="comment">% Popups for the plot.</span>
+0242             self.h.x_popup = uicontrol(<span class="string">'Style'</span>, <span class="string">'popupmenu'</span>, <span class="keyword">...</span>
+0243                 <span class="string">'Units'</span>, <span class="string">'pixels'</span>, <span class="string">'String'</span>, {<span class="string">'None'</span>});
+0244             self.h.y_popup = uicontrol(<span class="string">'Style'</span>, <span class="string">'popupmenu'</span>, <span class="keyword">...</span>
+0245                 <span class="string">'Units'</span>, <span class="string">'pixels'</span>, <span class="string">'String'</span>, {<span class="string">'None'</span>});
+0246             self.h.z_popup = uicontrol(<span class="string">'Style'</span>, <span class="string">'popupmenu'</span>, <span class="keyword">...</span>
+0247                 <span class="string">'Units'</span>, <span class="string">'pixels'</span>, <span class="string">'String'</span>, {<span class="string">'None'</span>});
+0248             set(self.h.x_popup, <span class="string">'Callback'</span>, @self.x_popup_cb);
+0249             set(self.h.y_popup, <span class="string">'Callback'</span>, @self.y_popup_cb);
+0250             set(self.h.z_popup, <span class="string">'Callback'</span>, @self.z_popup_cb);
+0251             <span class="comment">% Buttons to auto-rotate to the 2-d plots.</span>
+0252             self.h.xy_button = uicontrol(<span class="string">'Style'</span>, <span class="string">'pushbutton'</span>, <span class="keyword">...</span>
+0253                 <span class="string">'Units'</span>, <span class="string">'pixels'</span>, <span class="string">'String'</span>, <span class="string">'xy'</span>, <span class="string">'Callback'</span>, @self.xy_button_cb);
+0254             self.h.yz_button = uicontrol(<span class="string">'Style'</span>, <span class="string">'pushbutton'</span>, <span class="keyword">...</span>
+0255                 <span class="string">'Units'</span>, <span class="string">'pixels'</span>, <span class="string">'String'</span>, <span class="string">'yz'</span>, <span class="string">'Callback'</span>, @self.yz_button_cb);
+0256             self.h.zx_button = uicontrol(<span class="string">'Style'</span>, <span class="string">'pushbutton'</span>, <span class="keyword">...</span>
+0257                 <span class="string">'Units'</span>, <span class="string">'pixels'</span>, <span class="string">'String'</span>, <span class="string">'xz'</span>, <span class="string">'Callback'</span>, @self.zx_button_cb);
+0258             <span class="comment">% Labels for the plot controls. Even though these are labels,</span>
+0259             <span class="comment">% strange things were happening when I didn't keep the handles.</span>
+0260             self.h.xl = uicontrol(<span class="string">'Style'</span>, <span class="string">'text'</span>, <span class="string">'String'</span>, <span class="string">'X:'</span>);
+0261             self.h.yl = uicontrol(<span class="string">'Style'</span>, <span class="string">'text'</span>, <span class="string">'String'</span>, <span class="string">'Y:'</span>);
+0262             self.h.zl = uicontrol(<span class="string">'Style'</span>, <span class="string">'text'</span>, <span class="string">'String'</span>, <span class="string">'Z:'</span>);
+0263             <span class="comment">% Toggle button to turn continuous rotation on and off.</span>
+0264             self.h.rotate_toggle = uicontrol(<span class="string">'Style'</span>, <span class="string">'togglebutton'</span>, <span class="keyword">...</span>
+0265                 <span class="string">'Units'</span>, <span class="string">'pixels'</span>, <span class="string">'String'</span>, <span class="string">'Rotate'</span>, <span class="string">'Callback'</span>, @self.rotate_toggle_cb);
+0266             
+0267             <span class="comment">% Menu</span>
+0268             self.h.main_menu = uimenu(self.h.fh, <span class="string">'Label'</span>, <span class="string">'ICP'</span>);
+0269             self.h.load_settings_item = uimenu(<span class="string">'Parent'</span>, self.h.main_menu, <span class="keyword">...</span>
+0270                 <span class="string">'Label'</span>, <span class="string">'Load Settings'</span>, <span class="string">'Callback'</span>, @self.load_settings_cb);
+0271             self.h.save_settings_item = uimenu(<span class="string">'Parent'</span>, self.h.main_menu, <span class="keyword">...</span>
+0272                 <span class="string">'Label'</span>, <span class="string">'Save Settings'</span>, <span class="string">'Callback'</span>, @self.save_settings_cb);
+0273             set(self.h.save_settings_item, <span class="string">'Separator'</span>, <span class="string">'on'</span>);
+0274             self.h.edit_settings_item = uimenu(<span class="string">'Parent'</span>, self.h.main_menu, <span class="keyword">...</span>
+0275                 <span class="string">'Label'</span>, <span class="string">'Edit Settings'</span>);
+0276             self.h.edit_preprocessing_item = uimenu(<span class="string">'Parent'</span>, self.h.edit_settings_item, <span class="keyword">...</span>
+0277                 <span class="string">'Label'</span>, <span class="string">'Preprocessing'</span>, <span class="string">'Callback'</span>, @self.edit_preprocessing_cb);
+0278             self.h.edit_pca_item = uimenu(<span class="string">'Parent'</span>, self.h.edit_settings_item, <span class="keyword">...</span>
+0279                 <span class="string">'Label'</span>, <span class="string">'PCA'</span>, <span class="string">'Callback'</span>, @self.edit_pca_cb);            
+0280             self.h.edit_ica_item = uimenu(<span class="string">'Parent'</span>, self.h.edit_settings_item, <span class="keyword">...</span>
+0281                 <span class="string">'Label'</span>, <span class="string">'ICA'</span>, <span class="string">'Callback'</span>, @self.edit_ica_cb);
+0282             
+0283             self.h.save_rois_item = uimenu(<span class="string">'Parent'</span>, self.h.main_menu, <span class="keyword">...</span>
+0284                 <span class="string">'Label'</span>, <span class="string">'Save ROIs'</span>, <span class="string">'Callback'</span>, @self.save_rois_cb,<span class="keyword">...</span>
+0285                 <span class="string">'Separator'</span>, <span class="string">'on'</span>);
+0286             self.h.load_rois_item = uimenu(<span class="string">'Parent'</span>, self.h.main_menu, <span class="keyword">...</span>
+0287                 <span class="string">'Label'</span>, <span class="string">'Load ROIs'</span>, <span class="string">'Callback'</span>, @self.load_rois_cb);
+0288             
+0289             <span class="comment">%self = self.reset_layout();</span>
+0290             self = self.uiextras_layout();
+0291         <span class="keyword">end</span>
+0292         
+0293         <a name="_sub3" href="#_subfunctions" class="code">function self = uiextras_layout(self)</a>
+0294             <span class="comment">% uiextras_layout: Sets the layout of all of the gui components.</span>
+0295             
+0296             <span class="comment">% Ok, I'm going to do this with the layouts, and reset the</span>
+0297             <span class="comment">% parents here.</span>
+0298             disp(<span class="string">'uiextras_layout'</span>);
+0299             <span class="comment">% 3D plot Layout elements</span>
+0300             self.h.pc3_main_panel = uiextras.BoxPanel(<span class="string">'Title'</span>, <span class="string">'3D Plot'</span>);
+0301             self.h.pc3_main_hbox = uiextras.HBox();
+0302             self.h.pc3_control_rotate_vbox = uiextras.VBox();
+0303             self.h.pc3_control_panel = uiextras.BoxPanel(<span class="string">'Title'</span>, <span class="string">'3D Plot Controls'</span>);
+0304             self.h.pc3_control_grid = uiextras.Grid();
+0305             
+0306             <span class="comment">% Component axes elements</span>
+0307             self.h.component_panel = uiextras.BoxPanel(<span class="string">'Title'</span>, <span class="string">'Component Plot'</span>);
+0308             self.h.component_lock_vbox = uiextras.VBox();
+0309             self.h.lock_button_hbox = uiextras.HButtonBox();
+0310             self.h.component_pc3_vbox = uiextras.VBoxFlex();
+0311             
+0312             <span class="comment">% Data axes elements</span>
+0313             self.h.data_panel = uiextras.BoxPanel(<span class="string">'Title'</span>, <span class="string">'Data Plot'</span>);
+0314             
+0315             <span class="comment">% Stage elements</span>
+0316             <span class="comment">%self.h.stage_button_hbox = uiextras.HButtonBox();</span>
+0317             self.h.editor_button_vbox = uiextras.VBox();   
+0318             
+0319             self.h.roi_stage_hbox = uiextras.HBox();
+0320             self.h.roi_control_vbox = uiextras.VBox();
+0321             self.h.roi_button_hbox = uiextras.HButtonBox();
+0322             self.h.trial_control_vbox = uiextras.VBox();
+0323             self.h.trial_button_hbox = uiextras.HButtonBox();
+0324             
+0325             self.h.cluster_button_hbox = uiextras.HButtonBox();
+0326             self.h.post_button_hbox = uiextras.HButtonBox();
+0327             self.h.ica_button_hbox = uiextras.HButtonBox();
+0328             self.h.pca_button_hbox = uiextras.HButtonBox();
+0329             self.h.pp_button_hbox = uiextras.HButtonBox();
+0330             self.h.data_button_hbox = uiextras.HButtonBox();
+0331             
+0332             self.h.main_hbox = uiextras.HBoxFlex();
+0333             
+0334             <span class="comment">% Top-level hierarchy</span>
+0335             set(self.h.main_hbox, <span class="string">'Parent'</span>, self.h.panel);
+0336             set(self.h.editor_button_vbox, <span class="string">'Parent'</span>, self.h.main_hbox);
+0337             set(self.h.component_pc3_vbox, <span class="string">'Parent'</span>, self.h.main_hbox);
+0338 
+0339             <span class="comment">% Button, ROI Editor hierarchy</span>
+0340             set(self.h.roi_editor, <span class="string">'Parent'</span>, self.h.editor_button_vbox);
+0341             set(self.h.roi_stage_hbox, <span class="string">'Parent'</span>, self.h.editor_button_vbox);
+0342             set(self.h.stage_status, <span class="string">'Parent'</span>, self.h.editor_button_vbox.double());
+0343             
+0344             set(self.h.trial_control_vbox, <span class="string">'Parent'</span>, self.h.roi_stage_hbox);
+0345             set(self.h.roi_control_vbox, <span class="string">'Parent'</span>, self.h.roi_stage_hbox);
+0346             set(self.h.stage_tab_panel, <span class="string">'Parent'</span>, self.h.roi_stage_hbox);
+0347             
+0348             <span class="comment">% Trial list and buttons</span>
+0349             set(self.h.trial_listbox, <span class="string">'Parent'</span>, self.h.trial_control_vbox.double());
+0350             set(self.h.trial_button_hbox, <span class="string">'Parent'</span>, self.h.trial_control_vbox.double());
+0351             set(self.h.add_trial_button, <span class="string">'Parent'</span>, self.h.trial_button_hbox.double());
+0352             set(self.h.delete_trial_button, <span class="string">'Parent'</span>, self.h.trial_button_hbox.double());
+0353             
+0354             <span class="comment">% Roi list and buttons</span>
+0355             set(self.h.roi_listbox, <span class="string">'Parent'</span>, self.h.roi_control_vbox.double());
+0356             set(self.h.roi_button_hbox, <span class="string">'Parent'</span>, self.h.roi_control_vbox);
+0357             set(self.h.add_rois_button, <span class="string">'Parent'</span>, self.h.roi_button_hbox.double());
+0358             set(self.h.delete_rois_button, <span class="string">'Parent'</span>, self.h.roi_button_hbox.double());            
+0359             
+0360             
+0361             
+0362             <span class="comment">% Data tab</span>
+0363             set(self.h.data_button_hbox, <span class="string">'Parent'</span>, self.h.data_tab);
+0364             set(self.h.reset_button, <span class="string">'Parent'</span>, self.h.data_button_hbox.double());
+0365             
+0366             <span class="comment">% PP tab</span>
+0367             set(self.h.pp_button_hbox, <span class="string">'Parent'</span>, self.h.pp_tab);
+0368             set(self.h.motion_correct_button, <span class="string">'Parent'</span>, self.h.pp_button_hbox.double());
+0369             set(self.h.wavelets_check, <span class="string">'Parent'</span>, self.h.pp_button_hbox.double());
+0370             set(self.h.preprocess_button, <span class="string">'Parent'</span>, self.h.pp_button_hbox.double());            
+0371             
+0372             <span class="comment">% PCA tab</span>
+0373             set(self.h.pca_button_hbox, <span class="string">'Parent'</span>, self.h.pca_tab);
+0374             set(self.h.runpca_button, <span class="string">'Parent'</span>, self.h.pca_button_hbox.double());
+0375             
+0376             <span class="comment">% ICA tab</span>
+0377             set(self.h.ica_button_hbox, <span class="string">'Parent'</span>, self.h.ica_tab)
+0378             set(self.h.runica_button, <span class="string">'Parent'</span>, self.h.ica_button_hbox.double());
+0379             
+0380             <span class="comment">% Post tab</span>
+0381             set(self.h.post_button_hbox, <span class="string">'Parent'</span>, self.h.post_tab);
+0382             set(self.h.calc_rois_button, <span class="string">'Parent'</span>, self.h.post_button_hbox.double());
+0383             set(self.h.segment_ics_button, <span class="string">'Parent'</span>, self.h.post_button_hbox.double());
+0384             
+0385             <span class="comment">% Cluster tab</span>
+0386             set(self.h.cluster_button_hbox, <span class="string">'Parent'</span>, self.h.cluster_tab);
+0387             set(self.h.estimate_clusters_button, <span class="string">'Parent'</span>, self.h.cluster_button_hbox.double());
+0388             set(self.h.set_cluster_button, <span class="string">'Parent'</span>, self.h.cluster_button_hbox.double());
+0389             set(self.h.uncluster_button, <span class="string">'Parent'</span>, self.h.cluster_button_hbox.double());
+0390             
+0391             <span class="comment">% Component axis hierarchy</span>
+0392             set(self.h.data_panel, <span class="string">'Parent'</span>, self.h.component_pc3_vbox);
+0393             set(self.h.component_panel, <span class="string">'Parent'</span>, self.h.component_pc3_vbox);
+0394             set(self.h.pc3_main_panel, <span class="string">'Parent'</span>, self.h.component_pc3_vbox);
+0395             
+0396             set(self.h.component_lock_vbox, <span class="string">'Parent'</span>, self.h.component_panel);
+0397             set(self.h.component_axes, <span class="string">'Parent'</span>, self.h.component_lock_vbox.double());
+0398             set(self.h.lock_button_hbox, <span class="string">'Parent'</span>, self.h.component_lock_vbox);
+0399             set(self.h.lock_component_button, <span class="string">'Parent'</span>, self.h.lock_button_hbox.double());
+0400             set(self.h.clear_locked_button, <span class="string">'Parent'</span>, self.h.lock_button_hbox.double());
+0401             
+0402             set(self.h.data_axes, <span class="string">'Parent'</span>, self.h.data_panel.double());
+0403             
+0404             <span class="comment">% 3D plot hierarchy</span>
+0405             set(self.h.pc3_main_hbox, <span class="string">'Parent'</span>, self.h.pc3_main_panel);
+0406             
+0407             set(self.h.pc3_axes, <span class="string">'Parent'</span>, self.h.pc3_main_hbox.double());
+0408             set(self.h.pc3_control_rotate_vbox, <span class="string">'Parent'</span>, self.h.pc3_main_hbox);
+0409             
+0410             set(self.h.pc3_control_panel, <span class="string">'Parent'</span>, self.h.pc3_control_rotate_vbox);
+0411             set(self.h.rotate_toggle, <span class="string">'Parent'</span>, self.h.pc3_control_rotate_vbox.double());
+0412             
+0413             set(self.h.pc3_control_grid, <span class="string">'Parent'</span>, self.h.pc3_control_panel);
+0414                  
+0415             set(self.h.xl, <span class="string">'Parent'</span>, self.h.pc3_control_grid.double());
+0416             set(self.h.yl, <span class="string">'Parent'</span>, self.h.pc3_control_grid.double());
+0417             set(self.h.zl, <span class="string">'Parent'</span>, self.h.pc3_control_grid.double());
+0418             set(self.h.x_popup, <span class="string">'Parent'</span>, self.h.pc3_control_grid.double());
+0419             set(self.h.y_popup, <span class="string">'Parent'</span>, self.h.pc3_control_grid.double());
+0420             set(self.h.z_popup, <span class="string">'Parent'</span>, self.h.pc3_control_grid.double());
+0421             set(self.h.xy_button, <span class="string">'Parent'</span>, self.h.pc3_control_grid.double());
+0422             set(self.h.yz_button, <span class="string">'Parent'</span>, self.h.pc3_control_grid.double());
+0423             set(self.h.zx_button, <span class="string">'Parent'</span>, self.h.pc3_control_grid.double());
+0424             
+0425             <span class="comment">% Layout structure.</span>
+0426             set(self.h.pc3_control_grid,<span class="keyword">...</span>
+0427                 <span class="string">'ColumnSizes'</span>, [self.gui.PC_PANEL_ITEM_W, -1, self.gui.PC_PANEL_ITEM_W],<span class="keyword">...</span>
+0428                 <span class="string">'RowSizes'</span>, [self.gui.BUTTON_H, self.gui.BUTTON_H, self.gui.BUTTON_H]);
+0429             set(self.h.pc3_control_rotate_vbox, <span class="string">'Sizes'</span>, [-1, self.gui.BUTTON_H]);
+0430             set(self.h.pc3_main_hbox, <span class="string">'Sizes'</span>, [-4, -1]);
+0431             
+0432             set(self.h.component_pc3_vbox, <span class="string">'Sizes'</span>, [-1, -1, -1]);
+0433             
+0434             set(self.h.component_lock_vbox, <span class="string">'Sizes'</span>, [-1, self.gui.BUTTON_H]);
+0435             
+0436             set(self.h.editor_button_vbox, <span class="string">'Sizes'</span>, [-1, self.gui.CONTROL_H, self.gui.BUTTON_H]);
+0437             set(self.h.roi_stage_hbox, <span class="string">'Sizes'</span>, [-1, -1, -3]);
+0438             set(self.h.trial_control_vbox, <span class="string">'Sizes'</span>, [-1, self.gui.BUTTON_H]);
+0439             set(self.h.roi_control_vbox, <span class="string">'Sizes'</span>, [-1, self.gui.BUTTON_H]);
+0440             
+0441             set(self.h.main_hbox, <span class="string">'Sizes'</span>, [-1 -1]);
+0442             
+0443             set(self.h.Parent, <span class="string">'Position'</span>, [100, 100, self.Position(3), self.Position(4)]);
+0444         <span class="keyword">end</span>
+0445         
+0446         <a name="_sub4" href="#_subfunctions" class="code">function self = reset_layout(self)</a>
+0447             <span class="comment">% reset_layout: Sets the layout of all of the gui components.</span>
+0448             
+0449 <span class="comment">%             set(self.h.panel, 'Position', self.Position);</span>
+0450 <span class="comment">%</span>
+0451 <span class="comment">%             PANEL_W = self.Position(3);</span>
+0452 <span class="comment">%             PANEL_H = self.Position(4);</span>
+0453 <span class="comment">%</span>
+0454 <span class="comment">%             %%% ROI Editor</span>
+0455 <span class="comment">%             RE_L = self.gui.MARGIN;</span>
+0456 <span class="comment">%             RE_B = self.gui.MARGIN + 2*self.gui.BUTTON_H; %PANEL_H - RE_H - self.gui.MARGIN;</span>
+0457 <span class="comment">%             RE_W = self.h.roi_editor.Position(3);</span>
+0458 <span class="comment">%             RE_H = PANEL_H - RE_B - self.gui.MARGIN; %self.h.roi_editor.Position(4);</span>
+0459 <span class="comment">%</span>
+0460 <span class="comment">%             self.h.roi_editor.Position = [RE_L, RE_B, RE_W, RE_H];</span>
+0461 <span class="comment">%             self.h.roi_editor.reset_layout();</span>
+0462 <span class="comment">%</span>
+0463 <span class="comment">%             %%% Stage Buttons</span>
+0464 <span class="comment">%             B_W = RE_W / 4;</span>
+0465 <span class="comment">%             B_H = self.gui.BUTTON_H;</span>
+0466 <span class="comment">%             B_L = @(N) N * B_W + self.gui.MARGIN;</span>
+0467 <span class="comment">%             B_B = self.gui.MARGIN + self.gui.BUTTON_H;</span>
+0468 <span class="comment">%</span>
+0469 <span class="comment">%             set(self.h.reset_button, 'Position', [B_L(0), B_B, B_W, B_H]);</span>
+0470 <span class="comment">%             set(self.h.preprocess_button, 'Position', [B_L(1), B_B, B_W, B_H]);</span>
+0471 <span class="comment">%             set(self.h.runpca_button, 'Position', [B_L(2), B_B, B_W, B_H]);</span>
+0472 <span class="comment">%             set(self.h.runica_button, 'Position', [B_L(3), B_B, B_W, B_H]);</span>
+0473 <span class="comment">%</span>
+0474 <span class="comment">%             %%% Component Axes</span>
+0475 <span class="comment">%             CAX_L = 3 * self.gui.MARGIN + RE_W;</span>
+0476 <span class="comment">%             CAX_W = PANEL_W - CAX_L - self.gui.MARGIN;</span>
+0477 <span class="comment">%             CAX_H = self.gui.CAX_H;</span>
+0478 <span class="comment">%             CAX_B = PANEL_H - CAX_H - self.gui.MARGIN;</span>
+0479 <span class="comment">%             set(self.h.component_axes, 'Position', [CAX_L, CAX_B, CAX_W, CAX_H]);</span>
+0480 <span class="comment">%</span>
+0481 <span class="comment">%             %%% Score Axes</span>
+0482 <span class="comment">%             SAX_L = CAX_L;</span>
+0483 <span class="comment">%             SAX_B = RE_B;</span>
+0484 <span class="comment">%             SAX_W = CAX_W - self.gui.PC_PANEL_W;</span>
+0485 <span class="comment">%             SAX_H = CAX_B - SAX_B - 3 * self.gui.MARGIN;</span>
+0486 <span class="comment">%             set(self.h.pc3_axes, 'Position', [SAX_L, SAX_B, SAX_W, SAX_H]);</span>
+0487 <span class="comment">%             axis(self.h.pc3_axes, 'vis3d');</span>
+0488 <span class="comment">%</span>
+0489 <span class="comment">%             %%% Score Controls</span>
+0490 <span class="comment">%             LABEL_W = 20;</span>
+0491 <span class="comment">%             PUP_W = self.gui.PC_PANEL_W - 2 * LABEL_W - self.gui.MARGIN;</span>
+0492 <span class="comment">%             PUP_L = PANEL_W - self.gui.PC_PANEL_W;</span>
+0493 <span class="comment">%             PUP_B = @(N) SAX_B + SAX_H - self.gui.MARGIN - (N + 1) * self.gui.BUTTON_H;</span>
+0494 <span class="comment">%             PUP_H = self.gui.BUTTON_H;</span>
+0495 <span class="comment">%</span>
+0496 <span class="comment">%             set(self.h.xl, 'Position', [PUP_L, PUP_B(0), LABEL_W, PUP_H]);</span>
+0497 <span class="comment">%             set(self.h.x_popup, 'Position', [PUP_L + LABEL_W, PUP_B(0), PUP_W, PUP_H]);</span>
+0498 <span class="comment">%             set(self.h.xy_button, 'Position', [PUP_L + LABEL_W + PUP_W, PUP_B(0), LABEL_W, PUP_H]);</span>
+0499 <span class="comment">%</span>
+0500 <span class="comment">%             set(self.h.yl, 'Position', [PUP_L, PUP_B(1), LABEL_W, PUP_H]);</span>
+0501 <span class="comment">%             set(self.h.y_popup, 'Position', [PUP_L + LABEL_W, PUP_B(1), PUP_W, PUP_H]);</span>
+0502 <span class="comment">%             set(self.h.yz_button, 'Position', [PUP_L + LABEL_W + PUP_W, PUP_B(1), LABEL_W, PUP_H]);</span>
+0503 <span class="comment">%</span>
+0504 <span class="comment">%             set(self.h.zl, 'Position', [PUP_L, PUP_B(2), LABEL_W, PUP_H]);</span>
+0505 <span class="comment">%             set(self.h.z_popup, 'Position', [PUP_L + LABEL_W, PUP_B(2), PUP_W, PUP_H]);</span>
+0506 <span class="comment">%             set(self.h.zx_button, 'Position', [PUP_L + LABEL_W + PUP_W, PUP_B(2), LABEL_W, PUP_H]);</span>
+0507 <span class="comment">%</span>
+0508 <span class="comment">%             set(self.h.rotate_toggle, 'Position', [PUP_L, PUP_B(4), self.gui.PC_PANEL_W, PUP_H]);</span>
+0509         <span class="keyword">end</span>
+0510         
+0511         <span class="comment">%%%%%%%%%% Callbacks %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0512         <a name="_sub5" href="#_subfunctions" class="code">function window_key_press_cb(self, source_h, eventdata)</a>
+0513             disp(<span class="string">'window_keypress_cb'</span>);
+0514         <span class="keyword">end</span>
+0515         
+0516         <a name="_sub6" href="#_subfunctions" class="code">function reset_button_cb(self, source_h, eventdata)</a>
+0517             disp(<span class="string">'reset_button_cb'</span>);
+0518             self.reset();
+0519         <span class="keyword">end</span>
+0520         
+0521         <a name="_sub7" href="#_subfunctions" class="code">function motion_correct_button_cb(self, source_h, eventdata)</a>
+0522             disp(<span class="string">'motion_correct_button_cb'</span>);
+0523             self.run_motion_correction();
+0524         <span class="keyword">end</span>
+0525         
+0526         <a name="_sub8" href="#_subfunctions" class="code">function preprocess_button_cb(self, source_h, eventdata)</a>
+0527             disp(<span class="string">'preprocess_button_cb'</span>);
+0528             
+0529             self.run_preprocessing();
+0530         <span class="keyword">end</span>
+0531         
+0532         <a name="_sub9" href="#_subfunctions" class="code">function wavelets_check_cb(self, source_h, eventdata)</a>
+0533             disp(<span class="string">'wavelets_check_cb'</span>); 
+0534             self.set_use_wavelets(get(self.h.wavelets_check, <span class="string">'Value'</span>));
+0535         <span class="keyword">end</span>
+0536         
+0537         <a name="_sub10" href="#_subfunctions" class="code">function runpca_button_cb(self, source_h, eventdata)</a>
+0538             disp(<span class="string">'runpca_button_cb'</span>);
+0539             
+0540             self.run_pca();
+0541         <span class="keyword">end</span>
+0542         
+0543         <a name="_sub11" href="#_subfunctions" class="code">function runica_button_cb(self, source_h, eventdata)</a>
+0544             disp(<span class="string">'runica_button_cb'</span>);
+0545             
+0546             self.run_ica();
+0547         <span class="keyword">end</span>
+0548         
+0549         <a name="_sub12" href="#_subfunctions" class="code">function segment_ics_cb(self, source_h, eventdata)</a>
+0550             disp(<span class="string">'segment_ics_cb'</span>);
+0551             
+0552             self.run_segmentation();
+0553         <span class="keyword">end</span>
+0554         
+0555         <a name="_sub13" href="#_subfunctions" class="code">function estimate_clusters_cb(self, source_h, eventdata)</a>
+0556             self.estimate_clusters();
+0557         <span class="keyword">end</span>
+0558         
+0559         <a name="_sub14" href="#_subfunctions" class="code">function set_cluster_button_cb(self, source_h, eventdata)</a>
+0560             disp(<span class="string">'set_cluster_button_cb'</span>);
+0561             
+0562             self.set_cluster();
+0563         <span class="keyword">end</span>
+0564         
+0565         <a name="_sub15" href="#_subfunctions" class="code">function uncluster_button_cb(self, source_h, eventdata)</a>
+0566             disp(<span class="string">'uncluster_button_cb'</span>);
+0567             
+0568             self.uncluster();
+0569         <span class="keyword">end</span>
+0570         
+0571         <a name="_sub16" href="#_subfunctions" class="code">function stage_tab_panel_cb(self, source_h, eventdata)</a>
+0572             disp(<span class="string">'stage_tab_panel_cb'</span>);
+0573             
+0574             self.gui.display = eventdata.SelectedChild;
+0575             self.update();
+0576         <span class="keyword">end</span>
+0577         
+0578         <a name="_sub17" href="#_subfunctions" class="code">function x_popup_cb(self, sh, ed)</a>
+0579             <span class="comment">% x_popup_cb: callback for when x popup is changed.</span>
+0580             
+0581             v = get(sh, <span class="string">'Value'</span>);
+0582             self.gui.x_pc = v;
+0583             
+0584             <span class="comment">% Now make sure y, z aren't x.</span>
+0585             <span class="keyword">if</span> self.gui.y_pc == self.gui.x_pc
+0586                 <span class="comment">% Then y is equal to x</span>
+0587                 <span class="keyword">for</span> i = 1:10
+0588                     <span class="keyword">if</span> i ~= self.gui.x_pc &amp;&amp; i ~= self.gui.z_pc
+0589                         self.gui.y_pc = i;
+0590                         <span class="keyword">break</span>;
+0591                     <span class="keyword">end</span> 
+0592                 <span class="keyword">end</span>
+0593             <span class="keyword">end</span>
+0594             <span class="keyword">if</span> self.gui.z_pc == self.gui.x_pc
+0595                 <span class="comment">% Then z is equal to x</span>
+0596                 <span class="keyword">for</span> i = 1:10
+0597                     <span class="keyword">if</span> i ~= self.gui.x_pc &amp;&amp; i ~= self.gui.y_pc
+0598                         self.gui.z_pc = i;
+0599                         <span class="keyword">break</span>;
+0600                     <span class="keyword">end</span> 
+0601                 <span class="keyword">end</span>
+0602             <span class="keyword">end</span>
+0603             self.update();
+0604         <span class="keyword">end</span>
+0605         
+0606         <a name="_sub18" href="#_subfunctions" class="code">function y_popup_cb(self, sh, ed)</a>
+0607             <span class="comment">% y_popup_cb: callback for when y popup is changed.</span>
+0608             
+0609             v = get(sh, <span class="string">'Value'</span>);
+0610             self.gui.y_pc = v;
+0611             
+0612             <span class="comment">% Now make sure x, z aren't y.</span>
+0613             <span class="keyword">if</span> self.gui.x_pc == self.gui.y_pc
+0614                 <span class="comment">% Then x is equal to y</span>
+0615                 <span class="keyword">for</span> i = 1:10
+0616                     <span class="keyword">if</span> i ~= self.gui.y_pc &amp;&amp; i ~= self.gui.z_pc
+0617                         self.gui.x_pc = i;
+0618                         <span class="keyword">break</span>;
+0619                     <span class="keyword">end</span> 
+0620                 <span class="keyword">end</span>
+0621             <span class="keyword">end</span>
+0622             <span class="keyword">if</span> self.gui.z_pc == self.gui.y_pc
+0623                 <span class="comment">% Then z is equal to y</span>
+0624                 <span class="keyword">for</span> i = 1:10
+0625                     <span class="keyword">if</span> i ~= self.gui.y_pc &amp;&amp; i ~= self.gui.x_pc
+0626                         self.gui.z_pc = i;
+0627                         <span class="keyword">break</span>;
+0628                     <span class="keyword">end</span> 
+0629                 <span class="keyword">end</span>
+0630             <span class="keyword">end</span>
+0631             self.update();
+0632         <span class="keyword">end</span>
+0633         
+0634         <a name="_sub19" href="#_subfunctions" class="code">function z_popup_cb(self, sh, ed)</a>
+0635             <span class="comment">% z_popup_cb: callback for when z popup is changed.</span>
+0636             
+0637             v = get(sh, <span class="string">'Value'</span>);
+0638             self.gui.z_pc = v;
+0639             
+0640             <span class="comment">% Now make sure y, x aren't z.</span>
+0641             <span class="keyword">if</span> self.gui.y_pc == self.gui.z_pc
+0642                 <span class="comment">% Then y is equal to z</span>
+0643                 <span class="keyword">for</span> i = 1:10
+0644                     <span class="keyword">if</span> i ~= self.gui.x_pc &amp;&amp; i ~= self.gui.z_pc
+0645                         self.gui.y_pc = i;
+0646                         <span class="keyword">break</span>;
+0647                     <span class="keyword">end</span> 
+0648                 <span class="keyword">end</span>
+0649             <span class="keyword">end</span>
+0650             <span class="keyword">if</span> self.gui.x_pc == self.gui.z_pc
+0651                 <span class="comment">% Then x is equal to z</span>
+0652                 <span class="keyword">for</span> i = 1:10
+0653                     <span class="keyword">if</span> i ~= self.gui.z_pc &amp;&amp; i ~= self.gui.y_pc
+0654                         self.gui.x_pc = i;
+0655                         <span class="keyword">break</span>;
+0656                     <span class="keyword">end</span> 
+0657                 <span class="keyword">end</span>
+0658             <span class="keyword">end</span>
+0659             self.update();
+0660         <span class="keyword">end</span>
+0661         
+0662         <a name="_sub20" href="#_subfunctions" class="code">function xy_button_cb(self, sh, ed)</a>
+0663             <span class="comment">% xy_button_cb: callback that rotates pc axes to show xy.</span>
+0664             view(self.h.pc3_axes, [0 90]);
+0665         <span class="keyword">end</span>
+0666         
+0667         <a name="_sub21" href="#_subfunctions" class="code">function yz_button_cb(self, sh, ed)</a>
+0668             <span class="comment">% yz_button_cb: callback that rotates pc axes to show yz.</span>
+0669             view(self.h.pc3_axes, [90 0]);
+0670         <span class="keyword">end</span>
+0671         
+0672         <a name="_sub22" href="#_subfunctions" class="code">function zx_button_cb(self, sh, ed)</a>
+0673             <span class="comment">% zx_button_cb: callback that rotates pc axes to show zx.</span>
+0674             view(self.h.pc3_axes, [0 0]);
+0675         <span class="keyword">end</span>
+0676         
+0677         <a name="_sub23" href="#_subfunctions" class="code">function rotate_toggle_cb(self, sh, ed)</a>
+0678             v = get(sh, <span class="string">'Value'</span>);
+0679             
+0680             <span class="keyword">if</span> v
+0681                 start(self.gui.rotate_timer);
+0682             <span class="keyword">else</span>
+0683                 stop(self.gui.rotate_timer);
+0684             <span class="keyword">end</span>
+0685         <span class="keyword">end</span>
+0686         
+0687         <a name="_sub24" href="#_subfunctions" class="code">function rotate_timer_cb(self, sh, ed)</a>
+0688             [az, el] = view(self.h.pc3_axes);
+0689             view(self.h.pc3_axes, az + self.gui.rotate_angle_step, el);
+0690         <span class="keyword">end</span>
+0691         
+0692         <a name="_sub25" href="#_subfunctions" class="code">function re_selection_changed_cb(self, source_h, eventdata)</a>
+0693             disp(<span class="string">'re_selection_changed_cb'</span>);
+0694             self.update();
+0695         <span class="keyword">end</span>
+0696         
+0697         <a name="_sub26" href="#_subfunctions" class="code">function re_new_rois_cb(self, source_h, eventdata)</a>
+0698             disp(<span class="string">'re_new_rois_cb'</span>);
+0699             self.update_current_roi_set();
+0700             self.update();
+0701         <span class="keyword">end</span>
+0702         
+0703         <a name="_sub27" href="#_subfunctions" class="code">function re_altered_rois_cb(self, source_h, eventdata)</a>
+0704             disp(<span class="string">'re_altered_rois_cb'</span>);
+0705             self.update_current_roi_set();
+0706             self.update();
+0707         <span class="keyword">end</span>
+0708         
+0709         <a name="_sub28" href="#_subfunctions" class="code">function re_deleted_rois_cb(self, source_h, eventdata)</a>
+0710             disp(<span class="string">'re_deleted_rois_cb'</span>);
+0711             self.update_current_roi_set();
+0712             self.update();
+0713         <span class="keyword">end</span>
+0714         
+0715         <a name="_sub29" href="#_subfunctions" class="code">function re_frame_changed_cb(self, source_h, eventdata)</a>
+0716             disp(<span class="string">'re_frame_changed_cb'</span>);
+0717             self.update();
+0718         <span class="keyword">end</span>
+0719         
+0720         <a name="_sub30" href="#_subfunctions" class="code">function load_settings_cb(self, source_h, eventdata)</a>
+0721             disp(<span class="string">'load_settings_cb'</span>);
+0722         <span class="keyword">end</span>
+0723         
+0724         <a name="_sub31" href="#_subfunctions" class="code">function save_settings_cb(self, source_h, eventdata)</a>
+0725             disp(<span class="string">'save_settings_cb'</span>);
+0726         <span class="keyword">end</span>
+0727         
+0728         <a name="_sub32" href="#_subfunctions" class="code">function edit_preprocessing_cb(self, source_h, eventdata)</a>
+0729             disp(<span class="string">'edit_preprocessing_cb'</span>);
+0730             
+0731             self.edit_preprocessing_settings();
+0732         <span class="keyword">end</span>
+0733         
+0734         <a name="_sub33" href="#_subfunctions" class="code">function edit_pca_cb(self, source_h, eventdata)</a>
+0735             disp(<span class="string">'edit_pca_cb'</span>);
+0736         <span class="keyword">end</span>
+0737         
+0738         <a name="_sub34" href="#_subfunctions" class="code">function edit_ica_cb(self, source_h, eventdata)</a>
+0739             disp(<span class="string">'edit_ica_cb'</span>);
+0740         <span class="keyword">end</span>
+0741         
+0742         <a name="_sub35" href="#_subfunctions" class="code">function pp_settings_ok_cb(self, source_h, eventdata)</a>
+0743             
+0744             <span class="comment">% Get all of the data from the dialog. If the dialog has bad</span>
+0745             <span class="comment">% values, then these will be NaN. The set function will handle</span>
+0746             <span class="comment">% the NaN case.</span>
+0747             smooth_M_val = str2double(get(self.h.pp_smooth_M, <span class="string">'String'</span>));
+0748             smooth_N_val = str2double(get(self.h.pp_smooth_N, <span class="string">'String'</span>));
+0749             smooth_T_val = str2double(get(self.h.pp_smooth_T, <span class="string">'String'</span>));
+0750             
+0751             down_M_val = str2double(get(self.h.pp_down_M, <span class="string">'String'</span>));
+0752             down_N_val = str2double(get(self.h.pp_down_N, <span class="string">'String'</span>));
+0753             down_T_val = str2double(get(self.h.pp_down_T, <span class="string">'String'</span>));
+0754             
+0755             self.set_pp_smooth_window(smooth_M_val, smooth_N_val, smooth_T_val);
+0756             self.set_pp_down_sample(down_M_val, down_N_val, down_T_val);
+0757             
+0758             close(self.h.pp_dialog);
+0759         <span class="keyword">end</span>
+0760         
+0761         <a name="_sub36" href="#_subfunctions" class="code">function pp_settings_cancel_cb(self, source_h, eventdata)</a>
+0762             close(self.h.pp_dialog);
+0763         <span class="keyword">end</span>
+0764         
+0765         <a name="_sub37" href="#_subfunctions" class="code">function lock_component_button_cb(self, source_h, eventdata)</a>
+0766             disp(<span class="string">'lock_component_button_cb'</span>);
+0767             self.lock_current_component();
+0768         <span class="keyword">end</span>
+0769         
+0770         <a name="_sub38" href="#_subfunctions" class="code">function clear_locked_button_cb(self, source_h, eventdata)</a>
+0771             disp(<span class="string">'clear_locked_button_cb'</span>);
+0772             self.clear_locked_components();
+0773         <span class="keyword">end</span>
+0774         
+0775         <a name="_sub39" href="#_subfunctions" class="code">function component_label_cb(self, source_h, eventdata)</a>
+0776             disp(<span class="string">'component_label_cb'</span>);
+0777             c = get(source_h, <span class="string">'UserData'</span>);
+0778             
+0779             <span class="keyword">if</span> isscalar(c)
+0780                 self.h.roi_editor.set_current_frame(c);
+0781             <span class="keyword">end</span>
+0782         <span class="keyword">end</span>
+0783         
+0784         <a name="_sub40" href="#_subfunctions" class="code">function trial_listbox_cb(self, source_h, eventdata)</a>
+0785             disp(<span class="string">'trial_listbox_cb'</span>);
+0786             
+0787             sel = get(self.h.trial_listbox, <span class="string">'Value'</span>);
+0788             self.set_selected_trial(sel);
+0789         <span class="keyword">end</span>
+0790         
+0791         <a name="_sub41" href="#_subfunctions" class="code">function add_trial_button_cb(self, source_h, eventdata)</a>
+0792             disp(<span class="string">'add_trial_button_cb'</span>);
+0793             
+0794             <span class="comment">% hmmm... I guess a pop-up that allows you to then pick</span>
+0795             <span class="comment">% something from the workspace?</span>
+0796         <span class="keyword">end</span>
+0797         
+0798         <a name="_sub42" href="#_subfunctions" class="code">function delete_trial_button_cb(self, source_h, eventdata)</a>
+0799             disp(<span class="string">'delete_trial_button_cb'</span>);
+0800             
+0801             sel = get(self.h.trial_listbox, <span class="string">'Value'</span>);
+0802             self.delete_trial();
+0803         <span class="keyword">end</span>
+0804         
+0805         <a name="_sub43" href="#_subfunctions" class="code">function roi_listbox_cb(self, source_h, eventdata)</a>
+0806             disp(<span class="string">'roi_listbox_cb'</span>);
+0807             
+0808             sel = get(self.h.roi_listbox, <span class="string">'Value'</span>);
+0809             self.select_roi_set(sel);
+0810         <span class="keyword">end</span>
+0811         
+0812         <a name="_sub44" href="#_subfunctions" class="code">function add_rois_button_cb(self, source_h, eventdata)</a>
+0813             disp(<span class="string">'add_rois_button_cb'</span>);
+0814             self.create_new_roi_set();
+0815         <span class="keyword">end</span>
+0816         
+0817         <a name="_sub45" href="#_subfunctions" class="code">function delete_rois_button_cb(self, source_h, eventdata)</a>
+0818             disp(<span class="string">'delete_rois_button_cb'</span>);
+0819             self.delete_roi_set();
+0820         <span class="keyword">end</span>
+0821         
+0822         <a name="_sub46" href="#_subfunctions" class="code">function calc_rois_cb(self, source_h, eventdata)</a>
+0823             disp(<span class="string">'calc_rois_cb'</span>);
+0824             self.calc_rois();
+0825         <span class="keyword">end</span>
+0826         
+0827         <a name="_sub47" href="#_subfunctions" class="code">function save_rois_cb(self, source_h, eventdata)</a>
+0828             self.save_rois();
+0829         <span class="keyword">end</span>
+0830         
+0831         <a name="_sub48" href="#_subfunctions" class="code">function load_rois_cb(self, source_h, eventdata)</a>
+0832             self.load_rois();
+0833         <span class="keyword">end</span>
+0834         
+0835         <span class="comment">%%%%%%%%%% Main Functions %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0836         <a name="_sub49" href="#_subfunctions" class="code">function update(self)</a>
+0837             <span class="comment">% update(self): main update function</span>
+0838             
+0839             disp(<span class="string">'ICP: update'</span>);
+0840             f = self.h.roi_editor.current_frame;
+0841             
+0842             rois = self.h.roi_editor.rois.xyrra(self.h.roi_editor.selected_rois, :, 1);
+0843             
+0844             cla(self.h.data_axes);
+0845             <span class="keyword">if</span> ~isempty(rois)
+0846                 <span class="comment">% plot the original data from the ROI.</span>
+0847                 <span class="keyword">if</span> isfield(self.pp, <span class="string">'im_data_mc'</span>)
+0848                     data = <a href="mean_roi.html" class="code" title="function data = mean_roi(ccd_movie, roi_data, im_x, im_y)">mean_roi</a>(self.pp.im_data_mc, rois, self.pp.mc_x, self.pp.mc_y);
+0849                 <span class="keyword">else</span>
+0850                     data = <a href="mean_roi.html" class="code" title="function data = mean_roi(ccd_movie, roi_data, im_x, im_y)">mean_roi</a>(self.im_data{self.gui.current_trial}, rois);
+0851                 <span class="keyword">end</span>
+0852                 
+0853                 <span class="comment">% need to do a check on norm_frame</span>
+0854                 <span class="keyword">if</span> size(data, 1) &lt; self.gui.data_norm_frame
+0855                     self.gui.data_norm_frame = 1; <span class="comment">% I guess just do this?</span>
+0856                 <span class="keyword">end</span>
+0857                 
+0858                 data = 100 * (data ./ repmat(data(self.gui.data_norm_frame, :), size(data, 1), 1) - 1);
+0859                 
+0860                 plot(self.h.data_axes, data);
+0861             <span class="keyword">end</span>
+0862             
+0863             <span class="keyword">if</span> self.gui.display == 6 &amp;&amp; self.stage &gt;= self.PostProcessingStage <span class="keyword">...</span>
+0864                     &amp;&amp; isfield(self.cluster, <span class="string">'im_data'</span>) &amp;&amp; ~isempty(self.cluster.im_data)
+0865                 
+0866                 <span class="keyword">if</span> self.gui.last_display ~= self.gui.display
+0867                     <span class="comment">% Don't update the roi editor if its the same</span>
+0868                     self.h.roi_editor.set_im_data(self.cluster.im_data, [], self.cluster.im_x, self.cluster.im_y);
+0869                     f = self.h.roi_editor.set_current_frame(f);
+0870                 <span class="keyword">end</span>
+0871                 self.gui.last_display = self.gui.display;
+0872             
+0873                 cla(self.h.component_axes);
+0874                 plot(self.h.component_axes, self.ica.ics(:, f), <span class="string">'k'</span>, <span class="string">'LineWidth'</span>, 2);
+0875                 
+0876                 plot(self.h.component_axes, self.ica.ics(:, self.cluster.top3(f, 3)), <span class="string">'b'</span>);
+0877                 plot(self.h.component_axes, self.ica.ics(:, self.cluster.top3(f, 2)), <span class="string">'g'</span>);
+0878                 plot(self.h.component_axes, self.ica.ics(:, self.cluster.top3(f, 1)), <span class="string">'r'</span>);
+0879                 
+0880             <span class="keyword">elseif</span> self.gui.display == 5 &amp;&amp; self.stage &gt;= self.PostProcessingStage <span class="keyword">...</span>
+0881                     &amp;&amp; isfield(self.post, <span class="string">'im_data'</span>) &amp;&amp; ~isempty(self.post.im_data)
+0882                 <span class="comment">% Then view the segments</span>
+0883                 <span class="keyword">if</span> self.gui.last_display ~= self.gui.display
+0884                     self.h.roi_editor.set_im_data(self.post.im_data, [], self.post.im_x, self.post.im_y);
+0885                     f = self.h.roi_editor.set_current_frame(f);
+0886                 <span class="keyword">end</span>
+0887                 self.gui.last_display = self.gui.display;
+0888 
+0889             <span class="keyword">elseif</span> self.gui.display == 4 &amp;&amp; self.stage &gt;= self.IcaStage
+0890                 <span class="comment">% Then view the ICs</span>
+0891                 <span class="keyword">if</span> self.gui.last_display ~= self.gui.display
+0892                     <span class="comment">% Don't update the roi editor if its the same</span>
+0893                     self.h.roi_editor.set_im_data(self.ica.im_data, [], self.ica.im_x, self.ica.im_y);
+0894                     f = self.h.roi_editor.set_current_frame(f);
+0895                 <span class="keyword">end</span>
+0896                 self.gui.last_display = self.gui.display;                
+0897                 
+0898                 <span class="comment">% Plot the current ic</span>
+0899                 cla(self.h.component_axes);
+0900                 legend(self.h.component_axes, <span class="string">'off'</span>);
+0901                 
+0902                 plot(self.h.component_axes, self.ica.ics(:, f), <span class="string">'k'</span>);
+0903                 
+0904             <span class="keyword">elseif</span> self.gui.display == 3 &amp;&amp; self.stage &gt;= self.PcaStage
+0905                 <span class="comment">% Then view the PCs</span>
+0906                 <span class="keyword">if</span> self.gui.last_display ~= self.gui.display
+0907                     <span class="comment">% Don't update the roi editor if its the same</span>
+0908                     self.h.roi_editor.set_im_data(self.pca.im_data, [], self.pca.im_x, self.pca.im_y);
+0909                     f = self.h.roi_editor.set_current_frame(f);
+0910                 <span class="keyword">end</span>
+0911                 self.gui.last_display = self.gui.display;                
+0912                 
+0913                 <span class="comment">% Plot the current pc</span>
+0914                 cla(self.h.component_axes);
+0915                 legend(self.h.component_axes, <span class="string">'off'</span>);
+0916                 
+0917                 <span class="comment">%plot(self.h.component_axes, self.pca.pcs(:, f), 'k');</span>
+0918                 
+0919                 <span class="keyword">if</span> isfield(self.pca, <span class="string">'pc_rec'</span>)
+0920                     plot(self.h.component_axes, self.pca.pc_rec(:,f));
+0921                 <span class="keyword">else</span>
+0922                     plot(self.h.component_axes, self.pca.pcs(:, f), <span class="string">'k'</span>);
+0923                 <span class="keyword">end</span>
+0924             <span class="keyword">elseif</span> self.gui.display == 2 &amp;&amp; self.stage &gt;= self.PreProcessingStage
+0925                 <span class="comment">% View the Preprocessing data</span>
+0926                 <span class="keyword">if</span> self.gui.last_display ~= self.gui.display
+0927                     <span class="comment">% Don't update the roi editor if its the same</span>
+0928                     self.h.roi_editor.set_im_data(self.pp.im_data, [], self.pp.im_x, self.pp.im_y);
+0929                     self.h.roi_editor.set_current_frame(f);
+0930                 <span class="keyword">end</span>
+0931                 self.gui.last_display = self.gui.display;
+0932             <span class="keyword">else</span>
+0933                 <span class="comment">% View the raw data.</span>
+0934                 <span class="keyword">if</span> self.gui.last_display ~= self.gui.display
+0935                     <span class="comment">% Don't update the roi editor if its the same</span>
+0936                     self.h.roi_editor.set_im_data(self.im_data{self.gui.current_trial});
+0937                     self.h.roi_editor.set_current_frame(f);
+0938                 <span class="keyword">end</span>
+0939                 self.gui.last_display = self.gui.display;
+0940             <span class="keyword">end</span>
+0941             
+0942             <span class="keyword">switch</span> self.stage
+0943                 <span class="keyword">case</span> self.InitStage, s = <span class="string">'Initialized'</span>;
+0944                 <span class="keyword">case</span> self.PreProcessingStage, s = <span class="string">'Pre-Processing Complete'</span>;
+0945                 <span class="keyword">case</span> self.PcaStage, s = <span class="string">'PCA Complete'</span>;
+0946                 <span class="keyword">case</span> self.IcaStage, s = <span class="string">'ICA Complete'</span>;
+0947                 <span class="keyword">case</span> self.PostProcessingStage, s = <span class="string">'Post-Processing Complete'</span>;
+0948             <span class="keyword">end</span>
+0949                     
+0950             set(self.h.stage_status, <span class="string">'String'</span>, s);
+0951             
+0952             
+0953             self.h.roi_editor.color_rois = true;
+0954             <span class="keyword">if</span> self.gui.display == 6 &amp;&amp; self.stage == self.PostProcessingStage
+0955                 self.h.roi_editor.color_rois = false;
+0956                 self.draw_clustered_rois();
+0957                 
+0958             <span class="keyword">elseif</span> self.gui.is_component_set(self.gui.current_roi_set) <span class="keyword">...</span>
+0959                     &amp;&amp; self.stage &gt;= self.IcaStage <span class="keyword">...</span>
+0960                     &amp;&amp; ~isempty(self.h.roi_editor.selected_rois)
+0961                 cla(self.h.component_axes);
+0962                 
+0963                 self.h.component_labels = [];
+0964                 
+0965                 <span class="keyword">for</span> i = 1:length(self.h.roi_editor.selected_rois)
+0966                     c = self.gui.locked_colors(mod(i-1, length(self.gui.locked_colors))+1, :);
+0967                     
+0968                     plot(self.h.component_axes, self.ica.ics(:, self.h.roi_editor.selected_rois(i)), <span class="string">'Color'</span>, c);
+0969                     
+0970                     text_x = 0.95 - (length(self.h.roi_editor.selected_rois) - i) * 0.05;
+0971                     self.h.component_labels(i) = text(text_x, 0.9, num2str(self.h.roi_editor.selected_rois(i)), <span class="keyword">...</span>
+0972                         <span class="string">'Parent'</span>, self.h.component_axes, <span class="string">'Units'</span>, <span class="string">'normalized'</span>, <span class="keyword">...</span>
+0973                         <span class="string">'HorizontalAlignment'</span>, <span class="string">'center'</span>, <span class="string">'UserData'</span>, self.h.roi_editor.selected_rois(i), <span class="keyword">...</span>
+0974                         <span class="string">'Color'</span>, c, <span class="string">'ButtonDownFcn'</span>, @self.component_label_cb);
+0975                 <span class="keyword">end</span>
+0976             <span class="keyword">else</span>
+0977                 self.show_best_selected_components(rois);
+0978             <span class="keyword">end</span>
+0979             
+0980             self.plot_locked_components();
+0981             self.plot_3d();
+0982             
+0983             self.build_roi_listbox();
+0984             
+0985             drawnow;
+0986         <span class="keyword">end</span>
+0987         
+0988         <a name="_sub50" href="#_subfunctions" class="code">function warp = run_motion_correction(self)</a>
+0989             <span class="comment">% run_motion_correction(self): Runs the motion correction.</span>
+0990 
+0991             disp(<span class="string">'run_motion_correction'</span>);
+0992             
+0993             set(self.h.stage_status, <span class="string">'String'</span>, <span class="string">'Running Motion Correction...'</span>);
+0994             drawnow;
+0995             
+0996             s = self.settings.preprocessing;
+0997             
+0998             [self.pp.im_data_mc, warp] = s.motion_correct_func(self.im_data{self.gui.current_trial});
+0999             
+1000             <span class="comment">% Fix the size of the corrected data.</span>
+1001             sx = floor((size(self.im_data{self.gui.current_trial}, 2) - size(self.pp.im_data_mc, 2))/2) + 1; 
+1002             sy = floor((size(self.im_data{self.gui.current_trial}, 1) - size(self.pp.im_data_mc, 1))/2) + 1;
+1003             
+1004             self.pp.mc_x = sx:(size(self.pp.im_data_mc, 2) + sx - 1);
+1005             self.pp.mc_y = sy:(size(self.pp.im_data_mc, 1) + sy - 1);
+1006         <span class="keyword">end</span>
+1007         
+1008         <a name="_sub51" href="#_subfunctions" class="code">function run_filters(self)</a>
+1009             <span class="comment">% run_filters(self): Runs the filtering stage of preprocessing.</span>
+1010             
+1011             
+1012             
+1013         <span class="keyword">end</span>
+1014         
+1015         <a name="_sub52" href="#_subfunctions" class="code">function run_preprocessing(self)</a>
+1016             <span class="comment">% run_preprocessing(self): Runs the preprocessing stage of the</span>
+1017             <span class="comment">% analysis.</span>
+1018             <span class="comment">%</span>
+1019             <span class="comment">% Preprocessing turns image data (MxNxt) into a data matrix</span>
+1020             <span class="comment">% (M*Nxt).</span>
+1021             disp(<span class="string">'run_preprocessing'</span>);
+1022             
+1023             <span class="comment">% @todo: checks on current state</span>
+1024             
+1025             set(self.h.stage_status, <span class="string">'String'</span>, <span class="string">'Running Pre-Processing...'</span>);
+1026             drawnow;
+1027             
+1028             s = self.settings.preprocessing;
+1029             
+1030             <span class="keyword">if</span> isfield(self.pp, <span class="string">'im_data_mc'</span>)
+1031                 <span class="comment">% then we have motion corrected data.</span>
+1032                 im_data = self.pp.im_data_mc;
+1033                 im_x = self.pp.mc_x;
+1034                 im_y = self.pp.mc_y;
+1035                 im_z = 1:size(im_data, 3);
+1036             <span class="keyword">else</span>
+1037                 <span class="comment">% Then use the original data.</span>
+1038                 im_data = self.im_data{self.gui.current_trial};
+1039                 im_x = 1:size(im_data, 2);
+1040                 im_y = 1:size(im_data, 1);
+1041                 im_z = 1:size(im_data, 3);
+1042             <span class="keyword">end</span>
+1043             
+1044             block = ones(s.smooth_window) ./ (prod(s.smooth_window));
+1045             
+1046             im_conv = convn(im_data, block, <span class="string">'same'</span>);
+1047             
+1048             self.pp.im_y = im_y(1:s.down_sample(1):length(im_y));
+1049             self.pp.im_x = im_x(1:s.down_sample(2):length(im_x));
+1050             self.pp.im_z = im_z(1:s.down_sample(3):length(im_z));
+1051             
+1052             self.pp.im_data = im_conv(self.pp.im_y, self.pp.im_x, self.pp.im_z);
+1053             self.pp.data = reshape(self.pp.im_data, [], size(self.pp.im_data, 3));   
+1054             
+1055             self.pp.use_wavelets = self.gui.use_wavelets;
+1056             
+1057             <span class="keyword">if</span> self.pp.use_wavelets
+1058                 <span class="comment">% Then we want to do the wavelet decomposition</span>
+1059                 disp(<span class="string">'Computing Wavelets...'</span>);
+1060                 set(self.h.stage_status, <span class="string">'String'</span>, <span class="string">'Computing Wavelets...'</span>);
+1061                 drawnow;
+1062                 
+1063                 cwt_struct = cwtft(self.pp.data(1,:));
+1064                 num_scales = length(cwt_struct.scales);
+1065                 num_frames = size(self.pp.data, 2);
+1066                 
+1067                 self.pp.cwt_data = zeros(size(self.pp.data, 1), 2 * num_scales * num_frames);
+1068                 
+1069                 rcwt = real(cwt_struct.cfs);
+1070                 icwt = imag(cwt_struct.cfs);
+1071                 
+1072                 self.pp.cwt_data(1, :) = reshape([rcwt, icwt], 1, []);
+1073                 
+1074                 self.pp.cwt_struct = cwt_struct;
+1075                 
+1076                 <span class="keyword">for</span> i = 2:size(self.pp.data, 1)
+1077                     cwt_struct = cwtft(self.pp.data(i, :));
+1078                     
+1079                     rcwt = real(cwt_struct.cfs);
+1080                     icwt = imag(cwt_struct.cfs);
+1081                     
+1082                     self.pp.cwt_data(i, :) = reshape([rcwt, icwt], 1, []);
+1083                 <span class="keyword">end</span>
+1084                 
+1085                 <span class="comment">% @todo: other things with the wavelets, like removing</span>
+1086                 <span class="comment">% frequencies etc. Things that can be done to cwt_data</span>
+1087             <span class="keyword">end</span>
+1088 
+1089             <span class="comment">%%% I'm going ot hack in a filter here to test</span>
+1090             <span class="comment">%hd = load('icp_filter.mat');</span>
+1091             <span class="comment">%data = self.pp.data - repmat(mean(self.pp.data, 2), 1, size(self.pp.data, 2));</span>
+1092             <span class="comment">%self.pp.data = filter(hd.Hd, data')';</span>
+1093             <span class="comment">%%%</span>
+1094             
+1095             self.stage = self.PreProcessingStage;
+1096             
+1097             self.gui.last_display = 0;
+1098             self.update();
+1099         <span class="keyword">end</span>
+1100         
+1101         <a name="_sub53" href="#_subfunctions" class="code">function run_pca(self)</a>
+1102             <span class="comment">% run_pca(self): Runs the pca stage of the analysis.</span>
+1103             
+1104             disp(<span class="string">'run_pca'</span>);
+1105             
+1106             <span class="comment">% @todo: checks on state</span>
+1107             <span class="keyword">if</span> self.stage == self.InitStage
+1108                 disp(<span class="string">'Running previous stage...'</span>);
+1109                 self.run_preprocessing();
+1110             <span class="keyword">end</span>
+1111             
+1112             set(self.h.stage_status, <span class="string">'String'</span>, <span class="string">'Running PCA...'</span>);
+1113             drawnow;
+1114             
+1115             s = self.settings.pca;
+1116             
+1117             <span class="keyword">if</span> self.pp.use_wavelets
+1118                 [scores, pcs, eigs] = pca(self.pp.cwt_data');
+1119                  <span class="comment">% Reconstruct the original data from wavelets</span>
+1120                  cwt_struct = self.pp.cwt_struct;
+1121                  num_frames = size(self.pp.data, 2);
+1122                  wavelet_rec = zeros(num_frames, size(pcs, 2));
+1123                  <span class="keyword">for</span> i = 1:size(pcs, 2)
+1124                      pc_cfs = reshape(pcs(:,i), length(cwt_struct.scales), []);
+1125                      cwt_struct.cfs = complex(pc_cfs(:, 1:num_frames), pc_cfs(:, (num_frames+1):end));
+1126                      
+1127                      wavelet_rec(:, i) = icwtft(cwt_struct);
+1128                  <span class="keyword">end</span>
+1129                  self.pca.pc_rec = wavelet_rec;
+1130             <span class="keyword">else</span>
+1131                 [scores, pcs, eigs] = pca(self.pp.data');
+1132             <span class="keyword">end</span>
+1133             
+1134             self.pca.scores = scores;
+1135             self.pca.pcs = pcs;
+1136             self.pca.eigs = eigs;
+1137             
+1138             
+1139             self.pca.im_data = reshape(self.pca.scores, <span class="keyword">...</span>
+1140                 size(self.pp.im_data,1), size(self.pp.im_data,2), size(self.pca.scores, 2));
+1141             
+1142             self.pca.im_x = self.pp.im_x;
+1143             self.pca.im_y = self.pp.im_y;
+1144             
+1145             self.stage = self.PcaStage;
+1146             self.gui.last_display = 0;
+1147             self.update();
+1148         <span class="keyword">end</span>
+1149         
+1150         <a name="_sub54" href="#_subfunctions" class="code">function run_ica(self)</a>
+1151             <span class="comment">% run_ica(self): Runs the ica stage of the analysis.</span>
+1152             
+1153             disp(<span class="string">'run_ica'</span>);
+1154             
+1155             <span class="comment">% @todo: checks on state.</span>
+1156             <span class="keyword">if</span> self.stage == self.InitStage || self.stage == self.PreProcessingStage
+1157                 disp(<span class="string">'Running previous stages...'</span>);
+1158                 self.run_pca();
+1159             <span class="keyword">end</span>
+1160             
+1161             set(self.h.stage_status, <span class="string">'String'</span>, <span class="string">'Running ICA...'</span>);
+1162             drawnow;
+1163             
+1164             s = self.settings.ica;
+1165             
+1166             <span class="comment">% Make sure that the pcs requested are in range.</span>
+1167             which_pcs = s.which_pcs;
+1168             which_pcs(which_pcs &gt; size(self.pca.scores, 2)) = [];
+1169             
+1170             <span class="keyword">if</span> strcmp(s.ica_func, <span class="string">'CellsortICA'</span>)
+1171                 disp(<span class="string">'Running CellsortICA'</span>);
+1172                 [ics, im_data, A, niter] = CellsortICA(self.pca.pcs(:, which_pcs)', <span class="keyword">...</span>
+1173                     self.pca.im_data(:, :, which_pcs), self.pca.eigs(which_pcs), [], s.mu);
+1174                 
+1175                 self.ica.ics = ics';
+1176                 self.ica.im_data = shiftdim(im_data, 1);
+1177                 self.ica.A = A;
+1178                 self.ica.scores = reshape(self.ica.im_data, [], size(self.ica.im_data, 3));
+1179                 
+1180             <span class="keyword">elseif</span> strcmp(s.ica_func, <span class="string">'fastica'</span>)
+1181                 disp(<span class="string">'Running fastica'</span>);
+1182 
+1183                 <span class="keyword">if</span> s.init_guess == -1
+1184                     <span class="comment">% This means that the init guess should be the previous A</span>
+1185                     <span class="comment">% matrix.</span>
+1186                     <span class="keyword">if</span> isfield(self.ica, <span class="string">'A'</span>) &amp;&amp; size(self.ica.A, 1) == length(which_pcs)
+1187                         <span class="comment">% Then the last A matrix is valid.</span>
+1188                         [icasig, A, W] = fastica(self.pca.scores(:, which_pcs)', <span class="string">'initGuess'</span>, self.ica.A);
+1189                     <span class="keyword">else</span>
+1190                         <span class="comment">% Then the last A matrix is invalid.</span>
+1191                         disp(<span class="string">'Could not use previous A as initial guess.'</span>);                        
+1192                         [icasig, A, W] = fastica(self.pca.scores(:, which_pcs)');
+1193                     <span class="keyword">end</span>
+1194                 <span class="keyword">elseif</span> s.init_guess == 0
+1195                     <span class="comment">% Then we just use the normal random guess.</span>
+1196                     <span class="comment">%%%</span>
+1197                     <span class="comment">%[icasig, A, W] = fastica(self.pca.scores(:, which_pcs)');</span>
+1198                     <span class="comment">%%% Messing around with the other fastica params</span>
+1199                     disp(<span class="string">'fastica params'</span>);
+1200                     [icasig, A, W] = fastica(self.pca.scores(:, which_pcs)', <span class="string">'g'</span>, <span class="string">'tanh'</span>, <span class="string">'a1'</span>, 3, <span class="string">'stabilization'</span>, <span class="string">'on'</span>);
+1201                     <span class="comment">%%%</span>
+1202                 <span class="keyword">else</span>
+1203                     <span class="comment">% Then s.init_guess should be the A matrix itself.</span>
+1204                     <span class="keyword">if</span> size(s.init_guess, 1) == length(which_pcs)
+1205                         disp(<span class="string">'Using Init Guess'</span>);
+1206                         [icasig, A, W] = fastica(self.pca.scores(:, which_pcs)', <span class="string">'initGuess'</span>, s.init_guess);
+1207                     <span class="keyword">else</span>
+1208                         disp(<span class="string">'Initial Guess incorrectly formatted.'</span>);
+1209                         [icasig, A, W] = fastica(self.pca.scores(:, which_pcs)');
+1210                     <span class="keyword">end</span>
+1211                 <span class="keyword">end</span>
+1212                 
+1213                 self.ica.scores = icasig';
+1214 
+1215                 <span class="keyword">if</span> s.positive_skew
+1216                     <span class="comment">% Then we want the component scores to all skew positively.</span>
+1217                     is_neg_skew = skewness(self.ica.scores) &lt; 0;
+1218                     self.ica.scores(:, is_neg_skew) = -self.ica.scores(:, is_neg_skew);
+1219                     A(:, is_neg_skew) = -A(:, is_neg_skew);
+1220                 <span class="keyword">end</span>
+1221                 
+1222                 self.ica.A = A;
+1223                 self.ica.W = W;
+1224                 ics = self.pca.pcs(:, which_pcs) * A;
+1225                 
+1226                 <span class="keyword">if</span> self.pp.use_wavelets
+1227                     <span class="comment">% Reconstruct the original data from wavelets</span>
+1228                     cwt_struct = self.pp.cwt_struct;
+1229                     num_frames = size(self.pp.data, 2);
+1230                     wavelet_rec = zeros(num_frames, size(ics, 2));
+1231                     <span class="keyword">for</span> i = 1:size(ics, 2)
+1232                         ic_cfs = reshape(ics(:,i), length(cwt_struct.scales), []);
+1233                         cwt_struct.cfs = complex(ic_cfs(:, 1:num_frames), ic_cfs(:, (num_frames+1):end)); 
+1234                         
+1235                         wavelet_rec(:, i) = icwtft(cwt_struct);
+1236                     <span class="keyword">end</span>
+1237                     self.ica.ics = wavelet_rec;
+1238                 <span class="keyword">else</span>
+1239                     self.ica.ics = ics;
+1240                 <span class="keyword">end</span>
+1241                
+1242                 
+1243                 
+1244                 self.ica.im_data = reshape(self.ica.scores, <span class="keyword">...</span>
+1245                     size(self.pp.im_data,1), size(self.pp.im_data,2), size(self.ica.scores, 2));
+1246             <span class="keyword">elseif</span> strcmp(s.ica_func, <span class="string">'TreeICA'</span>)
+1247                 
+1248             <span class="keyword">elseif</span> strcmp(s.ica_func, <span class="string">'RadICAl'</span>)
+1249                 
+1250             <span class="keyword">elseif</span> strcmp(s.ica_func, <span class="string">'KernelICA'</span>)
+1251                 disp(<span class="string">'Running Kernel ICA'</span>);
+1252                 tic;
+1253                 W = kernel_ica(self.pca.scores(:, which_pcs)');
+1254                 
+1255                 self.ica.scores = (W * self.pca.scores(:, which_pcs)')';
+1256                 self.ica.ics = self.pca.pcs(:, which_pcs) / W;
+1257                 
+1258                 self.ica.im_data = reshape(self.ica.scores, <span class="keyword">...</span>
+1259                     size(self.pp.im_data,1), size(self.pp.im_data, 2), size(self.ica.scores, 2));
+1260                 
+1261                 toc;
+1262             <span class="keyword">elseif</span> strcmp(s.ica_func, <span class="string">'imageica'</span>)
+1263                 
+1264             <span class="keyword">elseif</span> strcmp(s.ica_func, <span class="string">'icasso'</span>)
+1265                 
+1266             <span class="keyword">elseif</span> strcmp(s.ica_func, <span class="string">'fourierica'</span>)
+1267                 [S_Ft, A, W] = fourierica(self.pca.scores(:, which_pcs)', length(which_pcs), 50, 0, 20);
+1268                 
+1269                 self.ica.scores = (W * self.pca.scores(:, which_pcs)')';
+1270                 self.ica.ics = self.pca.pcs(:, which_pcs) * A;
+1271                 
+1272                 self.ica.im_data = reshape(self.ica.scores, <span class="keyword">...</span>
+1273                     size(self.pp.im_data,1), size(self.pp.im_data, 2), size(self.ica.scores, 2));
+1274             <span class="keyword">else</span>
+1275                 error(<span class="string">'Incorrect ICA function'</span>);
+1276             <span class="keyword">end</span>
+1277             self.ica.im_x = self.pca.im_x;
+1278             self.ica.im_y = self.pca.im_y;
+1279             
+1280             self.stage = self.IcaStage;
+1281             self.gui.last_display = 0;
+1282             self.update();
+1283         <span class="keyword">end</span>
+1284         
+1285         <a name="_sub55" href="#_subfunctions" class="code">function run_segmentation(self)</a>
+1286             <span class="comment">% run_segmentation(self): Runs the segmentation algorithm on</span>
+1287             <span class="comment">% the ICs.</span>
+1288             <span class="comment">%</span>
+1289             <span class="comment">% This looks for ic components that are spatially localized.</span>
+1290             
+1291             <span class="keyword">if</span> self.stage &lt; self.IcaStage
+1292                 disp(<span class="string">'Run ICA first'</span>);
+1293                 <span class="keyword">return</span>;
+1294             <span class="keyword">end</span>
+1295             
+1296             set(self.h.stage_status, <span class="string">'String'</span>, <span class="string">'Running Segmentation...'</span>);
+1297             drawnow;
+1298             
+1299             [segment_masks, segment_info] = <a href="segment_ics.html" class="code" title="function [segment_masks, segment_info] = segment_ics(comp, x, y)">segment_ics</a>(self.ica.im_data, self.ica.im_x, self.ica.im_y);
+1300             
+1301             self.post.im_data = segment_masks;
+1302             self.post.im_x = self.ica.im_x;
+1303             self.post.im_y = self.ica.im_y;
+1304             self.post.segment_info = segment_info;
+1305             
+1306             self.stage = self.PostProcessingStage;
+1307             
+1308             self.gui.last_display = 0;
+1309             self.update();
+1310         <span class="keyword">end</span>
+1311         
+1312         <a name="_sub56" href="#_subfunctions" class="code">function rois = calc_rois(self)</a>
+1313             <span class="comment">% calc_rois(self): calculates the ROIs from the independent</span>
+1314             <span class="comment">% components.</span>
+1315             
+1316             <span class="keyword">if</span> self.stage &lt; self.IcaStage
+1317                 disp(<span class="string">'Run ICA first'</span>);
+1318                 <span class="keyword">return</span>;
+1319             <span class="keyword">end</span>
+1320             
+1321             
+1322             rois = self.settings.post.calc_rois_func(self.ica.im_data, self.ica.im_x, self.ica.im_y);
+1323             
+1324             self.create_new_roi_set(<span class="string">'IC_Generated_ROIs'</span>, true);
+1325             self.rois{self.gui.current_roi_set} = rois;
+1326             
+1327             self.h.roi_editor.set_rois(self.rois{self.gui.current_roi_set}, false);
+1328             
+1329             self.update();
+1330             
+1331         <span class="keyword">end</span>
+1332         
+1333         <a name="_sub57" href="#_subfunctions" class="code">function estimate_clusters(self)</a>
+1334             disp(<span class="string">'estimate_clusters'</span>);
+1335             
+1336             <span class="keyword">if</span> self.stage &lt; self.IcaStage
+1337                 disp(<span class="string">'Run ICA first'</span>);
+1338                 <span class="keyword">return</span>;
+1339             <span class="keyword">end</span>
+1340             
+1341             <span class="comment">% We need rois specifically for clustering.</span>
+1342             <span class="keyword">if</span> self.gui.is_component_set(self.gui.current_roi_set)
+1343                 self.cluster.rois = self.rois{self.gui.current_roi_set};
+1344             <span class="keyword">else</span>
+1345                 self.cluster.rois = self.calc_rois();
+1346             <span class="keyword">end</span>
+1347             
+1348             s = self.settings.cluster;
+1349             
+1350             [feature_matrix, feature_weights] = s.feature_matrix_func(self.ica.ics, self.ica.im_data);
+1351             
+1352             self.cluster.feature_matrix = feature_matrix;
+1353             self.cluster.feature_weights = feature_weights;
+1354             
+1355             self.cluster.similarity_matrix = s.calc_sim_matrix_func(self.cluster.feature_weights, self.cluster.feature_matrix);
+1356             
+1357             [self.cluster.im_data, top3] = s.visualization_func(self.cluster.similarity_matrix, self.ica.im_data);
+1358             
+1359             self.cluster.im_x = self.ica.im_x;
+1360             self.cluster.im_y = self.ica.im_y;
+1361             
+1362             self.cluster.top3 = top3;
+1363             
+1364             <span class="comment">%%% Not sure how/when to set this</span>
+1365             self.cluster.cluster_matrix = zeros(size(self.cluster.similarity_matrix));
+1366             <span class="comment">% THis is just a hack for testing</span>
+1367             self.cluster.cluster_matrix(1, 5) = 1;
+1368             self.cluster.cluster_matrix(2, [10, 20]) = 1;
+1369             <span class="comment">%%%</span>
+1370             
+1371             self.stage = self.PostProcessingStage;
+1372             self.update();
+1373         <span class="keyword">end</span>
+1374         
+1375         <a name="_sub58" href="#_subfunctions" class="code">function load_settings(self, filename)</a>
+1376             <span class="comment">% load_settings(self, filename): loads settings from a saved</span>
+1377             <span class="comment">% file.</span>
+1378             
+1379             disp(<span class="string">'load_settings'</span>);
+1380         <span class="keyword">end</span>
+1381         
+1382         <a name="_sub59" href="#_subfunctions" class="code">function save_settings(self, filename)</a>
+1383             <span class="comment">% save_settings(self, filename): saves the settings to a file.</span>
+1384             disp(<span class="string">'save_settings'</span>);
+1385         <span class="keyword">end</span>
+1386         
+1387         <a name="_sub60" href="#_subfunctions" class="code">function edit_preprocessing_settings(self)</a>
+1388             <span class="comment">% edit_preprocessing_settings(self): shows the edit</span>
+1389             <span class="comment">% preprocessing settings dialog.</span>
+1390             
+1391             self.h.pp_dialog = dialog(<span class="string">'Name'</span>, <span class="string">'Edit Preprocessing Settings'</span>, <span class="string">'Units'</span>, <span class="string">'pixels'</span>);
+1392             
+1393             self.h.pp_main_vbox = uiextras.VBox(<span class="string">'Parent'</span>, self.h.pp_dialog, <span class="keyword">...</span>
+1394                 <span class="string">'Spacing'</span>, self.gui.MARGIN, <span class="string">'Padding'</span>, self.gui.MARGIN);
+1395             self.h.pp_settings_grid = uiextras.Grid(<span class="string">'Parent'</span>, self.h.pp_main_vbox, <span class="string">'Spacing'</span>, self.gui.MARGIN);
+1396             self.h.pp_button_hbox = uiextras.HButtonBox(<span class="string">'Parent'</span>, self.h.pp_main_vbox, <span class="string">'Spacing'</span>, self.gui.MARGIN);
+1397             
+1398             <span class="comment">% The order of these matters, as they are added to the grid</span>
+1399             <span class="comment">% based on the order.</span>
+1400             <span class="comment">% First column</span>
+1401             uiextras.Empty(<span class="string">'Parent'</span>, self.h.pp_settings_grid);
+1402             self.h.pp_smooth_label = uicontrol(<span class="string">'Parent'</span>, self.h.pp_settings_grid, <span class="keyword">...</span>
+1403                 <span class="string">'Style'</span>, <span class="string">'text'</span>, <span class="string">'String'</span>, <span class="string">'Smooth Window:'</span>, <span class="string">'TooltipString'</span>, <span class="keyword">...</span>
+1404                 <span class="string">'Sets dimensions of smooth window - MxNxT'</span>, <span class="keyword">...</span>
+1405                 <span class="string">'HorizontalAlignment'</span>, <span class="string">'left'</span>);
+1406             self.h.pp_down_label = uicontrol(<span class="string">'Parent'</span>, self.h.pp_settings_grid, <span class="keyword">...</span>
+1407                 <span class="string">'Style'</span>, <span class="string">'text'</span>, <span class="string">'String'</span>, <span class="string">'Down Sampling:'</span>, <span class="string">'TooltipString'</span>, <span class="keyword">...</span>
+1408                 <span class="string">'Sets the down sampling in each dimensoin - MxNxT'</span>, <span class="keyword">...</span>
+1409                 <span class="string">'HorizontalAlignment'</span>, <span class="string">'left'</span>);
+1410             <span class="comment">% Second column</span>
+1411             self.h.pp_M_label = uicontrol(<span class="string">'Parent'</span>, self.h.pp_settings_grid, <span class="keyword">...</span>
+1412                 <span class="string">'Style'</span>, <span class="string">'text'</span>, <span class="string">'String'</span>, <span class="string">'M'</span>, <span class="string">'TooltipString'</span>, <span class="keyword">...</span>
+1413                 <span class="string">'M corresponds to the rows of the image (vertical)'</span>);
+1414             self.h.pp_smooth_M = uicontrol(<span class="string">'Parent'</span>, self.h.pp_settings_grid, <span class="keyword">...</span>
+1415                 <span class="string">'Style'</span>, <span class="string">'edit'</span>, <span class="string">'String'</span>, self.settings.preprocessing.smooth_window(1));
+1416             self.h.pp_down_M = uicontrol(<span class="string">'Parent'</span>, self.h.pp_settings_grid,<span class="keyword">...</span>
+1417                 <span class="string">'Style'</span>, <span class="string">'edit'</span>, <span class="string">'String'</span>, self.settings.preprocessing.down_sample(1));
+1418             
+1419             <span class="comment">% Third column</span>
+1420             self.h.pp_N_label = uicontrol(<span class="string">'Parent'</span>, self.h.pp_settings_grid, <span class="keyword">...</span>
+1421                 <span class="string">'Style'</span>, <span class="string">'text'</span>, <span class="string">'String'</span>, <span class="string">'N'</span>, <span class="string">'TooltipString'</span>, <span class="keyword">...</span>
+1422                 <span class="string">'N corresponds to the columns of th eimage (horizontal)'</span>);
+1423             self.h.pp_smooth_N = uicontrol(<span class="string">'Parent'</span>, self.h.pp_settings_grid, <span class="keyword">...</span>
+1424                 <span class="string">'Style'</span>, <span class="string">'edit'</span>, <span class="string">'String'</span>, self.settings.preprocessing.smooth_window(2));
+1425             self.h.pp_down_N = uicontrol(<span class="string">'Parent'</span>, self.h.pp_settings_grid, <span class="keyword">...</span>
+1426                 <span class="string">'Style'</span>, <span class="string">'edit'</span>, <span class="string">'String'</span>, self.settings.preprocessing.down_sample(2));
+1427             
+1428             <span class="comment">% Fourth column</span>
+1429             self.h.pp_T_label = uicontrol(<span class="string">'Parent'</span>, self.h.pp_settings_grid, <span class="keyword">...</span>
+1430                 <span class="string">'Style'</span>, <span class="string">'text'</span>, <span class="string">'String'</span>, <span class="string">'T'</span>, <span class="string">'TooltipString'</span>, <span class="keyword">...</span>
+1431                 <span class="string">'T corresponds to the frames (depth)'</span>);
+1432             self.h.pp_smooth_T = uicontrol(<span class="string">'Parent'</span>, self.h.pp_settings_grid, <span class="keyword">...</span>
+1433                 <span class="string">'Style'</span>, <span class="string">'edit'</span>, <span class="string">'String'</span>, self.settings.preprocessing.smooth_window(3));
+1434             self.h.pp_down_T = uicontrol(<span class="string">'Parent'</span>, self.h.pp_settings_grid, <span class="keyword">...</span>
+1435                 <span class="string">'Style'</span>, <span class="string">'edit'</span>, <span class="string">'String'</span>, self.settings.preprocessing.down_sample(3));
+1436             
+1437             
+1438             self.h.pp_ok_button = uicontrol(<span class="string">'Parent'</span>, self.h.pp_button_hbox, <span class="keyword">...</span>
+1439                 <span class="string">'Style'</span>, <span class="string">'pushbutton'</span>, <span class="string">'String'</span>, <span class="string">'OK'</span>, <span class="string">'Callback'</span>, @self.pp_settings_ok_cb);
+1440             self.h.pp_cancel_button = uicontrol(<span class="string">'Parent'</span>, self.h.pp_button_hbox, <span class="keyword">...</span>
+1441                 <span class="string">'Style'</span>, <span class="string">'pushbutton'</span>, <span class="string">'String'</span>, <span class="string">'Cancel'</span>, <span class="string">'Callback'</span>, @self.pp_settings_cancel_cb);
+1442             
+1443             set(self.h.pp_settings_grid, <span class="string">'ColumnSizes'</span>, [-1, 30, 30, 30], <span class="string">'RowSizes'</span>, [30, 30, 30]);
+1444             set(self.h.pp_main_vbox, <span class="string">'Sizes'</span>, [-1, 30]);
+1445             
+1446             fh_pos = get(self.h.fh, <span class="string">'Position'</span>);
+1447             set(self.h.pp_dialog, <span class="string">'Position'</span>, [fh_pos(1) + 100, fh_pos(2) + 100, 300, 200]);
+1448         <span class="keyword">end</span>
+1449         
+1450         <a name="_sub61" href="#_subfunctions" class="code">function set_pp_smooth_window(self, smM, smN, smT)</a>
+1451             <span class="comment">% set_smooth_window: sets the size of the smoothing convolution</span>
+1452             <span class="comment">% window.</span>
+1453             
+1454             <span class="keyword">if</span> nargin == 2
+1455                 <span class="comment">% Then the 3 values should all be in smM</span>
+1456                 assert(length(smM) == 3);
+1457                 smN = smM(2);
+1458                 smT = smM(3);
+1459                 smM = smM(1);
+1460             <span class="keyword">elseif</span> nargin &lt; 2 || isempty(smM)
+1461                 <span class="comment">% Default will be to leave unchanged.</span>
+1462                 smM = NaN;
+1463             <span class="keyword">elseif</span> nargin &lt; 3 || isempty(smN)
+1464                 smN = NaN;
+1465             <span class="keyword">elseif</span> nargin &lt; 4 || isempty(smT)
+1466                 smT = NaN;
+1467             <span class="keyword">end</span>
+1468             
+1469             <span class="comment">% Get the old values</span>
+1470             sm_old = self.settings.preprocessing.smooth_window;
+1471             
+1472             <span class="comment">% Set the new values</span>
+1473             self.settings.preprocessing.smooth_window = [smM, smN, smT];
+1474             
+1475             <span class="comment">% Check for bad values</span>
+1476             nan_vals = isnan(self.settings.preprocessing.smooth_window) <span class="keyword">...</span>
+1477                 | self.settings.preprocessing.smooth_window &lt; 0;
+1478             <span class="keyword">if</span> any(nan_vals)
+1479                 <span class="comment">% Then some of the values are bad/missing, use the old</span>
+1480                 <span class="comment">% values.</span>
+1481                 disp(<span class="string">'Some smooth window values bad/missing.'</span>);
+1482                 self.settings.preprocessing.smooth_window(nan_vals) = sm_old(nan_vals);
+1483             <span class="keyword">end</span>
+1484         <span class="keyword">end</span>
+1485         
+1486         <a name="_sub62" href="#_subfunctions" class="code">function set_pp_down_sample(self, dsM, dsN, dsT)</a>
+1487             <span class="comment">% set_down_sample: sets the size of the down sampling</span>
+1488             
+1489             <span class="keyword">if</span> nargin == 2
+1490                 <span class="comment">% Then the 3 values should all be in smM</span>
+1491                 assert(length(dsM) == 3);
+1492                 dsN = dsM(2);
+1493                 dsT = dsM(3);
+1494                 dsM = dsM(1);
+1495             <span class="keyword">elseif</span> nargin &lt; 2 || isempty(dsM)
+1496                 <span class="comment">% Default will be to leave unchanged.</span>
+1497                 dsM = NaN;
+1498             <span class="keyword">elseif</span> nargin &lt; 3 || isempty(dsN)
+1499                 dsN = NaN;
+1500             <span class="keyword">elseif</span> nargin &lt; 4 || isempty(dsT)
+1501                 dsT = NaN;
+1502             <span class="keyword">end</span>
+1503             
+1504             <span class="comment">% Get the old values</span>
+1505             ds_old = self.settings.preprocessing.down_sample;
+1506             
+1507             <span class="comment">% Set the new values</span>
+1508             self.settings.preprocessing.down_sample = [dsM, dsN, dsT];
+1509             
+1510             <span class="comment">% Check for bad values</span>
+1511             nan_vals = isnan(self.settings.preprocessing.down_sample) <span class="keyword">...</span>
+1512                 | self.settings.preprocessing.down_sample &lt; 0;
+1513             <span class="keyword">if</span> any(nan_vals)
+1514                 <span class="comment">% Then some of the values are bad/missing, use the old</span>
+1515                 <span class="comment">% values.</span>
+1516                 disp(<span class="string">'Some down sample values bad/missing.'</span>);
+1517                 self.settings.preprocessing.down_sample(nan_vals) = ds_old(nan_vals);
+1518             <span class="keyword">end</span>
+1519         <span class="keyword">end</span>
+1520         
+1521         <a name="_sub63" href="#_subfunctions" class="code">function edit_pca_settings(self)</a>
+1522             
+1523         <span class="keyword">end</span>
+1524         
+1525         <a name="_sub64" href="#_subfunctions" class="code">function edit_ica_settings(self)</a>
+1526             <span class="comment">% edit_ica_settings(self): shows the edit ica settings dialog.</span>
+1527             
+1528             self.h.ica_dialog = dialog(<span class="string">'Name'</span>, <span class="string">'Edit Preprocessing Settings'</span>, <span class="string">'Units'</span>, <span class="string">'pixels'</span>);
+1529             
+1530         <span class="keyword">end</span>
+1531         
+1532         <a name="_sub65" href="#_subfunctions" class="code">function set.Parent(self, val)</a>
+1533             disp(<span class="string">'Setting RoiEditor Parent'</span>);
+1534             set(self.h.panel, <span class="string">'Parent'</span>, double(val))
+1535         <span class="keyword">end</span>
+1536         
+1537         <a name="_sub66" href="#_subfunctions" class="code">function component = get_current_component(self)</a>
+1538             <span class="comment">% Returns the currently selected component</span>
+1539             component = [];
+1540             f = self.h.roi_editor.current_frame;
+1541 
+1542             <span class="keyword">switch</span> self.stage
+1543                 <span class="keyword">case</span> self.InitStage
+1544                     <span class="keyword">return</span>
+1545                 <span class="keyword">case</span> self.PreProcessingStage
+1546                     <span class="keyword">return</span>
+1547                 <span class="keyword">case</span> self.PcaStage
+1548                     component = self.pca.pcs(:, f);
+1549                     <span class="keyword">return</span>
+1550                 <span class="keyword">case</span> self.IcaStage
+1551                     component = self.ica.ics(:, f);
+1552             <span class="keyword">end</span>
+1553         <span class="keyword">end</span>
+1554         
+1555         <a name="_sub67" href="#_subfunctions" class="code">function lock_current_component(self)</a>
+1556             c = self.get_current_component();
+1557             
+1558             <span class="keyword">if</span> ~isempty(c)
+1559                 self.gui.locked_components{end+1} = c;
+1560             <span class="keyword">else</span>
+1561                 disp(<span class="string">'No component to lock.'</span>);
+1562             <span class="keyword">end</span>
+1563             
+1564             <span class="comment">%self.update();</span>
+1565         <span class="keyword">end</span>
+1566         
+1567         <a name="_sub68" href="#_subfunctions" class="code">function clear_locked_components(self)</a>
+1568             self.gui.locked_components = {};
+1569             self.update();
+1570         <span class="keyword">end</span>
+1571         
+1572         <a name="_sub69" href="#_subfunctions" class="code">function top_idxs = show_best_selected_components(self, rois)</a>
+1573             <span class="comment">% This plots the top components with an roi</span>
+1574             
+1575             disp(<span class="string">'show_best_selected_components'</span>);
+1576             
+1577             <span class="keyword">if</span> isempty(rois)
+1578                 <span class="comment">% Then nothing to plot.</span>
+1579                 <span class="keyword">return</span>
+1580             <span class="keyword">end</span>
+1581             
+1582             im_data = [];
+1583             comp = [];
+1584             im_x = [];
+1585             im_y = [];
+1586             
+1587             <span class="keyword">if</span> self.gui.display == 4 &amp;&amp; self.stage == self.IcaStage
+1588                 <span class="comment">% Then view the ICs</span>
+1589                 im_data = self.ica.im_data;
+1590                 im_x = self.ica.im_x;
+1591                 im_y = self.ica.im_y;
+1592                 comp = self.ica.ics;
+1593             <span class="keyword">elseif</span> self.gui.display == 3 &amp;&amp; self.stage &gt;= self.PcaStage
+1594                 <span class="comment">% Then view the PCs</span>
+1595                 im_data = self.pca.im_data;
+1596                 im_x = self.pca.im_x;
+1597                 im_y = self.pca.im_y;
+1598                 comp = self.pca.pcs;
+1599             <span class="keyword">elseif</span> self.stage == self.PcaStage
+1600                 <span class="comment">% Then view the PCs</span>
+1601                 im_data = self.pca.im_data;
+1602                 im_x = self.pca.im_x;
+1603                 im_y = self.pca.im_y;
+1604                 comp = self.pca.pcs;
+1605             <span class="keyword">elseif</span> self.stage == self.IcaStage
+1606                 <span class="comment">% Then view the ICs</span>
+1607                 im_data = self.ica.im_data;
+1608                 im_x = self.ica.im_x;
+1609                 im_y = self.ica.im_y;
+1610                 comp = self.ica.ics;
+1611             <span class="keyword">else</span>
+1612                 <span class="keyword">return</span>;
+1613             <span class="keyword">end</span>
+1614 
+1615             s = self.settings.visualize;
+1616             
+1617             top_idxs = [];
+1618             top_vals = [];
+1619             residuals = [];
+1620             <span class="keyword">for</span> i = 1:size(rois, 1)
+1621                 <span class="comment">% Lets just start with the center of the roi.</span>
+1622                 cx = interp1(im_x, 1:size(im_data, 2), rois(i, 1), <span class="string">'nearest'</span>);
+1623                 cy = interp1(im_y, 1:size(im_data, 1), rois(i, 2), <span class="string">'nearest'</span>);
+1624                 
+1625                 <span class="comment">% @todo: check if in the right range</span>
+1626                 
+1627                 <span class="comment">% Now get the 3 largest scores at the point</span>
+1628                 point_data = squeeze(im_data(cy, cx, :));
+1629                 
+1630 <span class="comment">%                 if s.best_selection_type == 0</span>
+1631 <span class="comment">%                     % Then use the data exactly</span>
+1632 <span class="comment">%</span>
+1633 <span class="comment">%                 elseif s.best_selection_type == 1</span>
+1634 <span class="comment">%                     % Use the absolute value</span>
+1635 <span class="comment">%                     point_data = abs(point_data);</span>
+1636 <span class="comment">%                 elseif s.best_selection_type == 2</span>
+1637 <span class="comment">%                     %</span>
+1638 <span class="comment">%                 end</span>
+1639                 
+1640                 [vals, sidx] = sort(point_data, 1, <span class="string">'descend'</span>);
+1641                 
+1642                 n_best = min(s.num_best_components, length(sidx));
+1643                 top_idxs = sidx(1:n_best);
+1644                 top_vals = vals(1:n_best);
+1645                 
+1646                 <span class="keyword">if</span> length(sidx &gt; n_best)
+1647                     residual_idxs = sidx((n_best+1):end);
+1648                     residuals(i,:) = sum(comp(:, residual_idxs) .* repmat(vals((n_best+1):end)', size(comp, 1), 1), 2);
+1649                 <span class="keyword">end</span>
+1650             <span class="keyword">end</span>
+1651             
+1652             [top_idxs, ia, ic] = unique(top_idxs);
+1653             top_vals = top_vals(ia);
+1654             
+1655             cla(self.h.component_axes);
+1656             legend(self.h.component_axes, <span class="string">'off'</span>);
+1657             hold(self.h.component_axes, <span class="string">'all'</span>);
+1658             
+1659 <span class="comment">%             if isfield(self.h, 'component_labels')</span>
+1660 <span class="comment">%                 delete(self.h.component_labels);</span>
+1661 <span class="comment">%             end</span>
+1662             
+1663             self.h.component_labels = [];
+1664             
+1665             <span class="keyword">for</span> i = 1:length(top_idxs)
+1666                 c = self.gui.locked_colors(mod(i-1, length(self.gui.locked_colors))+1, :); 
+1667                 
+1668                 component = comp(:, top_idxs(i));
+1669                 
+1670                 <span class="keyword">if</span> ~s.norm_best_components
+1671                     <span class="comment">% Then multiply the component by its value.</span>
+1672                     component = component * top_vals(i);
+1673                 <span class="keyword">end</span>
+1674                 
+1675                 plot(self.h.component_axes, component, <span class="string">'Color'</span>, c);
+1676                 text_x = 0.95 - (length(top_idxs) + size(residuals, 1) - i) * 0.05;
+1677                 self.h.component_labels(i) = text(text_x, 0.9, num2str(top_idxs(i)), <span class="keyword">...</span>
+1678                     <span class="string">'Parent'</span>, self.h.component_axes, <span class="string">'Units'</span>, <span class="string">'normalized'</span>, <span class="keyword">...</span>
+1679                     <span class="string">'HorizontalAlignment'</span>, <span class="string">'center'</span>, <span class="string">'UserData'</span>, top_idxs(i), <span class="keyword">...</span>
+1680                     <span class="string">'Color'</span>, c, <span class="string">'ButtonDownFcn'</span>, @self.component_label_cb);
+1681             <span class="keyword">end</span>
+1682 
+1683             <span class="keyword">if</span> s.show_residual
+1684                 <span class="keyword">for</span> i = 1:size(residuals, 1)
+1685                     c = self.gui.locked_colors(mod(i+length(top_idxs)-1, length(self.gui.locked_colors))+1, :);
+1686 
+1687                     plot(self.h.component_axes, residuals(i,:), <span class="string">':'</span>, <span class="string">'Color'</span>, c);
+1688                     text_x = 0.95 - (size(residuals, 1) - i) * 0.05;
+1689                     self.h.component_labels(i) = text(text_x, 0.9, <span class="string">'res'</span>, <span class="keyword">...</span>
+1690                         <span class="string">'Parent'</span>, self.h.component_axes, <span class="string">'Units'</span>, <span class="string">'normalized'</span>, <span class="keyword">...</span>
+1691                         <span class="string">'HorizontalAlignment'</span>, <span class="string">'center'</span>, <span class="keyword">...</span>
+1692                         <span class="string">'Color'</span>, c, <span class="string">'ButtonDownFcn'</span>, @self.component_label_cb);
+1693                 <span class="keyword">end</span>
+1694             <span class="keyword">end</span>
+1695             
+1696             <span class="comment">%self.h.lh = legend(self.h.component_axes, 'show');</span>
+1697         <span class="keyword">end</span>
+1698         
+1699         <a name="_sub70" href="#_subfunctions" class="code">function create_new_roi_set(self, name, is_component_set)</a>
+1700             <span class="comment">% create_new_roi_set(self, name): creates a new roi set.</span>
+1701             
+1702             disp(<span class="string">'create_new_roi_set'</span>);
+1703             
+1704             <span class="keyword">if</span> nargin &lt; 3 || isempty(is_component_set)
+1705                 is_component_set = false;
+1706             <span class="keyword">end</span>
+1707             
+1708             <span class="keyword">if</span> nargin &lt; 2 || isempty(name)
+1709                 <span class="comment">% Then prompt for a name for the roi set.</span>
+1710                 name = inputdlg(<span class="string">'Enter name for ROI set:'</span>);
+1711                 name = name{1};
+1712             <span class="keyword">end</span>
+1713             
+1714             <span class="keyword">if</span> isempty(name)
+1715                 <span class="comment">% Then at this point it was canceled</span>
+1716                 <span class="keyword">return</span>;
+1717             <span class="keyword">end</span>
+1718             
+1719             <span class="comment">% @todo: other checks on name</span>
+1720             
+1721             <span class="comment">% Add a new empty set of rois.</span>
+1722             self.rois{end+1} = [];
+1723             self.gui.current_roi_set = length(self.rois);
+1724             self.gui.roi_names{length(self.rois)} = name;
+1725             self.gui.is_component_set(length(self.rois)) = is_component_set;
+1726             
+1727             self.h.roi_editor.set_rois(self.rois{self.gui.current_roi_set});
+1728             
+1729             self.update();
+1730         <span class="keyword">end</span>
+1731         
+1732         <a name="_sub71" href="#_subfunctions" class="code">function delete_roi_set(self, idx)</a>
+1733             <span class="comment">% delete_roi_set(self, idx): deletes an roi set.</span>
+1734             
+1735             disp(<span class="string">'delete_roi_set'</span>);
+1736             
+1737             <span class="keyword">if</span> nargin &lt; 2
+1738                 <span class="comment">% Then just delete the currently selected set(?)</span>
+1739                 idx = self.gui.current_roi_set;
+1740             <span class="keyword">end</span>
+1741             
+1742             <span class="comment">% prompt?</span>
+1743             
+1744             <span class="comment">% Make sure idx is in range</span>
+1745             <span class="keyword">if</span> idx &lt; 1 || idx &gt; length(self.rois)
+1746                 <span class="comment">% umm... do nothing?</span>
+1747                 disp(<span class="string">'Requested ROI set not found. Nothing deleted.'</span>);
+1748                 <span class="keyword">return</span>;
+1749             <span class="keyword">end</span>
+1750             
+1751             self.rois(idx) = [];
+1752             self.gui.roi_names(idx) = [];
+1753             self.gui.is_component_set(idx) = [];
+1754             
+1755             <span class="keyword">if</span> isempty(self.rois)
+1756                 self.build_roi_listbox();
+1757             <span class="keyword">end</span>
+1758             
+1759             <span class="keyword">if</span> self.gui.current_roi_set &gt; length(self.rois)
+1760                 self.gui.current_roi_set = length(self.rois);
+1761             <span class="keyword">end</span>
+1762             
+1763             self.h.roi_editor.set_rois(self.rois{self.gui.current_roi_set}, false);
+1764             self.update();
+1765         <span class="keyword">end</span>
+1766         
+1767         <a name="_sub72" href="#_subfunctions" class="code">function select_roi_set(self, idx)</a>
+1768             <span class="comment">% select_roi_set(self, idx): sets the currently selected roi</span>
+1769             <span class="comment">% set.</span>
+1770             
+1771             disp(<span class="string">'select_roi_set'</span>);
+1772             
+1773             <span class="keyword">if</span> nargin &lt; 2 || isempty(idx)
+1774                 idx = 1;
+1775             <span class="keyword">end</span>
+1776             
+1777             <span class="comment">% Check for empty</span>
+1778             <span class="keyword">if</span> isempty(self.rois)
+1779                 self.build_roi_listbox();
+1780             <span class="keyword">end</span>
+1781             
+1782             <span class="comment">% Make sure idx is in range.</span>
+1783             <span class="keyword">if</span> idx &lt; 1 || idx &gt; length(self.rois)
+1784                 <span class="comment">% Then idx is out of range.</span>
+1785                 idx = length(self.rois);
+1786             <span class="keyword">end</span>
+1787             
+1788             <span class="keyword">if</span> idx == self.gui.current_roi_set
+1789                 <span class="comment">% Then nothing needs to be done.</span>
+1790                 <span class="keyword">return</span>;
+1791             <span class="keyword">end</span>
+1792             
+1793             self.gui.current_roi_set = idx;
+1794             
+1795             self.h.roi_editor.set_rois(self.rois{self.gui.current_roi_set}, false);
+1796             
+1797             self.update();
+1798         <span class="keyword">end</span>
+1799         
+1800         <a name="_sub73" href="#_subfunctions" class="code">function set_ica_spatial_guess(self, masks, which_pcs)</a>
+1801             <span class="comment">% set_ica_spatial_guess(self, masks): Sets an initial guess for</span>
+1802             <span class="comment">% the ICs given a series of spatial masks.</span>
+1803             <span class="comment">%</span>
+1804             <span class="comment">% This adjusts the settings.ica.which_pcs to match the number</span>
+1805             <span class="comment">% of masks.</span>
+1806             <span class="comment">%</span>
+1807             <span class="comment">% @param: masks mxnxG array of masks indicating the location of</span>
+1808             <span class="comment">% the ics. G is the number of masks.</span>
+1809             <span class="comment">% @param: which_pcs the pcs to use for the guess, this must</span>
+1810             <span class="comment">% have a length of G. Default is to use 1:G pcs</span>
+1811             
+1812             <span class="keyword">if</span> nargin &lt; 3 || isempty(which_pcs)
+1813                 which_pcs = 1:size(masks, 3);
+1814             <span class="keyword">end</span>
+1815             
+1816             <span class="comment">% Must have already run pca at least.</span>
+1817             <span class="keyword">if</span> self.stage == self.InitStage || self.stage == self.PreProcessingStage
+1818                 disp(<span class="string">'Running previous stages...'</span>);
+1819                 self.run_pca();
+1820             <span class="keyword">end</span>
+1821             
+1822             pc_scores = self.pca.scores(:, which_pcs)';
+1823             
+1824             <span class="comment">% reformat the masks into scores form</span>
+1825             ic_scores = reshape(masks, [], size(masks, 3))';
+1826             
+1827             A_guess = pc_scores / ic_scores;
+1828             
+1829             self.settings.ica.init_guess = A_guess;
+1830             self.settings.ica.which_pcs = which_pcs;
+1831         <span class="keyword">end</span>
+1832         
+1833         <a name="_sub74" href="#_subfunctions" class="code">function save_rois(self, filename)</a>
+1834             <span class="comment">% save_rois(self, filename): saves the rois to a mat file.</span>
+1835             <span class="comment">%</span>
+1836             <span class="comment">% If filename is not given then user will be prompted</span>
+1837             
+1838             <span class="keyword">if</span> nargin &lt; 2 || isempty(filename)
+1839                 <span class="comment">% Prompt for filename</span>
+1840                 [file, path] = uiputfile({<span class="string">'*.mat'</span>}, <span class="string">'Save ROIs'</span>);
+1841                 <span class="keyword">if</span> file == 0
+1842                     <span class="comment">% Dialog was canceled</span>
+1843                     <span class="keyword">return</span>;
+1844                 <span class="keyword">end</span>
+1845                 filename = [path file];
+1846             <span class="keyword">end</span>
+1847             rois = self.rois;
+1848             names = self.gui.roi_names;
+1849             
+1850             save(filename, <span class="string">'rois'</span>, <span class="string">'names'</span>);
+1851         <span class="keyword">end</span>
+1852         
+1853         <a name="_sub75" href="#_subfunctions" class="code">function load_rois(self, filename)</a>
+1854             <span class="comment">% load_rois(self, filename): loads rois from a mat file.</span>
+1855             
+1856             <span class="keyword">if</span> nargin &lt; 2 || isempty(filename)
+1857                 [file, path] = uigetfile({<span class="string">'*.mat'</span>}, <span class="string">'Load ROIs'</span>);
+1858                 
+1859                 <span class="keyword">if</span> file == 0
+1860                     <span class="comment">% Dialog was canceled</span>
+1861                     <span class="keyword">return</span>;
+1862                 <span class="keyword">end</span>
+1863                 filename = [path file];
+1864             <span class="keyword">end</span>
+1865             
+1866             roi_s = load(filename);
+1867             
+1868             <span class="keyword">for</span> i = 1:length(roi_s.rois)
+1869                 self.create_new_roi_set(roi_s.names{i});
+1870                 self.rois{self.gui.current_roi_set} = roi_s.rois{i};
+1871             <span class="keyword">end</span>
+1872             
+1873             self.h.roi_editor.set_rois(self.rois{self.gui.current_roi_set}, false);
+1874             
+1875             self.update();
+1876         <span class="keyword">end</span>
+1877         
+1878         <a name="_sub76" href="#_subfunctions" class="code">function set_cluster(self, ic_idxs)</a>
+1879             <span class="comment">% set_cluster(self, ic_idxs): Sets the ics given by ic_idxs as</span>
+1880             <span class="comment">% a cluster.</span>
+1881             
+1882             disp(<span class="string">'set_cluster'</span>);
+1883             
+1884             <span class="comment">% @todo: checks on state, cluster</span>
+1885             <span class="keyword">if</span> nargin &lt; 2 || isempty(ic_idxs)
+1886                 <span class="comment">% Then the ic_idxs should be the rois that are selected.</span>
+1887                 ic_idxs = self.h.roi_editor.selected_rois;
+1888             <span class="keyword">end</span>
+1889             <span class="comment">% @todo: more checks</span>
+1890             
+1891             <span class="comment">% Basically, just set the cluster matrix to 1 at the ic_idxs.</span>
+1892             self.cluster.cluster_matrix(ic_idxs, ic_idxs) = 1;
+1893             
+1894             self.update();
+1895         <span class="keyword">end</span>
+1896         
+1897         <a name="_sub77" href="#_subfunctions" class="code">function uncluster(self, idxs)</a>
+1898             <span class="comment">% uncluster(self, idxs): unclusters the given idxs.</span>
+1899             disp(<span class="string">'uncluster'</span>);
+1900             
+1901             <span class="keyword">if</span> nargin &lt; 2 || isempty(idxs)
+1902                 <span class="comment">% Then idxs are the currently selected rois</span>
+1903                 idxs = self.h.roi_editor.selected_rois;
+1904             <span class="keyword">end</span>
+1905             
+1906             self.cluster.cluster_matrix(idxs, idxs) = 0;
+1907             
+1908             self.update();
+1909         <span class="keyword">end</span>
+1910         
+1911         <a name="_sub78" href="#_subfunctions" class="code">function clear_clusters(self)</a>
+1912             <span class="comment">% clear_clusters(self): removes all clusters</span>
+1913         <span class="keyword">end</span>
+1914              
+1915         <a name="_sub79" href="#_subfunctions" class="code">function set_data(self, im, trial_idx)</a>
+1916             <span class="comment">% set_data(self, im): sets the image data.</span>
+1917             <span class="comment">%</span>
+1918             <span class="comment">% @param: im image data (MxNxt)</span>
+1919             <span class="comment">% @param: trial_idx the trial to set the im_data</span>
+1920             
+1921             disp(<span class="string">'set_data'</span>);
+1922             
+1923             <span class="keyword">if</span> nargin &lt; 3 || isempty(trial_idx)
+1924                 trial_idx = self.gui.current_trial;
+1925             <span class="keyword">end</span>
+1926             
+1927             <span class="comment">% @todo: checks on inputs</span>
+1928             
+1929             self.im_data{trial_idx} = im;
+1930             self.pp = [];
+1931             self.pca = [];
+1932             self.ica = [];
+1933             self.gui.last_display = 0;
+1934             
+1935             self.stage = self.InitStage;
+1936             
+1937             self.update();
+1938         <span class="keyword">end</span>
+1939         
+1940         <a name="_sub80" href="#_subfunctions" class="code">function add_trial(self, im_data)</a>
+1941             <span class="comment">% add_trial(self, im_data): adds a trial to the ICP</span>
+1942             
+1943         <span class="keyword">end</span>
+1944         
+1945         <a name="_sub81" href="#_subfunctions" class="code">function delete_trial(self, idx)</a>
+1946             <span class="comment">% remove_trial(self, idx): removes a trial from the ICP</span>
+1947             
+1948         <span class="keyword">end</span>
+1949         
+1950         <a name="_sub82" href="#_subfunctions" class="code">function align_trials(self)</a>
+1951             <span class="comment">% align_trials(self): aligns the frames of several trials.</span>
+1952             
+1953         <span class="keyword">end</span>
+1954         
+1955         <a name="_sub83" href="#_subfunctions" class="code">function set_selected_trial(self, idx)</a>
+1956             <span class="comment">% set_selected_trial(self, idx): sets the current trial.</span>
+1957             
+1958         <span class="keyword">end</span>
+1959         
+1960         <a name="_sub84" href="#_subfunctions" class="code">function set_use_wavelets(self, val)</a>
+1961             <span class="comment">% set_use_wavelets(self, val): sets whether to use the wavelets</span>
+1962             
+1963             <span class="comment">%todo: checks, update the checkbox in the gui</span>
+1964             self.gui.use_wavelets = val; 
+1965         <span class="keyword">end</span>
+1966         
+1967         <a name="_sub85" href="#_subfunctions" class="code">function reset(self)</a>
+1968             <span class="comment">% reset(self); resets to the init stage.</span>
+1969             self.stage = self.InitStage;
+1970             self.pp = [];
+1971             self.pca = [];
+1972             self.ica = [];
+1973             self.update();
+1974         <span class="keyword">end</span>
+1975         
+1976         <span class="comment">%%%%%%%%%% Utility Functions %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+1977         <a name="_sub86" href="#_subfunctions" class="code">function default_settings(self)</a>
+1978             <span class="comment">% default_settings(self): sets the settings to the default.</span>
+1979             
+1980             <span class="comment">%self.settings.preprocessing.block_size = 6;</span>
+1981             self.settings.preprocessing.smooth_window = [6, 6, 1];
+1982             <span class="comment">%self.settings.preprocessing.step_size = 2;</span>
+1983             self.settings.preprocessing.down_sample = [2, 2, 1];
+1984             
+1985             self.settings.preprocessing.motion_correct_func = @<a href="align_im_stack.html" class="code" title="function [im_stack, warp] = align_im_stack(im, n_iters, n_levels, transform, viz)">align_im_stack</a>;
+1986             
+1987             self.settings.preprocessing.default_filter_file = <span class="string">'icp_default_filters.mat'</span>;
+1988             self.settings.preprocessing.filter_file = self.settings.preprocessing.default_filter_file;
+1989             
+1990             self.settings.pca.mean_center = 0;
+1991             
+1992             self.settings.ica.which_pcs = 1:150;
+1993             self.settings.ica.positive_skew = true;
+1994             self.settings.ica.init_guess = -1;
+1995             self.settings.ica.ica_func = <span class="string">'fastica'</span>;
+1996             self.settings.ica.mu = 0.2; <span class="comment">% This is a parameter for Cellsort ICA</span>
+1997             
+1998             self.settings.post.calc_rois_func = @<a href="calc_rois_from_components.html" class="code" title="function rois = calc_rois_from_components(comp, x, y)">calc_rois_from_components</a>;
+1999             self.settings.post.segment_ics_func = @<a href="segment_ics.html" class="code" title="function [segment_masks, segment_info] = segment_ics(comp, x, y)">segment_ics</a>;
+2000             
+2001             self.settings.cluster.feature_matrix_func = @<a href="make_feature_matrix.html" class="code" title="function [feature_matrix, feature_weights] = make_feature_matrix(ics, im_data)">make_feature_matrix</a>;
+2002             self.settings.cluster.feature_weights = 1;
+2003             self.settings.cluster.visualization_func = @viz_best3;
+2004             self.settings.cluster.calc_sim_matrix_func = @(b, x) sum(repmat(b, [size(x,1), size(x,2), 1]) .* x, 3);
+2005             
+2006             
+2007             self.settings.visualize.norm_best_components = false;
+2008             self.settings.visualize.num_best_components = 3;
+2009             self.settings.visualize.show_residual = true;
+2010             self.settings.visualize.best_selection_type = 1;            
+2011             
+2012             
+2013         <span class="keyword">end</span>
+2014         
+2015         <a name="_sub87" href="#_subfunctions" class="code">function plot_locked_components(self)</a>
+2016             hold(self.h.component_axes, <span class="string">'on'</span>);
+2017             <span class="keyword">for</span> i = 1:length(self.gui.locked_components)
+2018                 c = self.gui.locked_colors(mod(i-1, length(self.gui.locked_colors))+1, :); 
+2019                 plot(self.h.component_axes, self.gui.locked_components{i}, <span class="string">'Color'</span>, c);
+2020             <span class="keyword">end</span>
+2021         <span class="keyword">end</span>
+2022         
+2023         <a name="_sub88" href="#_subfunctions" class="code">function plot_3d(self)</a>
+2024             <span class="comment">% plot_3d(self): plots the currently selected components in</span>
+2025             <span class="comment">% 3-space.</span>
+2026             disp(<span class="string">'plot_3d'</span>);
+2027 
+2028             <span class="keyword">if</span> self.gui.display == 4 &amp;&amp; self.stage == self.IcaStage
+2029                 <span class="comment">% Then view the ICs</span>
+2030                 sc = self.ica.scores;
+2031                 self.build_3d_gui_components(self.IcaStage)
+2032             <span class="keyword">elseif</span> self.gui.display == 3 &amp;&amp; self.stage &gt;= self.PcaStage
+2033                 <span class="comment">% Then view the PCs</span>
+2034                 sc = self.pca.scores;
+2035                 self.build_3d_gui_components(self.PcaStage);
+2036 
+2037             <span class="keyword">elseif</span> self.stage == self.PcaStage
+2038                 <span class="comment">% Then view the PCs</span>
+2039                 sc = self.pca.scores;
+2040                 self.build_3d_gui_components(self.PcaStage);
+2041             <span class="keyword">elseif</span> self.stage == self.IcaStage
+2042                 <span class="comment">% Then view the ICs</span>
+2043                 sc = self.ica.scores;
+2044                 self.build_3d_gui_components(self.IcaStage);
+2045             <span class="keyword">else</span>
+2046                 cla(self.h.pc3_axes);
+2047                 self.build_3d_gui_components(self.stage);
+2048                 <span class="keyword">return</span>;
+2049             <span class="keyword">end</span>
+2050             
+2051             <span class="keyword">if</span> isempty(sc)
+2052                 <span class="comment">% Then there's nothing to plot</span>
+2053                 <span class="keyword">return</span>;
+2054             <span class="keyword">end</span>
+2055             
+2056             <span class="comment">% Make sure everything is in range</span>
+2057             <span class="keyword">if</span> self.gui.x_pc &lt; 1 || self.gui.x_pc &gt; size(sc, 2)
+2058                 <span class="comment">% Just set to 1 for now.</span>
+2059                 self.gui.x_pc = 1;
+2060             <span class="keyword">end</span>
+2061             <span class="keyword">if</span> self.gui.y_pc &lt; 1 || self.gui.y_pc &gt; size(sc, 2)
+2062                 self.gui.y_pc = 1;
+2063             <span class="keyword">end</span>
+2064             <span class="keyword">if</span> self.gui.z_pc &lt; 1 || self.gui.z_pc &gt; size(sc, 2)
+2065                 self.gui.z_pc = 1;
+2066             <span class="keyword">end</span>
+2067             
+2068             xv = sc(:, self.gui.x_pc);
+2069             yv = sc(:, self.gui.y_pc);
+2070             zv = sc(:, self.gui.z_pc);
+2071             
+2072             [az, el] = view(self.h.pc3_axes);
+2073             plot3(self.h.pc3_axes, xv, yv, zv, <span class="string">'.k'</span>);
+2074             axis(self.h.pc3_axes, <span class="string">'vis3d'</span>);
+2075             view(self.h.pc3_axes, az, el);
+2076             
+2077             popup_str = get(self.h.x_popup, <span class="string">'String'</span>);
+2078             xlabel(self.h.pc3_axes, popup_str{self.gui.x_pc});
+2079             ylabel(self.h.pc3_axes, popup_str{self.gui.y_pc});
+2080             zlabel(self.h.pc3_axes, popup_str{self.gui.z_pc});
+2081         <span class="keyword">end</span>
+2082         
+2083         <a name="_sub89" href="#_subfunctions" class="code">function build_3d_gui_components(self, stage)</a>
+2084             <span class="comment">% build_3d_gui_components(self): builds the 3d axis gui</span>
+2085             
+2086             <span class="keyword">switch</span> stage
+2087                 <span class="keyword">case</span> {self.InitStage, self.PreProcessingStage}
+2088                     <span class="comment">% There's nothing to do in this case</span>
+2089                     set(self.h.x_popup, <span class="string">'String'</span>, {<span class="string">'None'</span>}, <span class="string">'Value'</span>, 1);
+2090                     set(self.h.y_popup, <span class="string">'String'</span>, {<span class="string">'None'</span>}, <span class="string">'Value'</span>, 1);
+2091                     set(self.h.z_popup, <span class="string">'String'</span>, {<span class="string">'None'</span>}, <span class="string">'Value'</span>, 1);
+2092                     <span class="keyword">return</span>;
+2093                 <span class="keyword">case</span> self.PcaStage
+2094                     popup_str = cellfun(@(n) [<span class="string">'PC '</span> num2str(n)], num2cell(1:size(self.pca.scores, 2)), <span class="keyword">...</span>
+2095                         <span class="string">'UniformOutput'</span>, 0);
+2096                     set(self.h.x_popup, <span class="string">'String'</span>, popup_str);
+2097                     set(self.h.y_popup, <span class="string">'String'</span>, popup_str);
+2098                     set(self.h.z_popup, <span class="string">'String'</span>, popup_str);                    
+2099                 <span class="keyword">case</span> self.IcaStage
+2100                     popup_str = cellfun(@(n) [<span class="string">'IC '</span> num2str(n)], num2cell(1:size(self.ica.scores, 2)), <span class="keyword">...</span>
+2101                         <span class="string">'UniformOutput'</span>, 0);
+2102                     set(self.h.x_popup, <span class="string">'String'</span>, popup_str);
+2103                     set(self.h.y_popup, <span class="string">'String'</span>, popup_str);
+2104                     set(self.h.z_popup, <span class="string">'String'</span>, popup_str);                    
+2105             <span class="keyword">end</span>
+2106             
+2107             set(self.h.x_popup, <span class="string">'Value'</span>, self.gui.x_pc);
+2108             set(self.h.y_popup, <span class="string">'Value'</span>, self.gui.y_pc);
+2109             set(self.h.z_popup, <span class="string">'Value'</span>, self.gui.z_pc);
+2110         <span class="keyword">end</span>
+2111         
+2112         <a name="_sub90" href="#_subfunctions" class="code">function build_roi_listbox(self)</a>
+2113             <span class="comment">% build_roi_listbox(self): creates the roi_listbox.</span>
+2114             
+2115             <span class="keyword">if</span> isempty(self.rois)
+2116                 <span class="comment">% Then there is nothing in the rois, so create an empty</span>
+2117                 <span class="comment">% list.</span>
+2118                 self.rois{1} = [];
+2119                 self.gui.current_roi_set = 1;
+2120                 self.gui.roi_names = {};
+2121                 self.gui.roi_names{1} = <span class="string">'ROI_set_1'</span>;
+2122                 self.gui.is_component_set = false;
+2123             <span class="keyword">end</span>
+2124             
+2125             <span class="comment">% Check ranges</span>
+2126             assert(length(self.rois) == length(self.gui.roi_names));
+2127             <span class="keyword">if</span> self.gui.current_roi_set &lt; 1 || self.gui.current_roi_set &gt; length(self.rois)
+2128                 self.gui.current_roi_set = length(self.rois);
+2129             <span class="keyword">end</span>
+2130             
+2131             set(self.h.roi_listbox, <span class="string">'String'</span>, self.gui.roi_names, <span class="string">'Value'</span>, self.gui.current_roi_set);
+2132         <span class="keyword">end</span>
+2133         
+2134         <a name="_sub91" href="#_subfunctions" class="code">function update_current_roi_set(self)</a>
+2135             <span class="comment">% update_current_roi_set(self): synchronizes the current roi</span>
+2136             <span class="comment">% set with the roi_editor.</span>
+2137             
+2138             disp(<span class="string">'update_current_roi_set'</span>);
+2139             
+2140             self.rois{self.gui.current_roi_set} = self.h.roi_editor.rois.xyrra(:,:,1);
+2141             self.update();
+2142         <span class="keyword">end</span>
+2143         
+2144         <a name="_sub92" href="#_subfunctions" class="code">function draw_clustered_rois(self)</a>
+2145             <span class="comment">% Ok</span>
+2146             disp(<span class="string">'draw_clustered_rois'</span>);
+2147             
+2148             roi_idx = self.h.roi_editor.selected_rois;
+2149             roi_h = self.h.roi_editor.h.rois;
+2150             
+2151             set(roi_h, <span class="string">'Color'</span>, [0.5, 0.5, 0.5], <span class="string">'Marker'</span>, <span class="string">'none'</span>);
+2152             
+2153             set(roi_h(roi_idx), <span class="string">'Color'</span>, <span class="string">'w'</span>);
+2154             
+2155             <span class="comment">% First see if there are other clustered rois</span>
+2156             cluster_idx = [];
+2157             <span class="keyword">if</span> ~isempty(roi_idx)
+2158                 cluster_idx = find(self.cluster.cluster_matrix(roi_idx(1), :));
+2159             <span class="keyword">end</span>
+2160             
+2161             <span class="keyword">if</span> ~isempty(cluster_idx)
+2162                 <span class="comment">% Then highlight the clustered rois</span>
+2163                 set(roi_h(cluster_idx), <span class="string">'Color'</span>, [0.9, 0.9, 0.9]);                
+2164             <span class="keyword">end</span>
+2165             
+2166             <span class="comment">% Draw the estimates</span>
+2167             
+2168             f = self.h.roi_editor.current_frame;
+2169             
+2170             set(roi_h(f), <span class="string">'Marker'</span>, <span class="string">'s'</span>, <span class="string">'MarkerSize'</span>, 1, <span class="string">'MarkerFaceColor'</span>, <span class="string">'w'</span>, <span class="string">'MarkerEdgeColor'</span>, <span class="string">'w'</span>);
+2171             set(roi_h(self.cluster.top3(f, 1)), <span class="string">'Marker'</span>, <span class="string">'s'</span>, <span class="string">'MarkerSize'</span>, 1, <span class="string">'MarkerFaceColor'</span>, <span class="string">'r'</span>, <span class="string">'MarkerEdgeColor'</span>, <span class="string">'r'</span>);
+2172             set(roi_h(self.cluster.top3(f, 2)), <span class="string">'Marker'</span>, <span class="string">'s'</span>, <span class="string">'MarkerSize'</span>, 1, <span class="string">'MarkerFaceColor'</span>, <span class="string">'g'</span>, <span class="string">'MarkerEdgeColor'</span>, <span class="string">'g'</span>);
+2173             set(roi_h(self.cluster.top3(f, 3)), <span class="string">'Marker'</span>, <span class="string">'s'</span>, <span class="string">'MarkerSize'</span>, 1, <span class="string">'MarkerFaceColor'</span>, <span class="string">'b'</span>, <span class="string">'MarkerEdgeColor'</span>, <span class="string">'b'</span>);
+2174 
+2175             
+2176         <span class="keyword">end</span>
+2177     <span class="keyword">end</span>
+2178     
+2179 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Fri 31-Jan-2014 15:55:41 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -89,7 +89,6 @@ classdef RoiEditor < hgsetget
             self.gui.MARGIN = 5;
             self.gui.BUTTON_W = 60;
             self.gui.BUTTON_H = 40;
-            self.gui.SCROLL_W = 20;
             
             self.im_x = 1:size(self.im_data, 2);
             self.im_y = 1:size(self.im_data, 1);
@@ -149,16 +148,6 @@ classdef RoiEditor < hgsetget
             set(self.h.frame_slider, 'Value', 1);
             self.update_frame_slider();
             
-            self.h.level_scroll = VDoubleScroll();
-            self.h.level_scroll2 = VDoubleScroll();
-            self.h.level_scroll3 = VDoubleScroll();
-            set(self.h.level_scroll, 'Color', 'r');
-            set(self.h.level_scroll2, 'Color', 'g');
-            set(self.h.level_scroll3, 'Color', 'b');
-            addlistener(self.h.level_scroll, 'SelectionChanged', @self.level_scroll_cb);
-            addlistener(self.h.level_scroll2, 'SelectionChanged', @self.level_scroll_cb);
-            addlistener(self.h.level_scroll3, 'SelectionChanged', @self.level_scroll_cb);
-            
             % Frame display
             self.h.frame_edit = uicontrol('Style', 'edit', 'Callback', @self.frame_edit_cb);
             set(self.h.frame_edit, 'String', 'none');
@@ -198,18 +187,11 @@ classdef RoiEditor < hgsetget
             self.h.main_vbox = uiextras.VBoxFlex();
             
             self.h.control_hbox = uiextras.HBox();
-            self.h.axes_level_hbox = uiextras.HBoxFlex();
             
             % Top-level hierarchy
             set(self.h.main_vbox, 'Parent', self.h.panel);
-            set(self.h.axes_level_hbox, 'Parent', self.h.main_vbox);
+            set(self.h.im_axes, 'Parent', self.h.main_vbox.double());
             set(self.h.control_hbox, 'Parent', self.h.main_vbox);
-            
-            % axes level
-            set(self.h.im_axes, 'Parent', self.h.axes_level_hbox.double());
-            set(self.h.level_scroll, 'Parent', self.h.axes_level_hbox.double());
-            set(self.h.level_scroll2, 'Parent', self.h.axes_level_hbox.double());
-            set(self.h.level_scroll3, 'Parent', self.h.axes_level_hbox.double());
             
             % Control
             set(self.h.frame_slider, 'Parent', self.h.control_hbox.double());
@@ -217,7 +199,6 @@ classdef RoiEditor < hgsetget
             set(self.h.move_mode_push, 'Parent', self.h.control_hbox.double());
             
             set(self.h.control_hbox, 'Sizes', [-1, self.gui.BUTTON_W, self.gui.BUTTON_W]);
-            set(self.h.axes_level_hbox, 'Sizes', [-1, self.gui.SCROLL_W, self.gui.SCROLL_W, self.gui.SCROLL_W]);
             set(self.h.main_vbox, 'Sizes', [-1, self.gui.BUTTON_H]);
         end
         
@@ -316,11 +297,6 @@ classdef RoiEditor < hgsetget
             self.set_current_frame(cf);
         end
         
-        function level_scroll_cb(self, source_h, eventdata)
-            %disp('level_scroll_cb');
-            self.update();
-        end
-        
         function frame_edit_cb(self, source_h, eventdata)
             cf = str2num(get(self.h.frame_edit, 'String'));
             
@@ -395,7 +371,6 @@ classdef RoiEditor < hgsetget
                                     
             %set(self.h.im, 'CData', repmat(norm_range(double(self.get_frame(self.current_frame))), [1 1 3]));        
             frame = self.get_nframe(self.current_frame);
-            
             if size(frame, 3) == 1
                 frame = repmat(frame, [1 1 3]);
             end
@@ -467,9 +442,14 @@ classdef RoiEditor < hgsetget
             notify(self, 'SelectionChanged');
         end
         
-        function val = set_current_frame(self, val, trigEvent)
+        function val = set_current_frame(self, val)
             % set_current_frame: sets the current frame. If the frame given
             % is out of range, will set the frame to 1. Returns the frame.
+            
+            if ~isempty(self.current_frame) && all(self.current_frame == val)
+                % The current frame hasn't changed, so don't do anything
+                return;
+            end
             
             % Make sure val is an int
             val = round(val);
@@ -477,26 +457,13 @@ classdef RoiEditor < hgsetget
             if val < 1 || val > self.get_num_frames()
                 % Then val is out of range.
                 %disp('val is out of range setting to 1.');
-                val = 1;
-                self.current_frame = val;
-                %val = self.current_frame;
+                %val = 1;
+                val = self.current_frame;
                 return;
-            end
-            
-            if ~isempty(self.current_frame) && all(self.current_frame == val)
-                % The current frame hasn't changed, so don't do anything
-                return;
-            end
-            
-            if nargin < 3 || isempty(trigEvent)
-                trigEvent = 1;
             end
             
             self.current_frame = val;
-            if trigEvent
-                notify(self, 'FrameChanged');
-            end
-            
+            notify(self, 'FrameChanged');
             self.update();
         end        
         
@@ -945,7 +912,6 @@ classdef RoiEditor < hgsetget
             % current rois.
             %
             % @param: im the image data.
-            
             disp('RoiEditor.set_im_data');
             if nargin < 3 || isempty(trigEvent)
                 trigEvent = true;
@@ -974,13 +940,8 @@ classdef RoiEditor < hgsetget
             
             %self.current_frame = 1;
             
-            self.h.level_scroll.Min = double(min(self.im_data(:)));
-            self.h.level_scroll.Max = double(max(self.im_data(:)));
-            self.h.level_scroll.MinStep = 0.01 * (self.h.level_scroll.Max - self.h.level_scroll.Min);
-            self.h.level_scroll.set_max_range();
-            
-            if self.current_frame > self.get_num_frames()
-                self.current_frame = self.get_num_frames();
+            if self.current_frame > size(self.im_data, 3)
+                self.current_frame = size(self.im_data, 3);
             end
 
             % Check to make sure the ROIs are the right size.
@@ -996,6 +957,8 @@ classdef RoiEditor < hgsetget
             axis(self.h.im_axes, [self.im_x(1), self.im_x(end), self.im_y(1), self.im_y(end)]);
             %self.delete_rois(1:self.get_num_rois(), trigEvent);
             
+            
+            
             self.update_frame_slider();
             self.update();
             disp('end RoiEditor.set_im_data');
@@ -1004,14 +967,6 @@ classdef RoiEditor < hgsetget
         function set.Parent(self, val)
             disp('Setting RoiEditor Parent');
             set(self.h.panel, 'Parent', double(val))
-        end
-        
-        function set_levels(self, levels)
-            % set_levels(self, levels): set the color level values.
-        end
-        
-        function levels = get_levels(self)
-            % levels = get_levels(self): returns the color level values.
         end
         
         %%%%%%%%%% Utility Functions %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1050,18 +1005,11 @@ classdef RoiEditor < hgsetget
             end
             
              if ndims(self.im_data) <= 3
-                % Then we have MxNxt or MxNx1 (if its only 2 dimensional) 
+                % Then we have MxNxt or MxNx1 (if its only 2 dimensional)                
                 frame = double(self.im_data(:,:, frame_num));
-                
-                % Ok so now lets get the level_scroll and rescale the frame
-                levels = self.h.level_scroll.Value;
-                frame(frame < levels(1)) = levels(1);
-                frame(frame > levels(2)) = levels(2);
-                
-                minv = double(max(double(min(self.im_data(:))), levels(1)));
-                maxv = double(min(double(max(self.im_data(:))), levels(2)));
-                
-                nframe = (frame - minv)./(maxv-minv) ; % now stretch to full range
+                min_v = double(min(self.im_data(:)));
+                max_v = double(max(self.im_data(:)));
+                nframe = (frame - min_v) ./ (max_v - min_v);
             else
                 % Then we have MxNx3xt
                 frame = self.im_data(:,:,:, frame_num);
@@ -1260,7 +1208,7 @@ classdef RoiEditor < hgsetget
             
             if ~self.is_editing_enabled
                 % Then no editing allowed, this is just a click on nothing.
-                self.set_selected_rois([]);
+                self.selected_rois = [];
                 self.update();
                 return;
             end

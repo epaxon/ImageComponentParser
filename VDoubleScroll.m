@@ -4,7 +4,7 @@ classdef VDoubleScroll < hgsetget
     %    minimum and a maximum - for instance it can be used to set the
     %    minimum and maximum color limits for an image.
     %
-    % @file: VDoubleScroll.m
+    % @file: DoubleScroll.m
     % @brief: gui object that creates a double scroll bar.
     % @author: Paxon Frady
     % @created: 6/14/11

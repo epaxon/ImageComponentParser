@@ -1,0 +1,147 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of icp_basics</title>
+  <meta name="keywords" content="icp_basics">
+  <meta name="description" content="A quick overview of ICP and the data">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">ica_gui-test</a> &gt; icp_basics.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for ica_gui-test&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>icp_basics
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>A quick overview of ICP and the data</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> A quick overview of ICP and the data</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="ImageComponentParser.html" class="code" title="classdef ImageComponentParser < hgsetget">ImageComponentParser</a>	class ImageComponentParser: gui to analyze the component ...</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+<h2><a name="_download"></a>DOWNLOAD <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<p><a href="icp_basics.m">icp_basics.m</a></p>
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% A quick overview of ICP and the data</span>
+0002 
+0003 <span class="comment">% Run this for paths</span>
+0004 <span class="comment">% addpath('ecc');</span>
+0005 <span class="comment">% addpath('FastICA_25');</span>
+0006 <span class="comment">% cd('GUILayout-v1p13');</span>
+0007 <span class="comment">% install();</span>
+0008 <span class="comment">% cd('..');</span>
+0009 
+0010 <span class="comment">%% Data files</span>
+0011 
+0012 files{1} = <span class="string">'component_data/ic200-x120121-n131011.mat'</span>;
+0013 files{2} = <span class="string">'component_data/ic200-x120124-n131011.mat'</span>;
+0014 files{3} = <span class="string">'component_data/ic200-x120207-n131011.mat'</span>;
+0015 files{4} = <span class="string">'component_data/ic200-x120228-n131011.mat'</span>;
+0016 files{5} = <span class="string">'component_data/ic200-x120305-n131011.mat'</span>;
+0017 files{6} = <span class="string">'component_data/ic200-x120509-n131011.mat'</span>;
+0018 files{7} = <span class="string">'component_data/ic200-x120510-n131011.mat'</span>;
+0019 files{8} = <span class="string">'component_data/ic200-x120516-n131011.mat'</span>;
+0020 
+0021 <span class="comment">%% Load a data</span>
+0022 
+0023 load(files{1}); <span class="comment">% produces vsx;</span>
+0024 
+0025 <span class="comment">% vsx is a 1x5 struct array with fields:</span>
+0026 <span class="comment">%</span>
+0027 <span class="comment">%     exp: the experiment date</span>
+0028 <span class="comment">%     trial_id: the trial id</span>
+0029 <span class="comment">%     ccd: motion-corrected raw ccd data [M x N x T] matrix</span>
+0030 <span class="comment">%     ft: frame timestamps</span>
+0031 <span class="comment">%     daq: extracellular daq recordings (this show whether it swims or</span>
+0032 <span class="comment">%          shortens)</span>
+0033 <span class="comment">%     dt: daq timestamps</span>
+0034 <span class="comment">%     rois: hand-drawn rois</span>
+0035 <span class="comment">%     ic_rois: Rois produced from ICA analysis</span>
+0036 <span class="comment">%     ics: Components produced from ICA analysis</span>
+0037 <span class="comment">%     is_swim: whether trial has swimming</span>
+0038 <span class="comment">%     is_short: whether trial has shortening (some trials can have both).</span>
+0039 
+0040 <span class="comment">%% ImageComponentParser</span>
+0041 <span class="comment">% So the ICP isn't quite complete, so not everything works... but its</span>
+0042 <span class="comment">% pretty close.</span>
+0043 
+0044 <span class="comment">% Open an icp</span>
+0045 icp = <a href="ImageComponentParser.html" class="code" title="classdef ImageComponentParser < hgsetget">ImageComponentParser</a>();
+0046 
+0047 <span class="comment">% Just set the raw data</span>
+0048 icp.set_data(vsx(1).ccd);
+0049 
+0050 <span class="comment">%   So the idea is that the analysis is broken into stages: Pre-processing,</span>
+0051 <span class="comment">% PCA, then ICA. And each stage you can look at various things.</span>
+0052 <span class="comment">% There are tabs at the bottom that control the display and give you access</span>
+0053 <span class="comment">% to the run buttons. You can just click run ica and everything will get</span>
+0054 <span class="comment">% run sequentially.</span>
+0055 <span class="comment">%   When you have the PCA or ICA tabs open the viewer shows you the weights</span>
+0056 <span class="comment">% of each components. You can click through with the slider at the bottom</span>
+0057 <span class="comment">% and view different components. The Component plot will show you the</span>
+0058 <span class="comment">% current component.</span>
+0059 <span class="comment">%   There is also a 3D plot so you can look at the components in that</span>
+0060 <span class="comment">% space. You can change which components you want to look at, and theres a</span>
+0061 <span class="comment">% rotation button (for help visualizing). The 3D plot will change depending</span>
+0062 <span class="comment">% if you have the PCA or ICA tab open.</span>
+0063 <span class="comment">%   Once the ICA analyis is done you can click on calc rois button and it</span>
+0064 <span class="comment">% will come up with rois for each component (see</span>
+0065 <span class="comment">% calc_rois_from_components). You can also make your own ROIs and different</span>
+0066 <span class="comment">% ROI sets. Just use the mouse on the image to manipulate, and create ROIs.</span>
+0067 <span class="comment">% press ctrl+delete to delete the currently selected rois. You can add or</span>
+0068 <span class="comment">% delete roi sets with the + and - buttons below the roi set list.</span>
+0069 <span class="comment">%   This is still very much a work in progress, so forgive me for bugs and</span>
+0070 <span class="comment">% things that are incomplete. Maybe we should put a versioning system</span>
+0071 <span class="comment">% together if you guys are interested in further developing this.</span>
+0072 
+0073 <span class="comment">%% ICA Analysis</span>
+0074 
+0075 <span class="comment">% So, you can use the gui to do this, or you can do it programatically</span>
+0076 
+0077 <span class="comment">% First change some settings</span>
+0078 icp.settings.preprocessing.smooth_window = [6,6,1]; <span class="comment">% smoothing in [m, n, t] dimensions</span>
+0079 <span class="comment">% It would probably also be worth-while to add in some filters in the</span>
+0080 <span class="comment">% preprocessing...</span>
+0081 
+0082 icp.settings.ica.which_pcs = 1:200; <span class="comment">% This means we'll use the first 200 PCs for the ICA analysis</span>
+0083 
+0084 <span class="comment">% Then run each stage:</span>
+0085 icp.run_preprocessing();
+0086 icp.run_pca();
+0087 icp.run_ica();
+0088 
+0089 <span class="comment">% Calcualte the rois from the ic components</span>
+0090 rois = icp.calc_rois();
+0091 
+0092 <span class="comment">% That is basically all you do. The ic_rois, and ics were created with</span>
+0093 <span class="comment">% these settings (and the default). But they aren't necessarily the best</span>
+0094 <span class="comment">% settings.</span>
+0095 
+0096 
+0097 
+0098 
+0099</pre></div>
+<hr><address>Generated on Fri 31-Jan-2014 15:55:41 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

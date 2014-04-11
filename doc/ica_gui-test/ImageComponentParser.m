@@ -5,22 +5,6 @@ classdef ImageComponentParser < hgsetget
     % @file: ImageComponentParser.m
     % @author: Paxon Frady
     % @created: 8/20/2013
-    %
-    % Copyright (C) 2013 E. Paxon Frady
-    %
-    % This program is free software: you can redistribute it and/or modify
-    % it under the terms of the GNU General Public License as published by
-    % the Free Software Foundation, either version 3 of the License, or
-    % (at your option) any later version.
-    %
-    % This program is distributed in the hope that it will be useful,
-    % but WITHOUT ANY WARRANTY; without even the implied warranty of
-    % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    % GNU General Public License for more details.
-    %
-    % You should have received a copy of the GNU General Public License
-    % along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
     
     properties
         % gui properties
@@ -32,18 +16,18 @@ classdef ImageComponentParser < hgsetget
         Parent; % The parent of the object
         
         % object properties
-        data; % Struct containing all the data for an ICP
+        im_data; % The original image data
+
+        rois; % Cell array containing the sets of rois
         
-        %im_data; % The original image data
-        %rois; % Cell array containing the sets of rois
-        %settings; % struct containing settings for each stage.
-        %pp;  % struct containing preprocessing data
-        %pca; % struct containing pca data
-        %ica; % struct containing ica data
-        %post; % struct containing postprocessing data
-        %viz; % struct containing visualization data
-        %cluster; % struct containing clustering data        
-        %stage; % Keeps track of which stage the analysis is in.
+        settings; % struct containing settings for each stage.
+        pp;  % struct containing preprocessing data
+        pca; % struct containing pca data
+        ica; % struct containing ica data
+        post; % struct containing postprocessing data
+        cluster; % struct containing clustering data
+        
+        stage; % Keeps track of which stage the analysis is in.
     end
     
     properties (Constant)
@@ -76,17 +60,20 @@ classdef ImageComponentParser < hgsetget
             if nargin < 1
                 parent = [];
             end
-            
             if nargin < 2
-                self.init_data([],1,1);
+                im_data = rand(128, 128, 10);
+            end
+            
+            if iscell(im_data)
+                self.im_data = im_data;
             else
-                self.init_data(im_data);
+                self.im_data{1} = im_data;
             end
             
             self = self.init_state();
             self = self.init_gui(parent);
             
-            self.reset();
+            self.update();
         end
         
         function self = init_state(self)
@@ -94,7 +81,15 @@ classdef ImageComponentParser < hgsetget
             
             self.Position = [0 0 1200 800];
             
+            self.default_settings();
+            
+            self.rois{1} = [];
+            self.gui.current_roi_set = 1;
+            self.gui.roi_names{1} = 'ROI_set_1';
+            self.gui.is_component_set = false;
             self.gui.current_trial = 1;
+            self.gui.trial_names{1} = 'Trial 1';
+            self.gui.use_wavelets = false;
             
             self.gui.MARGIN = 10;
             self.gui.CAX_H = 240;
@@ -102,18 +97,26 @@ classdef ImageComponentParser < hgsetget
             self.gui.CONTROL_H = 150;
             self.gui.PC_PANEL_ITEM_W = 20;
             
-            self.gui.data_norm_frame = 20; % Data normalized to this frame
+            % 3d-axis state variables
+            self.gui.x_pc = 1; % The PC scores to plot on the x-axis
+            self.gui.y_pc = 2; % The PC scores to plot on the y-axis
+            self.gui.z_pc = 3; % The PC scores to plot on the z-axis 
             
             self.gui.rotate_rate = 0.05;
             self.gui.rotate_angle_step = 2;
             self.gui.rotate_timer = timer('TimerFcn', @self.rotate_timer_cb, ...
                                           'ExecutionMode', 'fixedRate', ...
                                           'Period', self.gui.rotate_rate);
-             
+                                      
             self.gui.locked_components = {};
             self.gui.locked_colors = lines(7);
-          
-            self.default_settings();
+            
+            self.gui.display = 1;
+            self.gui.last_display = 0; 
+            
+            self.gui.data_norm_frame = 20; % Data normalized to this frame
+            
+            self.stage = self.InitStage;
         end
         
         function self = init_gui(self, parent)
@@ -129,27 +132,27 @@ classdef ImageComponentParser < hgsetget
                 set(parent, 'Position', [100, 100, self.Position(3), self.Position(4)]);
             end
             
-            self.h.parent = parent;
+            self.h.Parent = parent;
             
             % We must use a figure event notifier, which is attached to the
             % top-most figure. Go up until we get the figure.
-            self.h.fh = self.h.parent;
+            self.h.fh = self.h.Parent;
             while ~strcmp(get(self.h.fh, 'Type'), 'figure')
                 % Then the fh object is not a figure, so go up.
                 self.h.fh = get(self.h.fh, 'Parent');
             end
             
             % Now fh is the parent figure. Set its event notifier.
-            self.h.fen = FigureEventNotifier(self.h.fh);
-            addlistener(self.h.fen, 'WindowKeyPress', @self.window_key_press_cb);
+            self.gui.fen = FigureEventNotifier(self.h.fh);
+            addlistener(self.gui.fen, 'WindowKeyPress', @self.window_key_press_cb);
             set(self.h.fh, 'Toolbar', 'figure');
             
             %self.h.panel = uipanel(self.Parent, 'Units', 'pixels');
-            self.h.panel = uiextras.BoxPanel('Parent', self.h.parent, ...
+            self.h.panel = uiextras.BoxPanel('Parent', self.h.Parent, ...
                 'Title', 'Image Component Parser');
             
             % RoiEditor
-            self.h.roi_editor = RoiEditor(self.h.panel, self.data(self.gui.current_trial).im_data);
+            self.h.roi_editor = RoiEditor([], self.im_data{self.gui.current_trial});
             %self.h.roi_editor.is_editing_enabled = false;
             
             addlistener(self.h.roi_editor, 'SelectionChanged', @self.re_selection_changed_cb);
@@ -161,7 +164,7 @@ classdef ImageComponentParser < hgsetget
             
             % Roi Management
             self.h.roi_listbox = uicontrol('Style', 'listbox', ...
-                'String', self.data(1).roi_names, 'Min', 1, 'Max', 1, 'Callback', @self.roi_listbox_cb);
+                'String', self.gui.roi_names, 'Min', 1, 'Max', 1, 'Callback', @self.roi_listbox_cb);
             self.h.add_rois_button = uicontrol('Style', 'pushbutton', ...
                 'String', '+', 'Callback', @self.add_rois_button_cb);
             self.h.delete_rois_button = uicontrol('Style', 'pushbutton', ...
@@ -169,7 +172,7 @@ classdef ImageComponentParser < hgsetget
             
             % Trial Management
             self.h.trial_listbox = uicontrol('Style', 'listbox', ...
-                'String', {'loading...'}, 'Min', 1, 'Max', 1, 'Callback', @self.trial_listbox_cb);
+                'String', self.gui.trial_names, 'Min', 1, 'Max', 1, 'Callback', @self.trial_listbox_cb);
             self.h.add_trial_button = uicontrol('Style', 'pushbutton', ...
                 'String', '+', 'Callback', @self.add_trial_button_cb);
             self.h.delete_trial_button = uicontrol('Style', 'pushbutton', ...
@@ -185,16 +188,16 @@ classdef ImageComponentParser < hgsetget
             % Data axes
             self.h.data_axes = axes('Units', 'pixels');
                         
+             
             self.h.stage_tab_panel = uiextras.TabPanel('Callback', @self.stage_tab_panel_cb);
             self.h.data_tab = uiextras.Panel('Parent', self.h.stage_tab_panel);
             self.h.pp_tab = uiextras.Panel('Parent', self.h.stage_tab_panel);
             self.h.pca_tab = uiextras.Panel('Parent', self.h.stage_tab_panel);
             self.h.ica_tab = uiextras.Panel('Parent', self.h.stage_tab_panel);
-            %self.h.post_tab = uiextras.Panel('Parent', self.h.stage_tab_panel);
-            self.h.viz_tab = uiextras.Panel('Parent', self.h.stage_tab_panel);
+            self.h.post_tab = uiextras.Panel('Parent', self.h.stage_tab_panel);
             self.h.cluster_tab = uiextras.Panel('Parent', self.h.stage_tab_panel);
-            self.h.stage_tab_panel.TabNames = {'Data', 'Pre-Processing', 'PCA', 'ICA', 'Visualize', 'Cluster'};
-            self.h.stage_tab_panel.SelectedChild = self.gui.d(1).display;
+            self.h.stage_tab_panel.TabNames = {'Data', 'Pre-Processing', 'PCA', 'ICA', 'Segment', 'Cluster'};
+            self.h.stage_tab_panel.SelectedChild = self.gui.display;
             
             self.h.stage_status = uicontrol('Style', 'text', 'String', '...');
             
@@ -223,10 +226,6 @@ classdef ImageComponentParser < hgsetget
                 'String', 'Calc ROIs', 'Callback', @self.calc_rois_cb);
             self.h.segment_ics_button = uicontrol('Style', 'pushbutton', ...
                 'String', 'Segment ICs', 'Callback', @self.segment_ics_cb);
-            
-            % Visualization tab
-            self.h.viz_button = uicontrol('Style', 'pushbutton', ...
-                'String', 'Visualize', 'Callback', @self.viz_button_cb);
             
             % Cluster tab
             self.h.estimate_clusters_button = uicontrol('Style', 'pushbutton', ...
@@ -267,20 +266,11 @@ classdef ImageComponentParser < hgsetget
             
             % Menu
             self.h.main_menu = uimenu(self.h.fh, 'Label', 'ICP');
-            self.h.load_image_item = uimenu('Parent', self.h.main_menu, ...
-                'Label', 'Load Data', 'Callback', @self.load_image_cb);
-            
-            self.h.load_session_item = uimenu('Parent', self.h.main_menu, ...
-                'Label', 'Load Session', 'Callback', @self.load_session_cb, ...
-                'Separator', 'on');
-            self.h.save_session_item = uimenu('Parent', self.h.main_menu, ...
-                'Label', 'Save Session', 'Callback', @self.save_session_cb);                
-            
             self.h.load_settings_item = uimenu('Parent', self.h.main_menu, ...
                 'Label', 'Load Settings', 'Callback', @self.load_settings_cb);
-            set(self.h.load_settings_item, 'Separator', 'on');
             self.h.save_settings_item = uimenu('Parent', self.h.main_menu, ...
                 'Label', 'Save Settings', 'Callback', @self.save_settings_cb);
+            set(self.h.save_settings_item, 'Separator', 'on');
             self.h.edit_settings_item = uimenu('Parent', self.h.main_menu, ...
                 'Label', 'Edit Settings');
             self.h.edit_preprocessing_item = uimenu('Parent', self.h.edit_settings_item, ...
@@ -290,12 +280,11 @@ classdef ImageComponentParser < hgsetget
             self.h.edit_ica_item = uimenu('Parent', self.h.edit_settings_item, ...
                 'Label', 'ICA', 'Callback', @self.edit_ica_cb);
             
-            self.h.load_rois_item = uimenu('Parent', self.h.main_menu, ...
-                'Label', 'Load ROIs', 'Callback', @self.load_rois_cb,...
-                'Separator', 'on');
             self.h.save_rois_item = uimenu('Parent', self.h.main_menu, ...
-                'Label', 'Save ROIs', 'Callback', @self.save_rois_cb);
-            
+                'Label', 'Save ROIs', 'Callback', @self.save_rois_cb,...
+                'Separator', 'on');
+            self.h.load_rois_item = uimenu('Parent', self.h.main_menu, ...
+                'Label', 'Load ROIs', 'Callback', @self.load_rois_cb);
             
             %self = self.reset_layout();
             self = self.uiextras_layout();
@@ -334,8 +323,7 @@ classdef ImageComponentParser < hgsetget
             self.h.trial_button_hbox = uiextras.HButtonBox();
             
             self.h.cluster_button_hbox = uiextras.HButtonBox();
-            %self.h.post_button_hbox = uiextras.HButtonBox();
-            self.h.viz_button_hbox = uiextras.HButtonBox();
+            self.h.post_button_hbox = uiextras.HButtonBox();
             self.h.ica_button_hbox = uiextras.HButtonBox();
             self.h.pca_button_hbox = uiextras.HButtonBox();
             self.h.pp_button_hbox = uiextras.HButtonBox();
@@ -369,6 +357,8 @@ classdef ImageComponentParser < hgsetget
             set(self.h.add_rois_button, 'Parent', self.h.roi_button_hbox.double());
             set(self.h.delete_rois_button, 'Parent', self.h.roi_button_hbox.double());            
             
+            
+            
             % Data tab
             set(self.h.data_button_hbox, 'Parent', self.h.data_tab);
             set(self.h.reset_button, 'Parent', self.h.data_button_hbox.double());
@@ -388,15 +378,9 @@ classdef ImageComponentParser < hgsetget
             set(self.h.runica_button, 'Parent', self.h.ica_button_hbox.double());
             
             % Post tab
-            %set(self.h.post_button_hbox, 'Parent', self.h.post_tab);
-            %set(self.h.calc_rois_button, 'Parent', self.h.post_button_hbox.double());
-            %set(self.h.segment_ics_button, 'Parent', self.h.post_button_hbox.double());
-            set(self.h.calc_rois_button, 'Parent', self.h.ica_button_hbox.double());
-            set(self.h.segment_ics_button, 'Parent', self.h.ica_button_hbox.double());
-            
-            % Viz tab
-            set(self.h.viz_button_hbox, 'Parent', self.h.viz_tab);
-            set(self.h.viz_button, 'Parent', self.h.viz_button_hbox.double());
+            set(self.h.post_button_hbox, 'Parent', self.h.post_tab);
+            set(self.h.calc_rois_button, 'Parent', self.h.post_button_hbox.double());
+            set(self.h.segment_ics_button, 'Parent', self.h.post_button_hbox.double());
             
             % Cluster tab
             set(self.h.cluster_button_hbox, 'Parent', self.h.cluster_tab);
@@ -456,7 +440,72 @@ classdef ImageComponentParser < hgsetget
             
             set(self.h.main_hbox, 'Sizes', [-1 -1]);
             
-            set(self.Parent, 'Position', [100, 100, self.Position(3), self.Position(4)]);
+            set(self.h.Parent, 'Position', [100, 100, self.Position(3), self.Position(4)]);
+        end
+        
+        function self = reset_layout(self)
+            % reset_layout: Sets the layout of all of the gui components.
+            
+%             set(self.h.panel, 'Position', self.Position);
+% 
+%             PANEL_W = self.Position(3);
+%             PANEL_H = self.Position(4);      
+%             
+%             %%% ROI Editor
+%             RE_L = self.gui.MARGIN;
+%             RE_B = self.gui.MARGIN + 2*self.gui.BUTTON_H; %PANEL_H - RE_H - self.gui.MARGIN;
+%             RE_W = self.h.roi_editor.Position(3);
+%             RE_H = PANEL_H - RE_B - self.gui.MARGIN; %self.h.roi_editor.Position(4);
+%             
+%             self.h.roi_editor.Position = [RE_L, RE_B, RE_W, RE_H];
+%             self.h.roi_editor.reset_layout();
+%             
+%             %%% Stage Buttons
+%             B_W = RE_W / 4;
+%             B_H = self.gui.BUTTON_H;
+%             B_L = @(N) N * B_W + self.gui.MARGIN;
+%             B_B = self.gui.MARGIN + self.gui.BUTTON_H;
+%             
+%             set(self.h.reset_button, 'Position', [B_L(0), B_B, B_W, B_H]);
+%             set(self.h.preprocess_button, 'Position', [B_L(1), B_B, B_W, B_H]);
+%             set(self.h.runpca_button, 'Position', [B_L(2), B_B, B_W, B_H]);
+%             set(self.h.runica_button, 'Position', [B_L(3), B_B, B_W, B_H]);
+%             
+%             %%% Component Axes
+%             CAX_L = 3 * self.gui.MARGIN + RE_W;
+%             CAX_W = PANEL_W - CAX_L - self.gui.MARGIN;
+%             CAX_H = self.gui.CAX_H;
+%             CAX_B = PANEL_H - CAX_H - self.gui.MARGIN;
+%             set(self.h.component_axes, 'Position', [CAX_L, CAX_B, CAX_W, CAX_H]);
+% 
+%             %%% Score Axes
+%             SAX_L = CAX_L;
+%             SAX_B = RE_B;
+%             SAX_W = CAX_W - self.gui.PC_PANEL_W;
+%             SAX_H = CAX_B - SAX_B - 3 * self.gui.MARGIN;
+%             set(self.h.pc3_axes, 'Position', [SAX_L, SAX_B, SAX_W, SAX_H]);
+%             axis(self.h.pc3_axes, 'vis3d');
+%             
+%             %%% Score Controls
+%             LABEL_W = 20;
+%             PUP_W = self.gui.PC_PANEL_W - 2 * LABEL_W - self.gui.MARGIN;
+%             PUP_L = PANEL_W - self.gui.PC_PANEL_W;
+%             PUP_B = @(N) SAX_B + SAX_H - self.gui.MARGIN - (N + 1) * self.gui.BUTTON_H;
+%             PUP_H = self.gui.BUTTON_H;
+%             
+%             set(self.h.xl, 'Position', [PUP_L, PUP_B(0), LABEL_W, PUP_H]);
+%             set(self.h.x_popup, 'Position', [PUP_L + LABEL_W, PUP_B(0), PUP_W, PUP_H]);
+%             set(self.h.xy_button, 'Position', [PUP_L + LABEL_W + PUP_W, PUP_B(0), LABEL_W, PUP_H]);
+%             
+%             set(self.h.yl, 'Position', [PUP_L, PUP_B(1), LABEL_W, PUP_H]);
+%             set(self.h.y_popup, 'Position', [PUP_L + LABEL_W, PUP_B(1), PUP_W, PUP_H]);
+%             set(self.h.yz_button, 'Position', [PUP_L + LABEL_W + PUP_W, PUP_B(1), LABEL_W, PUP_H]);
+%             
+%             set(self.h.zl, 'Position', [PUP_L, PUP_B(2), LABEL_W, PUP_H]);
+%             set(self.h.z_popup, 'Position', [PUP_L + LABEL_W, PUP_B(2), PUP_W, PUP_H]);
+%             set(self.h.zx_button, 'Position', [PUP_L + LABEL_W + PUP_W, PUP_B(2), LABEL_W, PUP_H]);
+%             
+%             set(self.h.rotate_toggle, 'Position', [PUP_L, PUP_B(4), self.gui.PC_PANEL_W, PUP_H]);
         end
         
         %%%%%%%%%% Callbacks %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%        
@@ -503,10 +552,6 @@ classdef ImageComponentParser < hgsetget
             self.run_segmentation();
         end
         
-        function viz_button_cb(self, source_h, eventdata)
-            self.run_visualization();
-        end
-        
         function estimate_clusters_cb(self, source_h, eventdata)
             self.estimate_clusters();
         end
@@ -526,7 +571,7 @@ classdef ImageComponentParser < hgsetget
         function stage_tab_panel_cb(self, source_h, eventdata)
             disp('stage_tab_panel_cb');
             
-            self.gui.d(self.gui.current_trial).display = eventdata.SelectedChild;
+            self.gui.display = eventdata.SelectedChild;
             self.update();
         end
         
@@ -534,23 +579,23 @@ classdef ImageComponentParser < hgsetget
             % x_popup_cb: callback for when x popup is changed.
             
             v = get(sh, 'Value');
-            self.gui.d(self.gui.current_trial).x_pc = v;
+            self.gui.x_pc = v;
             
             % Now make sure y, z aren't x.
-            if self.gui.d(self.gui.current_trial).y_pc == self.gui.d(self.gui.current_trial).x_pc
+            if self.gui.y_pc == self.gui.x_pc
                 % Then y is equal to x
                 for i = 1:10
-                    if i ~= self.gui.d(self.gui.current_trial).x_pc && i ~= self.gui.d(self.gui.current_trial).z_pc
-                        self.gui.d(self.gui.current_trial).y_pc = i;
+                    if i ~= self.gui.x_pc && i ~= self.gui.z_pc
+                        self.gui.y_pc = i;
                         break;
                     end 
                 end
             end
-            if self.gui.d(self.gui.current_trial).z_pc == self.gui.d(self.gui.current_trial).x_pc
+            if self.gui.z_pc == self.gui.x_pc
                 % Then z is equal to x
                 for i = 1:10
-                    if i ~= self.gui.d(self.gui.current_trial).x_pc && i ~= self.gui.d(self.gui.current_trial).y_pc
-                        self.gui.d(self.gui.current_trial).z_pc = i;
+                    if i ~= self.gui.x_pc && i ~= self.gui.y_pc
+                        self.gui.z_pc = i;
                         break;
                     end 
                 end
@@ -562,23 +607,23 @@ classdef ImageComponentParser < hgsetget
             % y_popup_cb: callback for when y popup is changed.
             
             v = get(sh, 'Value');
-            self.gui.d(self.gui.current_trial).y_pc = v;
+            self.gui.y_pc = v;
             
             % Now make sure x, z aren't y.
-            if self.gui.d(self.gui.current_trial).x_pc == self.gui.d(self.gui.current_trial).y_pc
+            if self.gui.x_pc == self.gui.y_pc
                 % Then x is equal to y
                 for i = 1:10
-                    if i ~= self.gui.d(self.gui.current_trial).y_pc && i ~= self.gui.d(self.gui.current_trial).z_pc
-                        self.gui.d(self.gui.current_trial).x_pc = i;
+                    if i ~= self.gui.y_pc && i ~= self.gui.z_pc
+                        self.gui.x_pc = i;
                         break;
                     end 
                 end
             end
-            if self.gui.d(self.gui.current_trial).z_pc == self.gui.d(self.gui.current_trial).y_pc
+            if self.gui.z_pc == self.gui.y_pc
                 % Then z is equal to y
                 for i = 1:10
-                    if i ~= self.gui.d(self.gui.current_trial).y_pc && i ~= self.gui.d(self.gui.current_trial).x_pc
-                        self.gui.d(self.gui.current_trial).z_pc = i;
+                    if i ~= self.gui.y_pc && i ~= self.gui.x_pc
+                        self.gui.z_pc = i;
                         break;
                     end 
                 end
@@ -590,23 +635,23 @@ classdef ImageComponentParser < hgsetget
             % z_popup_cb: callback for when z popup is changed.
             
             v = get(sh, 'Value');
-            self.gui.d(self.gui.current_trial).z_pc = v;
+            self.gui.z_pc = v;
             
             % Now make sure y, x aren't z.
-            if self.gui.d(self.gui.current_trial).y_pc == self.gui.d(self.gui.current_trial).z_pc
+            if self.gui.y_pc == self.gui.z_pc
                 % Then y is equal to z
                 for i = 1:10
-                    if i ~= self.gui.d(self.gui.current_trial).x_pc && i ~= self.gui.d(self.gui.current_trial).z_pc
-                        self.gui.d(self.gui.current_trial).y_pc = i;
+                    if i ~= self.gui.x_pc && i ~= self.gui.z_pc
+                        self.gui.y_pc = i;
                         break;
                     end 
                 end
             end
-            if self.gui.d(self.gui.current_trial).x_pc == self.gui.d(self.gui.current_trial).z_pc
+            if self.gui.x_pc == self.gui.z_pc
                 % Then x is equal to z
                 for i = 1:10
-                    if i ~= self.gui.d(self.gui.current_trial).z_pc && i ~= self.gui.d(self.gui.current_trial).y_pc
-                        self.gui.d(self.gui.current_trial).x_pc = i;
+                    if i ~= self.gui.z_pc && i ~= self.gui.y_pc
+                        self.gui.x_pc = i;
                         break;
                     end 
                 end
@@ -669,9 +714,6 @@ classdef ImageComponentParser < hgsetget
         
         function re_frame_changed_cb(self, source_h, eventdata)
             disp('re_frame_changed_cb');
-            f = self.h.roi_editor.current_frame;
-            
-            self.gui.d(self.gui.current_trial).current_frame(self.gui.d(self.gui.current_trial).display) = f;
             self.update();
         end
         
@@ -735,11 +777,7 @@ classdef ImageComponentParser < hgsetget
             c = get(source_h, 'UserData');
             
             if isscalar(c)
-                % Then jump to the IC
-                self.gui.d(self.gui.current_trial).display = 4;
-                self.gui.d(self.gui.current_trial).current_frame(4) = c;
-                self.update();
-                %self.h.roi_editor.set_current_frame(c);
+                self.h.roi_editor.set_current_frame(c);
             end
         end
         
@@ -753,7 +791,8 @@ classdef ImageComponentParser < hgsetget
         function add_trial_button_cb(self, source_h, eventdata)
             disp('add_trial_button_cb');
             
-            self.load_data();
+            % hmmm... I guess a pop-up that allows you to then pick
+            % something from the workspace?
         end
         
         function delete_trial_button_cb(self, source_h, eventdata)
@@ -793,42 +832,22 @@ classdef ImageComponentParser < hgsetget
             self.load_rois();
         end
         
-        function load_image_cb(self, source_h, eventdata)
-            self.load_data(); 
-        end
-        
-        function load_session_cb(self, source_h, eventdata)
-            self.load_session();
-        end
-        
-        function save_session_cb(self, source_h, eventdata)
-            self.save_session();
-        end
-        
         %%%%%%%%%% Main Functions %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         function update(self)
             % update(self): main update function
             
             disp('ICP: update');
-            
             f = self.h.roi_editor.current_frame;
-            if self.gui.d(self.gui.current_trial).display > length(self.gui.d(self.gui.current_trial).current_frame)
-                self.gui.d(self.gui.current_trial).current_frame(self.gui.d(self.gui.current_trial).display) = f;
-            end
-            
-            f = self.gui.d(self.gui.current_trial).current_frame(self.gui.d(self.gui.current_trial).display);
-            
-            set(self.h.stage_tab_panel, 'SelectedChild', self.gui.d(self.gui.current_trial).display);
             
             rois = self.h.roi_editor.rois.xyrra(self.h.roi_editor.selected_rois, :, 1);
             
             cla(self.h.data_axes);
             if ~isempty(rois)
                 % plot the original data from the ROI.
-                if isfield(self.data(self.gui.current_trial).pp, 'im_data_mc')
-                    data = mean_roi(self.data(self.gui.current_trial).pp.im_data_mc, rois, self.data(self.gui.current_trial).pp.mc_x, self.data(self.gui.current_trial).pp.mc_y);
+                if isfield(self.pp, 'im_data_mc')
+                    data = mean_roi(self.pp.im_data_mc, rois, self.pp.mc_x, self.pp.mc_y);
                 else
-                    data = mean_roi(self.data(self.gui.current_trial).im_data, rois);
+                    data = mean_roi(self.im_data{self.gui.current_trial}, rois);
                 end
                 
                 % need to do a check on norm_frame
@@ -841,97 +860,86 @@ classdef ImageComponentParser < hgsetget
                 plot(self.h.data_axes, data);
             end
             
-            
-            if self.gui.d(self.gui.current_trial).display == 6 && self.data(self.gui.current_trial).stage >= self.PostProcessingStage ...
-                    && isfield(self.data(self.gui.current_trial).cluster, 'im_data') && ~isempty(self.data(self.gui.current_trial).cluster.im_data)
+            if self.gui.display == 6 && self.stage >= self.PostProcessingStage ...
+                    && isfield(self.cluster, 'im_data') && ~isempty(self.cluster.im_data)
                 
-                if self.gui.d(self.gui.current_trial).last_display ~= self.gui.d(self.gui.current_trial).display
+                if self.gui.last_display ~= self.gui.display
                     % Don't update the roi editor if its the same
-                    self.h.roi_editor.set_im_data(self.data(self.gui.current_trial).cluster.im_data, [], self.data(self.gui.current_trial).cluster.im_x, self.data(self.gui.current_trial).cluster.im_y);
+                    self.h.roi_editor.set_im_data(self.cluster.im_data, [], self.cluster.im_x, self.cluster.im_y);
+                    f = self.h.roi_editor.set_current_frame(f);
                 end
-                self.gui.d(self.gui.current_trial).last_display = self.gui.d(self.gui.current_trial).display;
+                self.gui.last_display = self.gui.display;
             
                 cla(self.h.component_axes);
-                plot(self.h.component_axes, self.data(self.gui.current_trial).ica.ics(:, f), 'k', 'LineWidth', 2);
+                plot(self.h.component_axes, self.ica.ics(:, f), 'k', 'LineWidth', 2);
                 
-                plot(self.h.component_axes, self.data(self.gui.current_trial).ica.ics(:, self.data(self.gui.current_trial).cluster.top3(f, 3)), 'b');
-                plot(self.h.component_axes, self.data(self.gui.current_trial).ica.ics(:, self.data(self.gui.current_trial).cluster.top3(f, 2)), 'g');
-                plot(self.h.component_axes, self.data(self.gui.current_trial).ica.ics(:, self.data(self.gui.current_trial).cluster.top3(f, 1)), 'r');
+                plot(self.h.component_axes, self.ica.ics(:, self.cluster.top3(f, 3)), 'b');
+                plot(self.h.component_axes, self.ica.ics(:, self.cluster.top3(f, 2)), 'g');
+                plot(self.h.component_axes, self.ica.ics(:, self.cluster.top3(f, 1)), 'r');
                 
-%             elseif self.gui.display == 5 && self.data(self.gui.current_trial).stage >= self.PostProcessingStage ...
-%                     && isfield(self.data(self.gui.current_trial).segment, 'im_data') && ~isempty(self.data(self.gui.current_trial).segment.im_data)
-%                 % Then view the segments
-%                 if self.gui.last_display ~= self.gui.display
-%                     self.h.roi_editor.set_im_data(self.data(self.gui.current_trial).segment.im_data, [], self.data(self.gui.current_trial).segment.im_x, self.data(self.gui.current_trial).segment.im_y);
-%                     f = self.h.roi_editor.set_current_frame(f);
-%                 end
-%                 self.gui.last_display = self.gui.display;
-            elseif self.gui.d(self.gui.current_trial).display == 5 && self.data(self.gui.current_trial).stage >= self.PostProcessingStage ...
-                    && isfield(self.data(self.gui.current_trial).viz, 'im_data') && ~isempty(self.data(self.gui.current_trial).viz.im_data)
-                % View the visualization
-                if self.gui.d(self.gui.current_trial).last_display ~= self.gui.d(self.gui.current_trial).display
-                    %%% This is a HACK for ROI Editor. It can show an RGB
-                    %%% image, but it needs a 4th dimension and I can't
-                    %%% make it a singleton 4th dimension.
-                    im4D = repmat(self.data(self.gui.current_trial).viz.im_data, [1 1 1 2]);
-                    %%%
-                    
-                    self.h.roi_editor.set_im_data(im4D, [], self.data(self.gui.current_trial).viz.im_x, self.data(self.gui.current_trial).viz.im_y);
+            elseif self.gui.display == 5 && self.stage >= self.PostProcessingStage ...
+                    && isfield(self.post, 'im_data') && ~isempty(self.post.im_data)
+                % Then view the segments
+                if self.gui.last_display ~= self.gui.display
+                    self.h.roi_editor.set_im_data(self.post.im_data, [], self.post.im_x, self.post.im_y);
+                    f = self.h.roi_editor.set_current_frame(f);
                 end
-                self.gui.d(self.gui.current_trial).last_display = self.gui.d(self.gui.current_trial).display;
+                self.gui.last_display = self.gui.display;
 
-            elseif self.gui.d(self.gui.current_trial).display == 4 && self.data(self.gui.current_trial).stage >= self.IcaStage
+            elseif self.gui.display == 4 && self.stage >= self.IcaStage
                 % Then view the ICs
-                if self.gui.d(self.gui.current_trial).last_display ~= self.gui.d(self.gui.current_trial).display
+                if self.gui.last_display ~= self.gui.display
                     % Don't update the roi editor if its the same
-                    self.h.roi_editor.set_im_data(self.data(self.gui.current_trial).ica.im_data, [], self.data(self.gui.current_trial).ica.im_x, self.data(self.gui.current_trial).ica.im_y);
+                    self.h.roi_editor.set_im_data(self.ica.im_data, [], self.ica.im_x, self.ica.im_y);
+                    f = self.h.roi_editor.set_current_frame(f);
                 end
-                self.gui.d(self.gui.current_trial).last_display = self.gui.d(self.gui.current_trial).display;                
+                self.gui.last_display = self.gui.display;                
                 
                 % Plot the current ic
                 cla(self.h.component_axes);
                 legend(self.h.component_axes, 'off');
                 
-                plot(self.h.component_axes, self.data(self.gui.current_trial).ica.ics(:, f), 'k');
+                plot(self.h.component_axes, self.ica.ics(:, f), 'k');
                 
-            elseif self.gui.d(self.gui.current_trial).display == 3 && self.data(self.gui.current_trial).stage >= self.PcaStage
+            elseif self.gui.display == 3 && self.stage >= self.PcaStage
                 % Then view the PCs
-                if self.gui.d(self.gui.current_trial).last_display ~= self.gui.d(self.gui.current_trial).display
+                if self.gui.last_display ~= self.gui.display
                     % Don't update the roi editor if its the same
-                    self.h.roi_editor.set_im_data(self.data(self.gui.current_trial).pca.im_data, [], self.data(self.gui.current_trial).pca.im_x, self.data(self.gui.current_trial).pca.im_y);
+                    self.h.roi_editor.set_im_data(self.pca.im_data, [], self.pca.im_x, self.pca.im_y);
+                    f = self.h.roi_editor.set_current_frame(f);
                 end
-                self.gui.d(self.gui.current_trial).last_display = self.gui.d(self.gui.current_trial).display;                
+                self.gui.last_display = self.gui.display;                
                 
                 % Plot the current pc
                 cla(self.h.component_axes);
                 legend(self.h.component_axes, 'off');
                 
-                %plot(self.h.component_axes, self.data(self.gui.current_trial).pca.pcs(:, f), 'k');
+                %plot(self.h.component_axes, self.pca.pcs(:, f), 'k');
                 
-                if isfield(self.data(self.gui.current_trial).pca, 'pc_rec')
-                    plot(self.h.component_axes, self.data(self.gui.current_trial).pca.pc_rec(:,f));
+                if isfield(self.pca, 'pc_rec')
+                    plot(self.h.component_axes, self.pca.pc_rec(:,f));
                 else
-                    plot(self.h.component_axes, self.data(self.gui.current_trial).pca.pcs(:, f), 'k');
+                    plot(self.h.component_axes, self.pca.pcs(:, f), 'k');
                 end
-            elseif self.gui.d(self.gui.current_trial).display == 2 && self.data(self.gui.current_trial).stage >= self.PreProcessingStage
+            elseif self.gui.display == 2 && self.stage >= self.PreProcessingStage
                 % View the Preprocessing data
-                if self.gui.d(self.gui.current_trial).last_display ~= self.gui.d(self.gui.current_trial).display
+                if self.gui.last_display ~= self.gui.display
                     % Don't update the roi editor if its the same
-                    self.h.roi_editor.set_im_data(self.data(self.gui.current_trial).pp.im_data, [], self.data(self.gui.current_trial).pp.im_x, self.data(self.gui.current_trial).pp.im_y);
+                    self.h.roi_editor.set_im_data(self.pp.im_data, [], self.pp.im_x, self.pp.im_y);
+                    self.h.roi_editor.set_current_frame(f);
                 end
-                self.gui.d(self.gui.current_trial).last_display = self.gui.d(self.gui.current_trial).display;
+                self.gui.last_display = self.gui.display;
             else
                 % View the raw data.
-                if self.gui.d(self.gui.current_trial).last_display ~= 1
+                if self.gui.last_display ~= self.gui.display
                     % Don't update the roi editor if its the same
-                    self.h.roi_editor.set_im_data(self.data(self.gui.current_trial).im_data);
+                    self.h.roi_editor.set_im_data(self.im_data{self.gui.current_trial});
+                    self.h.roi_editor.set_current_frame(f);
                 end
-                self.gui.d(self.gui.current_trial).last_display = 1;
+                self.gui.last_display = self.gui.display;
             end
             
-            self.h.roi_editor.set_current_frame(f, 0);
-            
-            switch self.data(self.gui.current_trial).stage
+            switch self.stage
                 case self.InitStage, s = 'Initialized';
                 case self.PreProcessingStage, s = 'Pre-Processing Complete';
                 case self.PcaStage, s = 'PCA Complete';
@@ -943,13 +951,12 @@ classdef ImageComponentParser < hgsetget
             
             
             self.h.roi_editor.color_rois = true;
-            if self.gui.d(self.gui.current_trial).display == 6 && self.data(self.gui.current_trial).stage == self.PostProcessingStage  ...
-                    && isfield(self.data(self.gui.current_trial).cluster, 'im_data') && ~isempty(self.data(self.gui.current_trial).cluster.im_data)
+            if self.gui.display == 6 && self.stage == self.PostProcessingStage
                 self.h.roi_editor.color_rois = false;
                 self.draw_clustered_rois();
                 
-            elseif self.data(self.gui.current_trial).is_component_set(self.gui.d(self.gui.current_trial).current_roi_set) ...
-                    && self.data(self.gui.current_trial).stage >= self.IcaStage ...
+            elseif self.gui.is_component_set(self.gui.current_roi_set) ...
+                    && self.stage >= self.IcaStage ...
                     && ~isempty(self.h.roi_editor.selected_rois)
                 cla(self.h.component_axes);
                 
@@ -958,7 +965,7 @@ classdef ImageComponentParser < hgsetget
                 for i = 1:length(self.h.roi_editor.selected_rois)
                     c = self.gui.locked_colors(mod(i-1, length(self.gui.locked_colors))+1, :);
                     
-                    plot(self.h.component_axes, self.data(self.gui.current_trial).ica.ics(:, self.h.roi_editor.selected_rois(i)), 'Color', c);
+                    plot(self.h.component_axes, self.ica.ics(:, self.h.roi_editor.selected_rois(i)), 'Color', c);
                     
                     text_x = 0.95 - (length(self.h.roi_editor.selected_rois) - i) * 0.05;
                     self.h.component_labels(i) = text(text_x, 0.9, num2str(self.h.roi_editor.selected_rois(i)), ...
@@ -974,7 +981,6 @@ classdef ImageComponentParser < hgsetget
             self.plot_3d();
             
             self.build_roi_listbox();
-            self.build_trial_listbox();
             
             drawnow;
         end
@@ -987,20 +993,22 @@ classdef ImageComponentParser < hgsetget
             set(self.h.stage_status, 'String', 'Running Motion Correction...');
             drawnow;
             
-            s = self.data(self.gui.current_trial).settings.preprocessing;
+            s = self.settings.preprocessing;
             
-            [self.data(self.gui.current_trial).pp.im_data_mc, warp] = s.motion_correct_func(self.data(self.gui.current_trial).im_data);
+            [self.pp.im_data_mc, warp] = s.motion_correct_func(self.im_data{self.gui.current_trial});
             
             % Fix the size of the corrected data.
-            sx = floor((size(self.data(self.gui.current_trial).im_data, 2) - size(self.data(self.gui.current_trial).pp.im_data_mc, 2))/2) + 1; 
-            sy = floor((size(self.data(self.gui.current_trial).im_data, 1) - size(self.data(self.gui.current_trial).pp.im_data_mc, 1))/2) + 1;
+            sx = floor((size(self.im_data{self.gui.current_trial}, 2) - size(self.pp.im_data_mc, 2))/2) + 1; 
+            sy = floor((size(self.im_data{self.gui.current_trial}, 1) - size(self.pp.im_data_mc, 1))/2) + 1;
             
-            self.data(self.gui.current_trial).pp.mc_x = sx:(size(self.data(self.gui.current_trial).pp.im_data_mc, 2) + sx - 1);
-            self.data(self.gui.current_trial).pp.mc_y = sy:(size(self.data(self.gui.current_trial).pp.im_data_mc, 1) + sy - 1);
+            self.pp.mc_x = sx:(size(self.pp.im_data_mc, 2) + sx - 1);
+            self.pp.mc_y = sy:(size(self.pp.im_data_mc, 1) + sy - 1);
         end
         
         function run_filters(self)
             % run_filters(self): Runs the filtering stage of preprocessing.
+            
+            
             
         end
         
@@ -1017,87 +1025,61 @@ classdef ImageComponentParser < hgsetget
             set(self.h.stage_status, 'String', 'Running Pre-Processing...');
             drawnow;
             
-            s = self.data(self.gui.current_trial).settings.preprocessing;
+            s = self.settings.preprocessing;
             
-            if isfield(self.data(self.gui.current_trial).pp, 'im_data_mc')
+            if isfield(self.pp, 'im_data_mc')
                 % then we have motion corrected data.
-                im_data = self.data(self.gui.current_trial).pp.im_data_mc;
-                im_x = self.data(self.gui.current_trial).pp.mc_x;
-                im_y = self.data(self.gui.current_trial).pp.mc_y;
+                im_data = self.pp.im_data_mc;
+                im_x = self.pp.mc_x;
+                im_y = self.pp.mc_y;
                 im_z = 1:size(im_data, 3);
             else
                 % Then use the original data.
-                im_data = self.data(self.gui.current_trial).im_data;
+                im_data = self.im_data{self.gui.current_trial};
                 im_x = 1:size(im_data, 2);
                 im_y = 1:size(im_data, 1);
                 im_z = 1:size(im_data, 3);
             end
             
-            im_data(:,:,s.remove_frames) = [];
-            im_z(s.remove_frames) = [];
-            
             block = ones(s.smooth_window) ./ (prod(s.smooth_window));
             
             im_conv = convn(im_data, block, 'same');
             
-            xs_remove = floor((size(block, 2)-1)/2);
-            xe_remove = (size(block, 2)-1) - xs_remove;
-            ys_remove = floor((size(block, 1)-1)/2);
-            ye_remove = (size(block, 2)-1) - xs_remove;
-            zs_remove = floor((size(block, 3)-1)/2);
-            ze_remove = (size(block, 3)-1) - xs_remove;
+            self.pp.im_y = im_y(1:s.down_sample(1):length(im_y));
+            self.pp.im_x = im_x(1:s.down_sample(2):length(im_x));
+            self.pp.im_z = im_z(1:s.down_sample(3):length(im_z));
             
-            im_x(1:xs_remove) = [];
-            im_x((end-xe_remove):end) = [];
-            im_y(1:ys_remove) = [];
-            im_y((end-ye_remove):end) = [];
-            im_z(1:zs_remove) = [];
-            im_z((end-ze_remove):end) = [];
+            self.pp.im_data = im_conv(self.pp.im_y, self.pp.im_x, self.pp.im_z);
+            self.pp.data = reshape(self.pp.im_data, [], size(self.pp.im_data, 3));   
             
-            im_conv([1:ys_remove, (end-ye_remove):end], :, :) = [];
-            im_conv(:, [1:xs_remove, (end-xe_remove):end], :) = [];
-            im_conv(:, :, [1:zs_remove, (end-ze_remove):end]) = [];
+            self.pp.use_wavelets = self.gui.use_wavelets;
             
-            xidx = 1:s.down_sample(1):length(im_x);
-            yidx = 1:s.down_sample(2):length(im_y);
-            zidx = 1:s.down_sample(3):length(im_z);
-            
-            % Ok, now need to take out frames
-            self.data(self.gui.current_trial).pp.im_y = im_y(yidx);
-            self.data(self.gui.current_trial).pp.im_x = im_x(xidx);
-            self.data(self.gui.current_trial).pp.im_z = im_z(zidx);
-            
-            self.data(self.gui.current_trial).pp.im_data = im_conv(yidx, xidx, zidx);
-            self.data(self.gui.current_trial).pp.data = reshape(self.data(self.gui.current_trial).pp.im_data, [], size(self.data(self.gui.current_trial).pp.im_data, 3));   
-            
-            self.data(self.gui.current_trial).pp.use_wavelets = self.gui.d(self.gui.current_trial).use_wavelets;
-            
-            if self.data(self.gui.current_trial).pp.use_wavelets
+            if self.pp.use_wavelets
                 % Then we want to do the wavelet decomposition
                 disp('Computing Wavelets...');
                 set(self.h.stage_status, 'String', 'Computing Wavelets...');
                 drawnow;
                 
-                cwt_struct = cwtft(self.data(self.gui.current_trial).pp.data(1,:));
+                cwt_struct = cwtft(self.pp.data(1,:));
                 num_scales = length(cwt_struct.scales);
-                num_frames = size(self.data(self.gui.current_trial).pp.data, 2);
+                num_frames = size(self.pp.data, 2);
                 
-                self.data(self.gui.current_trial).pp.cwt_data = zeros(size(self.data(self.gui.current_trial).pp.data, 1), 2 * num_scales * num_frames);
+                self.pp.cwt_data = zeros(size(self.pp.data, 1), 2 * num_scales * num_frames);
                 
                 rcwt = real(cwt_struct.cfs);
                 icwt = imag(cwt_struct.cfs);
                 
-                self.data(self.gui.current_trial).pp.cwt_data(1, :) = reshape([rcwt, icwt], 1, []);
+                self.pp.cwt_data(1, :) = reshape([rcwt, icwt], 1, []);
                 
-                self.data(self.gui.current_trial).pp.cwt_struct = cwt_struct;
+                self.pp.cwt_struct = cwt_struct;
                 
-                for i = 2:size(self.data(self.gui.current_trial).pp.data, 1)
-                    cwt_struct = cwtft(self.data(self.gui.current_trial).pp.data(i, :));
+                for i = 2:size(self.pp.data, 1)
+                    cwt_struct = cwtft(self.pp.data(i, :));
                     
                     rcwt = real(cwt_struct.cfs);
                     icwt = imag(cwt_struct.cfs);
                     
-                    self.data(self.gui.current_trial).pp.cwt_data(i, :) = reshape([rcwt, icwt], 1, []);
+                    self.pp.cwt_data(i, :) = reshape([rcwt, icwt], 1, []);
                 end
                 
                 % @todo: other things with the wavelets, like removing
@@ -1106,13 +1088,13 @@ classdef ImageComponentParser < hgsetget
 
             %%% I'm going ot hack in a filter here to test
             %hd = load('icp_filter.mat');
-            %data = self.data(self.gui.current_trial).pp.data - repmat(mean(self.data(self.gui.current_trial).pp.data, 2), 1, size(self.data(self.gui.current_trial).pp.data, 2));
-            %self.data(self.gui.current_trial).pp.data = filter(hd.Hd, data')';            
+            %data = self.pp.data - repmat(mean(self.pp.data, 2), 1, size(self.pp.data, 2));
+            %self.pp.data = filter(hd.Hd, data')';            
             %%%
             
-            self.data(self.gui.current_trial).stage = self.PreProcessingStage;
+            self.stage = self.PreProcessingStage;
             
-            self.gui.d(self.gui.current_trial).last_display = 0;
+            self.gui.last_display = 0;
             self.update();
         end
         
@@ -1122,7 +1104,7 @@ classdef ImageComponentParser < hgsetget
             disp('run_pca');
             
             % @todo: checks on state
-            if self.data(self.gui.current_trial).stage == self.InitStage
+            if self.stage == self.InitStage
                 disp('Running previous stage...');
                 self.run_preprocessing();
             end
@@ -1130,24 +1112,13 @@ classdef ImageComponentParser < hgsetget
             set(self.h.stage_status, 'String', 'Running PCA...');
             drawnow;
             
-            s = self.data(self.gui.current_trial).settings.pca;
+            s = self.settings.pca;
             
-            if self.data(self.gui.current_trial).pp.use_wavelets
-                if s.corr_pca == 1
-                    d = zscore(self.data(self.gui.current_trial).pp.cwt_data');
-                else
-                    d = self.data(self.gui.current_trial).pp.cwt_data';
-                end
-                
-                if exist('pca') == 2
-                    [scores, pcs, eigs] = pca(d);
-                else 
-                    [scores, pcs, eigs] = princomp(d);
-                end
-
+            if self.pp.use_wavelets
+                [scores, pcs, eigs] = pca(self.pp.cwt_data');
                  % Reconstruct the original data from wavelets
-                 cwt_struct = self.data(self.gui.current_trial).pp.cwt_struct;
-                 num_frames = size(self.data(self.gui.current_trial).pp.data, 2);
+                 cwt_struct = self.pp.cwt_struct;
+                 num_frames = size(self.pp.data, 2);
                  wavelet_rec = zeros(num_frames, size(pcs, 2));
                  for i = 1:size(pcs, 2)
                      pc_cfs = reshape(pcs(:,i), length(cwt_struct.scales), []);
@@ -1155,34 +1126,24 @@ classdef ImageComponentParser < hgsetget
                      
                      wavelet_rec(:, i) = icwtft(cwt_struct);
                  end
-                 self.data(self.gui.current_trial).pca.pc_rec = wavelet_rec;
+                 self.pca.pc_rec = wavelet_rec;
             else
-                if s.corr_pca == 1
-                    d = zscore(self.data(self.gui.current_trial).pp.data');
-                else
-                    d = self.data(self.gui.current_trial).pp.data';
-                end
-                
-                if exist('pca') == 2
-                    [scores, pcs, eigs] = pca(d);
-                else
-                    [scores, pcs, eigs] = princomp(d);
-                end
+                [scores, pcs, eigs] = pca(self.pp.data');
             end
             
-            self.data(self.gui.current_trial).pca.scores = scores;
-            self.data(self.gui.current_trial).pca.pcs = pcs;
-            self.data(self.gui.current_trial).pca.eigs = eigs;
+            self.pca.scores = scores;
+            self.pca.pcs = pcs;
+            self.pca.eigs = eigs;
             
             
-            self.data(self.gui.current_trial).pca.im_data = reshape(self.data(self.gui.current_trial).pca.scores, ...
-                size(self.data(self.gui.current_trial).pp.im_data,1), size(self.data(self.gui.current_trial).pp.im_data,2), size(self.data(self.gui.current_trial).pca.scores, 2));
+            self.pca.im_data = reshape(self.pca.scores, ...
+                size(self.pp.im_data,1), size(self.pp.im_data,2), size(self.pca.scores, 2));
             
-            self.data(self.gui.current_trial).pca.im_x = self.data(self.gui.current_trial).pp.im_x;
-            self.data(self.gui.current_trial).pca.im_y = self.data(self.gui.current_trial).pp.im_y;
+            self.pca.im_x = self.pp.im_x;
+            self.pca.im_y = self.pp.im_y;
             
-            self.data(self.gui.current_trial).stage = self.PcaStage;
-            self.gui.d(self.gui.current_trial).last_display = 0;
+            self.stage = self.PcaStage;
+            self.gui.last_display = 0;
             self.update();
         end
         
@@ -1192,7 +1153,7 @@ classdef ImageComponentParser < hgsetget
             disp('run_ica');
             
             % @todo: checks on state.
-            if self.data(self.gui.current_trial).stage == self.InitStage || self.data(self.gui.current_trial).stage == self.PreProcessingStage
+            if self.stage == self.InitStage || self.stage == self.PreProcessingStage
                 disp('Running previous stages...');
                 self.run_pca();
             end
@@ -1200,21 +1161,21 @@ classdef ImageComponentParser < hgsetget
             set(self.h.stage_status, 'String', 'Running ICA...');
             drawnow;
             
-            s = self.data(self.gui.current_trial).settings.ica;
+            s = self.settings.ica;
             
             % Make sure that the pcs requested are in range.
             which_pcs = s.which_pcs;
-            which_pcs(which_pcs > size(self.data(self.gui.current_trial).pca.scores, 2)) = [];
+            which_pcs(which_pcs > size(self.pca.scores, 2)) = [];
             
             if strcmp(s.ica_func, 'CellsortICA')
                 disp('Running CellsortICA');
-                [ics, im_data, A, niter] = CellsortICA(self.data(self.gui.current_trial).pca.pcs(:, which_pcs)', ...
-                    self.data(self.gui.current_trial).pca.im_data(:, :, which_pcs), self.data(self.gui.current_trial).pca.eigs(which_pcs), [], s.mu);
+                [ics, im_data, A, niter] = CellsortICA(self.pca.pcs(:, which_pcs)', ...
+                    self.pca.im_data(:, :, which_pcs), self.pca.eigs(which_pcs), [], s.mu);
                 
-                self.data(self.gui.current_trial).ica.ics = ics';
-                self.data(self.gui.current_trial).ica.im_data = shiftdim(im_data, 1);
-                self.data(self.gui.current_trial).ica.A = A;
-                self.data(self.gui.current_trial).ica.scores = reshape(self.data(self.gui.current_trial).ica.im_data, [], size(self.data(self.gui.current_trial).ica.im_data, 3));
+                self.ica.ics = ics';
+                self.ica.im_data = shiftdim(im_data, 1);
+                self.ica.A = A;
+                self.ica.scores = reshape(self.ica.im_data, [], size(self.ica.im_data, 3));
                 
             elseif strcmp(s.ica_func, 'fastica')
                 disp('Running fastica');
@@ -1222,50 +1183,50 @@ classdef ImageComponentParser < hgsetget
                 if s.init_guess == -1
                     % This means that the init guess should be the previous A
                     % matrix.
-                    if isfield(self.data(self.gui.current_trial).ica, 'A') && size(self.data(self.gui.current_trial).ica.A, 1) == length(which_pcs)
+                    if isfield(self.ica, 'A') && size(self.ica.A, 1) == length(which_pcs)
                         % Then the last A matrix is valid.
-                        [icasig, A, W] = fastica(self.data(self.gui.current_trial).pca.scores(:, which_pcs)', 'initGuess', self.data(self.gui.current_trial).ica.A);
+                        [icasig, A, W] = fastica(self.pca.scores(:, which_pcs)', 'initGuess', self.ica.A);
                     else
                         % Then the last A matrix is invalid.
                         disp('Could not use previous A as initial guess.');                        
-                        [icasig, A, W] = fastica(self.data(self.gui.current_trial).pca.scores(:, which_pcs)');
+                        [icasig, A, W] = fastica(self.pca.scores(:, which_pcs)');
                     end
                 elseif s.init_guess == 0
                     % Then we just use the normal random guess.                        
                     %%%
-                    %[icasig, A, W] = fastica(self.data(self.gui.current_trial).pca.scores(:, which_pcs)');
+                    %[icasig, A, W] = fastica(self.pca.scores(:, which_pcs)');
                     %%% Messing around with the other fastica params
                     disp('fastica params');
-                    [icasig, A, W] = fastica(self.data(self.gui.current_trial).pca.scores(:, which_pcs)', 'g', 'tanh', 'a1', 3, 'stabilization', 'on');
+                    [icasig, A, W] = fastica(self.pca.scores(:, which_pcs)', 'g', 'tanh', 'a1', 3, 'stabilization', 'on');
                     %%%
                 else
                     % Then s.init_guess should be the A matrix itself.
                     if size(s.init_guess, 1) == length(which_pcs)
                         disp('Using Init Guess');
-                        [icasig, A, W] = fastica(self.data(self.gui.current_trial).pca.scores(:, which_pcs)', 'initGuess', s.init_guess);
+                        [icasig, A, W] = fastica(self.pca.scores(:, which_pcs)', 'initGuess', s.init_guess);
                     else
                         disp('Initial Guess incorrectly formatted.');
-                        [icasig, A, W] = fastica(self.data(self.gui.current_trial).pca.scores(:, which_pcs)');
+                        [icasig, A, W] = fastica(self.pca.scores(:, which_pcs)');
                     end
                 end
                 
-                self.data(self.gui.current_trial).ica.scores = icasig';
+                self.ica.scores = icasig';
 
                 if s.positive_skew
                     % Then we want the component scores to all skew positively.
-                    is_neg_skew = skewness(self.data(self.gui.current_trial).ica.scores) < 0;
-                    self.data(self.gui.current_trial).ica.scores(:, is_neg_skew) = -self.data(self.gui.current_trial).ica.scores(:, is_neg_skew);
+                    is_neg_skew = skewness(self.ica.scores) < 0;
+                    self.ica.scores(:, is_neg_skew) = -self.ica.scores(:, is_neg_skew);
                     A(:, is_neg_skew) = -A(:, is_neg_skew);
                 end
                 
-                self.data(self.gui.current_trial).ica.A = A;
-                self.data(self.gui.current_trial).ica.W = W;
-                ics = self.data(self.gui.current_trial).pca.pcs(:, which_pcs) * A;
+                self.ica.A = A;
+                self.ica.W = W;
+                ics = self.pca.pcs(:, which_pcs) * A;
                 
-                if self.data(self.gui.current_trial).pp.use_wavelets
+                if self.pp.use_wavelets
                     % Reconstruct the original data from wavelets
-                    cwt_struct = self.data(self.gui.current_trial).pp.cwt_struct;
-                    num_frames = size(self.data(self.gui.current_trial).pp.data, 2);
+                    cwt_struct = self.pp.cwt_struct;
+                    num_frames = size(self.pp.data, 2);
                     wavelet_rec = zeros(num_frames, size(ics, 2));
                     for i = 1:size(ics, 2)
                         ic_cfs = reshape(ics(:,i), length(cwt_struct.scales), []);
@@ -1273,15 +1234,15 @@ classdef ImageComponentParser < hgsetget
                         
                         wavelet_rec(:, i) = icwtft(cwt_struct);
                     end
-                    self.data(self.gui.current_trial).ica.ics = wavelet_rec;
+                    self.ica.ics = wavelet_rec;
                 else
-                    self.data(self.gui.current_trial).ica.ics = ics;
+                    self.ica.ics = ics;
                 end
                
                 
                 
-                self.data(self.gui.current_trial).ica.im_data = reshape(self.data(self.gui.current_trial).ica.scores, ...
-                    size(self.data(self.gui.current_trial).pp.im_data,1), size(self.data(self.gui.current_trial).pp.im_data,2), size(self.data(self.gui.current_trial).ica.scores, 2));
+                self.ica.im_data = reshape(self.ica.scores, ...
+                    size(self.pp.im_data,1), size(self.pp.im_data,2), size(self.ica.scores, 2));
             elseif strcmp(s.ica_func, 'TreeICA')
                 
             elseif strcmp(s.ica_func, 'RadICAl')
@@ -1289,13 +1250,13 @@ classdef ImageComponentParser < hgsetget
             elseif strcmp(s.ica_func, 'KernelICA')
                 disp('Running Kernel ICA');
                 tic;
-                W = kernel_ica(self.data(self.gui.current_trial).pca.scores(:, which_pcs)');
+                W = kernel_ica(self.pca.scores(:, which_pcs)');
                 
-                self.data(self.gui.current_trial).ica.scores = (W * self.data(self.gui.current_trial).pca.scores(:, which_pcs)')';
-                self.data(self.gui.current_trial).ica.ics = self.data(self.gui.current_trial).pca.pcs(:, which_pcs) / W;
+                self.ica.scores = (W * self.pca.scores(:, which_pcs)')';
+                self.ica.ics = self.pca.pcs(:, which_pcs) / W;
                 
-                self.data(self.gui.current_trial).ica.im_data = reshape(self.data(self.gui.current_trial).ica.scores, ...
-                    size(self.data(self.gui.current_trial).pp.im_data,1), size(self.data(self.gui.current_trial).pp.im_data, 2), size(self.data(self.gui.current_trial).ica.scores, 2));
+                self.ica.im_data = reshape(self.ica.scores, ...
+                    size(self.pp.im_data,1), size(self.pp.im_data, 2), size(self.ica.scores, 2));
                 
                 toc;
             elseif strcmp(s.ica_func, 'imageica')
@@ -1303,21 +1264,21 @@ classdef ImageComponentParser < hgsetget
             elseif strcmp(s.ica_func, 'icasso')
                 
             elseif strcmp(s.ica_func, 'fourierica')
-                [S_Ft, A, W] = fourierica(self.data(self.gui.current_trial).pca.scores(:, which_pcs)', length(which_pcs), 50, 0, 20);
+                [S_Ft, A, W] = fourierica(self.pca.scores(:, which_pcs)', length(which_pcs), 50, 0, 20);
                 
-                self.data(self.gui.current_trial).ica.scores = (W * self.data(self.gui.current_trial).pca.scores(:, which_pcs)')';
-                self.data(self.gui.current_trial).ica.ics = self.data(self.gui.current_trial).pca.pcs(:, which_pcs) * A;
+                self.ica.scores = (W * self.pca.scores(:, which_pcs)')';
+                self.ica.ics = self.pca.pcs(:, which_pcs) * A;
                 
-                self.data(self.gui.current_trial).ica.im_data = reshape(self.data(self.gui.current_trial).ica.scores, ...
-                    size(self.data(self.gui.current_trial).pp.im_data,1), size(self.data(self.gui.current_trial).pp.im_data, 2), size(self.data(self.gui.current_trial).ica.scores, 2));
+                self.ica.im_data = reshape(self.ica.scores, ...
+                    size(self.pp.im_data,1), size(self.pp.im_data, 2), size(self.ica.scores, 2));
             else
                 error('Incorrect ICA function');
             end
-            self.data(self.gui.current_trial).ica.im_x = self.data(self.gui.current_trial).pca.im_x;
-            self.data(self.gui.current_trial).ica.im_y = self.data(self.gui.current_trial).pca.im_y;
+            self.ica.im_x = self.pca.im_x;
+            self.ica.im_y = self.pca.im_y;
             
-            self.data(self.gui.current_trial).stage = self.IcaStage;
-            self.gui.d(self.gui.current_trial).last_display = 0;
+            self.stage = self.IcaStage;
+            self.gui.last_display = 0;
             self.update();
         end
         
@@ -1327,7 +1288,7 @@ classdef ImageComponentParser < hgsetget
             %
             % This looks for ic components that are spatially localized.
             
-            if self.data(self.gui.current_trial).stage < self.IcaStage
+            if self.stage < self.IcaStage
                 disp('Run ICA first');
                 return;
             end
@@ -1335,91 +1296,35 @@ classdef ImageComponentParser < hgsetget
             set(self.h.stage_status, 'String', 'Running Segmentation...');
             drawnow;
             
-            [segment_masks, segment_info] = segment_ics(self.data(self.gui.current_trial).ica.im_data, self.data(self.gui.current_trial).ica.im_x, self.data(self.gui.current_trial).ica.im_y);
+            [segment_masks, segment_info] = segment_ics(self.ica.im_data, self.ica.im_x, self.ica.im_y);
             
-            self.data(self.gui.current_trial).segment.im_data = segment_masks;
-            self.data(self.gui.current_trial).segment.im_x = self.data(self.gui.current_trial).ica.im_x;
-            self.data(self.gui.current_trial).segment.im_y = self.data(self.gui.current_trial).ica.im_y;
-            self.data(self.gui.current_trial).segment.segment_info = segment_info;
+            self.post.im_data = segment_masks;
+            self.post.im_x = self.ica.im_x;
+            self.post.im_y = self.ica.im_y;
+            self.post.segment_info = segment_info;
             
-            self.data(self.gui.current_trial).stage = self.PostProcessingStage;
+            self.stage = self.PostProcessingStage;
             
-            self.gui.d(self.gui.current_trial).last_display = 0;
+            self.gui.last_display = 0;
             self.update();
-        end
-        
-        function run_visualization(self)
-            % run_visualization(self): computes ica visualizations.
-            
-            disp('run_visualization');
-            
-            if self.data(self.gui.current_trial).stage < self.IcaStage
-                disp('Run ICA first');
-                return;
-            end
-            
-            
-            colors = viz_function(self);
-            
-            % So whatever the function, there should be 1 color per IC. The
-            % color is taken as RGB, it can just be a scalar, or it can be
-            % RGBA (alpha).
-            
-            s = self.data(self.gui.current_trial).settings.viz;
-            
-            im_data = self.data(self.gui.current_trial).ica.im_data;
-            component_color_map = zeros(size(self.data(self.gui.current_trial).ica.im_data, 1), size(self.data(self.gui.current_trial).ica.im_data, 2), 3);
-            
-            for i = 1:size(self.data(self.gui.current_trial).ica.im_data, 3)
-                cc = zeros(size(component_color_map));
-                
-                if size(colors, 2) == 1
-                    % Then we have a scalar, just do red channel for now
-                    cc(:,:,1) = norm_range(im_data(:,:,i)) .^ s.map_pow .* colors(i) .^ s.color_pow;
-                elseif size(colors, 2) == 3
-                    % Then we have RGB
-                    cc(:,:,1) = norm_range(im_data(:,:,i)) .^ s.map_pow .* colors(i, 1) .^ s.color_pow;
-                    cc(:,:,2) = norm_range(im_data(:,:,i)) .^ s.map_pow .* colors(i, 2) .^ s.color_pow;
-                    cc(:,:,3) = norm_range(im_data(:,:,i)) .^ s.map_pow .* colors(i, 3) .^ s.color_pow;
-                elseif size(colors, 2) == 4
-                    % Then we have RGBA
-                    cc(:,:,1) = norm_range(im_data(:,:,i)) .^ s.map_pow .* colors(i, 1) .^ s.color_pow .* colors(i, 4);
-                    cc(:,:,2) = norm_range(im_data(:,:,i)) .^ s.map_pow .* colors(i, 2) .^ s.color_pow .* colors(i, 4);
-                    cc(:,:,3) = norm_range(im_data(:,:,i)) .^ s.map_pow .* colors(i, 3) .^ s.color_pow .* colors(i, 4);
-                else
-                    % Something is not right....
-                    disp('Incorrect input');
-                end
-                    
-                component_color_map = component_color_map + cc;
-            end
-            
-            self.data(self.gui.current_trial).viz.component_color_map = norm_range(component_color_map);
-            self.data(self.gui.current_trial).viz.ccm_x = self.data(self.gui.current_trial).ica.im_x;
-            self.data(self.gui.current_trial).viz.ccm_y = self.data(self.gui.current_trial).ica.im_y;
-            %self.data(self.gui.current_trial).viz.ccm_z = self.data(self.gui.current_trial).ica.im_z;
-            
-            self.data(self.gui.current_trial).stage = self.PostProcessingStage;
-            
-            self.draw_component_viz();
         end
         
         function rois = calc_rois(self)
             % calc_rois(self): calculates the ROIs from the independent
             % components.
             
-            if self.data(self.gui.current_trial).stage < self.IcaStage
+            if self.stage < self.IcaStage
                 disp('Run ICA first');
                 return;
             end
             
             
-            rois = self.data(self.gui.current_trial).settings.segment.calc_rois_func(self.data(self.gui.current_trial).ica.im_data, self.data(self.gui.current_trial).ica.im_x, self.data(self.gui.current_trial).ica.im_y);
+            rois = self.settings.post.calc_rois_func(self.ica.im_data, self.ica.im_x, self.ica.im_y);
             
             self.create_new_roi_set('IC_Generated_ROIs', true);
-            self.data(self.gui.current_trial).rois{self.gui.d(self.gui.current_trial).current_roi_set} = rois;
+            self.rois{self.gui.current_roi_set} = rois;
             
-            self.h.roi_editor.set_rois(self.data(self.gui.current_trial).rois{self.gui.d(self.gui.current_trial).current_roi_set}, false);
+            self.h.roi_editor.set_rois(self.rois{self.gui.current_roi_set}, false);
             
             self.update();
             
@@ -1428,42 +1333,42 @@ classdef ImageComponentParser < hgsetget
         function estimate_clusters(self)
             disp('estimate_clusters');
             
-            if self.data(self.gui.current_trial).stage < self.IcaStage
+            if self.stage < self.IcaStage
                 disp('Run ICA first');
                 return;
             end
             
             % We need rois specifically for clustering.
-            if self.data(self.gui.current_trial).is_component_set(self.gui.d(self.gui.current_trial).current_roi_set)
-                self.data(self.gui.current_trial).cluster.rois = self.data(self.gui.current_trial).rois{self.gui.d(self.gui.current_trial).current_roi_set};
+            if self.gui.is_component_set(self.gui.current_roi_set)
+                self.cluster.rois = self.rois{self.gui.current_roi_set};
             else
-                self.data(self.gui.current_trial).cluster.rois = self.calc_rois();
+                self.cluster.rois = self.calc_rois();
             end
             
-            s = self.data(self.gui.current_trial).settings.cluster;
+            s = self.settings.cluster;
             
-            [feature_matrix, feature_weights] = s.feature_matrix_func(self.data(self.gui.current_trial).ica.ics, self.data(self.gui.current_trial).ica.im_data);
+            [feature_matrix, feature_weights] = s.feature_matrix_func(self.ica.ics, self.ica.im_data);
             
-            self.data(self.gui.current_trial).cluster.feature_matrix = feature_matrix;
-            self.data(self.gui.current_trial).cluster.feature_weights = feature_weights;
+            self.cluster.feature_matrix = feature_matrix;
+            self.cluster.feature_weights = feature_weights;
             
-            self.data(self.gui.current_trial).cluster.similarity_matrix = s.calc_sim_matrix_func(self.data(self.gui.current_trial).cluster.feature_weights, self.data(self.gui.current_trial).cluster.feature_matrix);
+            self.cluster.similarity_matrix = s.calc_sim_matrix_func(self.cluster.feature_weights, self.cluster.feature_matrix);
             
-            [self.data(self.gui.current_trial).cluster.im_data, top3] = s.visualization_func(self.data(self.gui.current_trial).cluster.similarity_matrix, self.data(self.gui.current_trial).ica.im_data);
+            [self.cluster.im_data, top3] = s.visualization_func(self.cluster.similarity_matrix, self.ica.im_data);
             
-            self.data(self.gui.current_trial).cluster.im_x = self.data(self.gui.current_trial).ica.im_x;
-            self.data(self.gui.current_trial).cluster.im_y = self.data(self.gui.current_trial).ica.im_y;
+            self.cluster.im_x = self.ica.im_x;
+            self.cluster.im_y = self.ica.im_y;
             
-            self.data(self.gui.current_trial).cluster.top3 = top3;
+            self.cluster.top3 = top3;
             
             %%% Not sure how/when to set this
-            self.data(self.gui.current_trial).cluster.cluster_matrix = zeros(size(self.data(self.gui.current_trial).cluster.similarity_matrix));
+            self.cluster.cluster_matrix = zeros(size(self.cluster.similarity_matrix));
             % THis is just a hack for testing
-            self.data(self.gui.current_trial).cluster.cluster_matrix(1, 5) = 1;
-            self.data(self.gui.current_trial).cluster.cluster_matrix(2, [10, 20]) = 1;
+            self.cluster.cluster_matrix(1, 5) = 1;
+            self.cluster.cluster_matrix(2, [10, 20]) = 1;
             %%%
             
-            self.data(self.gui.current_trial).stage = self.PostProcessingStage;
+            self.stage = self.PostProcessingStage;
             self.update();
         end
         
@@ -1507,27 +1412,27 @@ classdef ImageComponentParser < hgsetget
                 'Style', 'text', 'String', 'M', 'TooltipString', ...
                 'M corresponds to the rows of the image (vertical)');
             self.h.pp_smooth_M = uicontrol('Parent', self.h.pp_settings_grid, ...
-                'Style', 'edit', 'String', self.data(self.gui.current_trial).settings.preprocessing.smooth_window(1));
+                'Style', 'edit', 'String', self.settings.preprocessing.smooth_window(1));
             self.h.pp_down_M = uicontrol('Parent', self.h.pp_settings_grid,...
-                'Style', 'edit', 'String', self.data(self.gui.current_trial).settings.preprocessing.down_sample(1));
+                'Style', 'edit', 'String', self.settings.preprocessing.down_sample(1));
             
             % Third column
             self.h.pp_N_label = uicontrol('Parent', self.h.pp_settings_grid, ...
                 'Style', 'text', 'String', 'N', 'TooltipString', ...
                 'N corresponds to the columns of th eimage (horizontal)');
             self.h.pp_smooth_N = uicontrol('Parent', self.h.pp_settings_grid, ...
-                'Style', 'edit', 'String', self.data(self.gui.current_trial).settings.preprocessing.smooth_window(2));
+                'Style', 'edit', 'String', self.settings.preprocessing.smooth_window(2));
             self.h.pp_down_N = uicontrol('Parent', self.h.pp_settings_grid, ...
-                'Style', 'edit', 'String', self.data(self.gui.current_trial).settings.preprocessing.down_sample(2));
+                'Style', 'edit', 'String', self.settings.preprocessing.down_sample(2));
             
             % Fourth column
             self.h.pp_T_label = uicontrol('Parent', self.h.pp_settings_grid, ...
                 'Style', 'text', 'String', 'T', 'TooltipString', ...
                 'T corresponds to the frames (depth)');
             self.h.pp_smooth_T = uicontrol('Parent', self.h.pp_settings_grid, ...
-                'Style', 'edit', 'String', self.data(self.gui.current_trial).settings.preprocessing.smooth_window(3));
+                'Style', 'edit', 'String', self.settings.preprocessing.smooth_window(3));
             self.h.pp_down_T = uicontrol('Parent', self.h.pp_settings_grid, ...
-                'Style', 'edit', 'String', self.data(self.gui.current_trial).settings.preprocessing.down_sample(3));
+                'Style', 'edit', 'String', self.settings.preprocessing.down_sample(3));
             
             
             self.h.pp_ok_button = uicontrol('Parent', self.h.pp_button_hbox, ...
@@ -1562,19 +1467,19 @@ classdef ImageComponentParser < hgsetget
             end
             
             % Get the old values
-            sm_old = self.data(self.gui.current_trial).settings.preprocessing.smooth_window;
+            sm_old = self.settings.preprocessing.smooth_window;
             
             % Set the new values
-            self.data(self.gui.current_trial).settings.preprocessing.smooth_window = [smM, smN, smT];
+            self.settings.preprocessing.smooth_window = [smM, smN, smT];
             
             % Check for bad values
-            nan_vals = isnan(self.data(self.gui.current_trial).settings.preprocessing.smooth_window) ...
-                | self.data(self.gui.current_trial).settings.preprocessing.smooth_window < 0;
+            nan_vals = isnan(self.settings.preprocessing.smooth_window) ...
+                | self.settings.preprocessing.smooth_window < 0;
             if any(nan_vals)
                 % Then some of the values are bad/missing, use the old
                 % values.
                 disp('Some smooth window values bad/missing.');
-                self.data(self.gui.current_trial).settings.preprocessing.smooth_window(nan_vals) = sm_old(nan_vals);
+                self.settings.preprocessing.smooth_window(nan_vals) = sm_old(nan_vals);
             end
         end
         
@@ -1597,19 +1502,19 @@ classdef ImageComponentParser < hgsetget
             end
             
             % Get the old values
-            ds_old = self.data(self.gui.current_trial).settings.preprocessing.down_sample;
+            ds_old = self.settings.preprocessing.down_sample;
             
             % Set the new values
-            self.data(self.gui.current_trial).settings.preprocessing.down_sample = [dsM, dsN, dsT];
+            self.settings.preprocessing.down_sample = [dsM, dsN, dsT];
             
             % Check for bad values
-            nan_vals = isnan(self.data(self.gui.current_trial).settings.preprocessing.down_sample) ...
-                | self.data(self.gui.current_trial).settings.preprocessing.down_sample < 0;
+            nan_vals = isnan(self.settings.preprocessing.down_sample) ...
+                | self.settings.preprocessing.down_sample < 0;
             if any(nan_vals)
                 % Then some of the values are bad/missing, use the old
                 % values.
                 disp('Some down sample values bad/missing.');
-                self.data(self.gui.current_trial).settings.preprocessing.down_sample(nan_vals) = ds_old(nan_vals);
+                self.settings.preprocessing.down_sample(nan_vals) = ds_old(nan_vals);
             end
         end
         
@@ -1634,16 +1539,16 @@ classdef ImageComponentParser < hgsetget
             component = [];
             f = self.h.roi_editor.current_frame;
 
-            switch self.data(self.gui.current_trial).stage
+            switch self.stage
                 case self.InitStage
                     return
                 case self.PreProcessingStage
                     return
                 case self.PcaStage
-                    component = self.data(self.gui.current_trial).pca.pcs(:, f);
+                    component = self.pca.pcs(:, f);
                     return
                 case self.IcaStage
-                    component = self.data(self.gui.current_trial).ica.ics(:, f);
+                    component = self.ica.ics(:, f);
             end
         end
         
@@ -1679,35 +1584,35 @@ classdef ImageComponentParser < hgsetget
             im_x = [];
             im_y = [];
             
-            if self.gui.d(self.gui.current_trial).display == 4 && self.data(self.gui.current_trial).stage == self.IcaStage
+            if self.gui.display == 4 && self.stage == self.IcaStage
                 % Then view the ICs
-                im_data = self.data(self.gui.current_trial).ica.im_data;
-                im_x = self.data(self.gui.current_trial).ica.im_x;
-                im_y = self.data(self.gui.current_trial).ica.im_y;
-                comp = self.data(self.gui.current_trial).ica.ics;
-            elseif self.gui.d(self.gui.current_trial).display == 3 && self.data(self.gui.current_trial).stage >= self.PcaStage
+                im_data = self.ica.im_data;
+                im_x = self.ica.im_x;
+                im_y = self.ica.im_y;
+                comp = self.ica.ics;
+            elseif self.gui.display == 3 && self.stage >= self.PcaStage
                 % Then view the PCs
-                im_data = self.data(self.gui.current_trial).pca.im_data;
-                im_x = self.data(self.gui.current_trial).pca.im_x;
-                im_y = self.data(self.gui.current_trial).pca.im_y;
-                comp = self.data(self.gui.current_trial).pca.pcs;
-            elseif self.data(self.gui.current_trial).stage == self.PcaStage
+                im_data = self.pca.im_data;
+                im_x = self.pca.im_x;
+                im_y = self.pca.im_y;
+                comp = self.pca.pcs;
+            elseif self.stage == self.PcaStage
                 % Then view the PCs
-                im_data = self.data(self.gui.current_trial).pca.im_data;
-                im_x = self.data(self.gui.current_trial).pca.im_x;
-                im_y = self.data(self.gui.current_trial).pca.im_y;
-                comp = self.data(self.gui.current_trial).pca.pcs;
-            elseif self.data(self.gui.current_trial).stage == self.IcaStage
+                im_data = self.pca.im_data;
+                im_x = self.pca.im_x;
+                im_y = self.pca.im_y;
+                comp = self.pca.pcs;
+            elseif self.stage == self.IcaStage
                 % Then view the ICs
-                im_data = self.data(self.gui.current_trial).ica.im_data;
-                im_x = self.data(self.gui.current_trial).ica.im_x;
-                im_y = self.data(self.gui.current_trial).ica.im_y;
-                comp = self.data(self.gui.current_trial).ica.ics;
+                im_data = self.ica.im_data;
+                im_x = self.ica.im_x;
+                im_y = self.ica.im_y;
+                comp = self.ica.ics;
             else
                 return;
             end
 
-            s = self.data(self.gui.current_trial).settings.visualize;
+            s = self.settings.visualize;
             
             top_idxs = [];
             top_vals = [];
@@ -1814,20 +1719,12 @@ classdef ImageComponentParser < hgsetget
             % @todo: other checks on name
             
             % Add a new empty set of rois.
-            self.data(self.gui.current_trial).rois{end+1} = [];
+            self.rois{end+1} = [];
+            self.gui.current_roi_set = length(self.rois);
+            self.gui.roi_names{length(self.rois)} = name;
+            self.gui.is_component_set(length(self.rois)) = is_component_set;
             
-            self.data(self.gui.current_trial).roi_names{length(self.data(self.gui.current_trial).rois)} = name;
-            self.data(self.gui.current_trial).is_component_set(length(self.data(self.gui.current_trial).rois)) = is_component_set;
-            
-            self.gui.d(self.gui.current_trial).current_roi_set = length(self.data(self.gui.current_trial).rois);
-            
-            self.h.roi_editor.set_rois(self.data(self.gui.current_trial).rois{self.gui.d(self.gui.current_trial).current_roi_set});
-            
-            if is_component_set
-                self.h.roi_editor.disable_roi_editing();
-            else
-                self.h.roi_editor.enable_roi_editing();
-            end
+            self.h.roi_editor.set_rois(self.rois{self.gui.current_roi_set});
             
             self.update();
         end
@@ -1839,31 +1736,31 @@ classdef ImageComponentParser < hgsetget
             
             if nargin < 2
                 % Then just delete the currently selected set(?)
-                idx = self.gui.d(self.gui.current_trial).current_roi_set;
+                idx = self.gui.current_roi_set;
             end
             
             % prompt?
             
             % Make sure idx is in range
-            if idx < 1 || idx > length(self.data(self.gui.current_trial).rois)
+            if idx < 1 || idx > length(self.rois)
                 % umm... do nothing?
                 disp('Requested ROI set not found. Nothing deleted.');
                 return;
             end
             
-            self.data(self.gui.current_trial).rois(idx) = [];
-            self.data(self.gui.current_trial).roi_names(idx) = [];
-            self.data(self.gui.current_trial).is_component_set(idx) = [];
+            self.rois(idx) = [];
+            self.gui.roi_names(idx) = [];
+            self.gui.is_component_set(idx) = [];
             
-            if isempty(self.data(self.gui.current_trial).rois)
+            if isempty(self.rois)
                 self.build_roi_listbox();
             end
             
-            if self.gui.d(self.gui.current_trial).current_roi_set > length(self.data(self.gui.current_trial).rois)
-                self.gui.d(self.gui.current_trial).current_roi_set = length(self.data(self.gui.current_trial).rois);
+            if self.gui.current_roi_set > length(self.rois)
+                self.gui.current_roi_set = length(self.rois);
             end
             
-            self.h.roi_editor.set_rois(self.data(self.gui.current_trial).rois{self.gui.d(self.gui.current_trial).current_roi_set}, false);
+            self.h.roi_editor.set_rois(self.rois{self.gui.current_roi_set}, false);
             self.update();
         end
         
@@ -1878,30 +1775,24 @@ classdef ImageComponentParser < hgsetget
             end
             
             % Check for empty
-            if isempty(self.data(self.gui.current_trial).rois)
+            if isempty(self.rois)
                 self.build_roi_listbox();
             end
             
             % Make sure idx is in range.
-            if idx < 1 || idx > length(self.data(self.gui.current_trial).rois)
+            if idx < 1 || idx > length(self.rois)
                 % Then idx is out of range.
-                idx = length(self.data(self.gui.current_trial).rois);
+                idx = length(self.rois);
             end
             
-            if idx == self.gui.d(self.gui.current_trial).current_roi_set
+            if idx == self.gui.current_roi_set
                 % Then nothing needs to be done.
                 return;
             end
             
-            self.gui.d(self.gui.current_trial).current_roi_set = idx;
+            self.gui.current_roi_set = idx;
             
-            self.h.roi_editor.set_rois(self.data(self.gui.current_trial).rois{self.gui.d(self.gui.current_trial).current_roi_set}, false);
-            
-            if self.data(self.gui.current_trial).is_component_set(idx)
-                self.h.roi_editor.disable_roi_editing();
-            else
-                self.h.roi_editor.enable_roi_editing();
-            end
+            self.h.roi_editor.set_rois(self.rois{self.gui.current_roi_set}, false);
             
             self.update();
         end
@@ -1923,20 +1814,20 @@ classdef ImageComponentParser < hgsetget
             end
             
             % Must have already run pca at least.
-            if self.data(self.gui.current_trial).stage == self.InitStage || self.data(self.gui.current_trial).stage == self.PreProcessingStage
+            if self.stage == self.InitStage || self.stage == self.PreProcessingStage
                 disp('Running previous stages...');
                 self.run_pca();
             end
             
-            pc_scores = self.data(self.gui.current_trial).pca.scores(:, which_pcs)';
+            pc_scores = self.pca.scores(:, which_pcs)';
             
             % reformat the masks into scores form
             ic_scores = reshape(masks, [], size(masks, 3))';
             
             A_guess = pc_scores / ic_scores;
             
-            self.data(self.gui.current_trial).settings.ica.init_guess = A_guess;
-            self.data(self.gui.current_trial).settings.ica.which_pcs = which_pcs;
+            self.settings.ica.init_guess = A_guess;
+            self.settings.ica.which_pcs = which_pcs;
         end
         
         function save_rois(self, filename)
@@ -1953,8 +1844,8 @@ classdef ImageComponentParser < hgsetget
                 end
                 filename = [path file];
             end
-            rois = self.data(self.gui.current_trial).rois;
-            names = self.data(self.gui.current_trial).roi_names;
+            rois = self.rois;
+            names = self.gui.roi_names;
             
             save(filename, 'rois', 'names');
         end
@@ -1976,10 +1867,10 @@ classdef ImageComponentParser < hgsetget
             
             for i = 1:length(roi_s.rois)
                 self.create_new_roi_set(roi_s.names{i});
-                self.data(self.gui.current_trial).rois{self.gui.d(self.gui.current_trial).current_roi_set} = roi_s.rois{i};
+                self.rois{self.gui.current_roi_set} = roi_s.rois{i};
             end
             
-            self.h.roi_editor.set_rois(self.data(self.gui.current_trial).rois{self.gui.d(self.gui.current_trial).current_roi_set}, false);
+            self.h.roi_editor.set_rois(self.rois{self.gui.current_roi_set}, false);
             
             self.update();
         end
@@ -1998,7 +1889,7 @@ classdef ImageComponentParser < hgsetget
             % @todo: more checks
             
             % Basically, just set the cluster matrix to 1 at the ic_idxs.
-            self.data(self.gui.current_trial).cluster.cluster_matrix(ic_idxs, ic_idxs) = 1;
+            self.cluster.cluster_matrix(ic_idxs, ic_idxs) = 1;
             
             self.update();
         end
@@ -2012,7 +1903,7 @@ classdef ImageComponentParser < hgsetget
                 idxs = self.h.roi_editor.selected_rois;
             end
             
-            self.data(self.gui.current_trial).cluster.cluster_matrix(idxs, idxs) = 0;
+            self.cluster.cluster_matrix(idxs, idxs) = 0;
             
             self.update();
         end
@@ -2021,74 +1912,6 @@ classdef ImageComponentParser < hgsetget
             % clear_clusters(self): removes all clusters
         end
              
-        function load_data(self, filename)
-            % load_data(self, filename): loads data from a file. 
-            %
-            % File must be a tif image stack or a mat file with an mxnxt
-            % variable.
-            
-            if nargin < 2 || isempty(filename)
-                % Then ask the user for a file with the prompt
-                [file_name, path_name] = uigetfile({'*.mat;*.tif;', 'Image Files'}, 'Load Data File');
-                %[file_name, path_name] = uigetfile();
-
-                if file_name == 0
-                    % cancelled
-                    return;
-                end
-                filename = [path_name file_name];
-            end
-            
-            set(self.h.stage_status, 'String', 'Loading Data...');
-            drawnow;
-
-            ext = filename((end-2):end);
-            if strcmp(ext, 'tif')
-                % Ok we should be able to just load a file using tifread
-                data = tifread(filename);
-                self.add_trial(data);
-            elseif strcmp(ext, 'mat')
-                % Ok then we need to load the mat file and find the image
-                % data.
-                data = load(filename);
-                
-                if isstruct(data)
-                    % then [data] should have a field thats the image data
-                    fn = fieldnames(data);
-                    notfound = true;
-                    for i = 1:length(fn)
-                        if ndims(data.(fn{i})) == 3
-                            % So then this must be the data that we're
-                            % looking for.
-                            self.add_trial(data.(fn{i}));
-                            notfound = false;
-                            break;
-                        end
-                    end
-                    
-                    if notfound
-                        % So if we get to this point then we didn't find
-                        % anything suitable for data.
-                        disp('No Image data found. Need NxMxT matrix.');
-                        return;
-                    end
-                elseif ndims(data) == 3
-                    % then [data] is the image data
-                    self.add_trial(data);
-                else
-                    % then data is not valid.
-                    disp('Data file must be MxNxT movie.');
-                end
-            else
-                % Then something is weird...
-                disp('Invalid File.');
-            end
-            
-            % @todo: set the trial name to be the filename here.
-            
-            self.update();
-        end
-        
         function set_data(self, im, trial_idx)
             % set_data(self, im): sets the image data.
             %
@@ -2102,7 +1925,14 @@ classdef ImageComponentParser < hgsetget
             end
             
             % @todo: checks on inputs
-            self.init_data(im, trial_idx);
+            
+            self.im_data{trial_idx} = im;
+            self.pp = [];
+            self.pca = [];
+            self.ica = [];
+            self.gui.last_display = 0;
+            
+            self.stage = self.InitStage;
             
             self.update();
         end
@@ -2110,22 +1940,10 @@ classdef ImageComponentParser < hgsetget
         function add_trial(self, im_data)
             % add_trial(self, im_data): adds a trial to the ICP
             
-            disp('add_trial');
-            
-            if length(self.data) == 1 && self.gui.default_data 
-                % Then we have defualt data which can be replaced. This
-                % should always be the first data, and should only be true
-                % if there is 1 thing in the data.
-                self.set_data(im_data, 1);
-                self.gui.default_data = false;
-            else
-                self.set_data(im_data, length(self.data)+1);
-            end
-                
         end
         
         function delete_trial(self, idx)
-            % delete_trial(self, idx): removes a trial from the ICP
+            % remove_trial(self, idx): removes a trial from the ICP
             
         end
         
@@ -2137,133 +1955,22 @@ classdef ImageComponentParser < hgsetget
         function set_selected_trial(self, idx)
             % set_selected_trial(self, idx): sets the current trial.
             
-            % @todo: checks
-            disp('set_selected_trial');
-            self.gui.current_trial = idx;
-            self.gui.d(self.gui.current_trial).last_display = 0;
-            self.update();
         end
         
         function set_use_wavelets(self, val)
             % set_use_wavelets(self, val): sets whether to use the wavelets
             
             %todo: checks, update the checkbox in the gui
-            self.gui.d(self.gui.current_trial).use_wavelets = val; 
+            self.gui.use_wavelets = val; 
         end
         
         function reset(self)
             % reset(self); resets to the init stage.
-            self.data(self.gui.current_trial).stage = self.InitStage;
-            self.data(self.gui.current_trial).pp = [];
-            self.data(self.gui.current_trial).pca = [];
-            self.data(self.gui.current_trial).ica = [];
+            self.stage = self.InitStage;
+            self.pp = [];
+            self.pca = [];
+            self.ica = [];
             self.update();
-        end
-        
-        function load_session(self, filename)
-            % load_session(self, filename): loads an ICP session from a
-            % file.
-            
-            if nargin < 2 || isempty(filename)
-                % Then ask the user for a file with the prompt
-                [file_name, path_name] = uigetfile({'*.mat;*.icp;', 'ICP Session Files'}, 'Load Session File');
-                %[file_name, path_name] = uigetfile();
-
-                if file_name == 0
-                    % cancelled
-                    return;
-                end
-                filename = [path_name file_name];
-            end
-            
-            set(self.h.stage_status, 'String', 'Loading Session...');
-            drawnow;
-
-            ext = filename((end-2):end);
-            
-            ds = load(filename);
-            
-            if isstruct(ds)
-                % Ok well it should be a struct no matter what
-                if isfield(ds, 'data')
-                    % This is the most normal thing that should happen,
-                    % this is what should happen on a file that is saved by
-                    % the save_session function
-                    
-                    % delete all of the current settings
-                    self.data =[];
-                    self.gui.d = [];
-                    
-                    % reinit the gui states
-                    for i = 1:length(ds.data)
-                        self.init_gui_display(i);
-                    end
-                    
-                    % Now just set the data
-                    self.data = ds.data;
-                else
-                    % ds could be data itself? but just going to say no for
-                    % now
-                    disp('data struct not found.');
-                    return;
-                end
-            else
-                % Then we have a weird problem...
-                disp('Data in file invalid.');
-                return;
-            end
-            
-            self.update();
-            set(self.h.stage_status, 'String', 'Load Complete');
-            drawnow;
-        end
-        
-        function save_session(self, filename)
-            % save_session(self, filename): saves the ICP session to a
-            % file.
-            %
-            % @param: filename the name of the file to save the session.
-            % Default [] will open an file window
-            
-            if nargin < 2 || isempty(filename)
-                % Then ask the user for a file with the prompt
-                [file_name, path_name] = uiputfile({'*.mat;*.icp;', 'ICP Session Files'}, 'Load Session File');
-                %[file_name, path_name] = uigetfile();
-                
-                if file_name == 0
-                    % cancelled
-                    return;
-                end
-                filename = [path_name file_name];
-            end
-            
-            set(self.h.stage_status, 'String', 'Saving Session...');
-            drawnow;
-            
-            % First lets get the extension
-            if filename(end-3) == '.'
-                % Then there is an extension
-                ext = filename((end-2):end);
-                
-                % So now just make sure it is mat or icp
-                if strcmp(ext, 'mat') || strcmp(ext, 'icp')
-                    % Then we're good.
-                else
-                    % Then replace the extension
-                    filename((end-2):end) = 'icp';
-                end
-            else
-                % Then no extension so add one
-                filename = [filename '.icp'];
-            end
-            
-            % Ok, so baically we just save data to the file
-            data = self.data;
-            
-            save(filename, '-mat', '-v7.3', 'data');
-            
-            set(self.h.stage_status, 'String', 'Session Saved');
-            drawnow;
         end
         
         %%%%%%%%%% Utility Functions %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -2271,121 +1978,38 @@ classdef ImageComponentParser < hgsetget
             % default_settings(self): sets the settings to the default.
             
             %self.settings.preprocessing.block_size = 6;
-            self.data(self.gui.current_trial).settings.preprocessing.smooth_window = [6, 6, 1];
-            %self.data(self.gui.current_trial).settings.preprocessing.step_size = 2;
-            self.data(self.gui.current_trial).settings.preprocessing.down_sample = [1, 1, 1];
-            self.data(self.gui.current_trial).settings.preprocessing.remove_frames = [];
+            self.settings.preprocessing.smooth_window = [6, 6, 1];
+            %self.settings.preprocessing.step_size = 2;
+            self.settings.preprocessing.down_sample = [2, 2, 1];
             
-            self.data(self.gui.current_trial).settings.preprocessing.motion_correct_func = @align_im_stack;
+            self.settings.preprocessing.motion_correct_func = @align_im_stack;
             
-            self.data(self.gui.current_trial).settings.preprocessing.default_filter_file = 'icp_default_filters.mat';
-            self.data(self.gui.current_trial).settings.preprocessing.filter_file = self.data(self.gui.current_trial).settings.preprocessing.default_filter_file;
+            self.settings.preprocessing.default_filter_file = 'icp_default_filters.mat';
+            self.settings.preprocessing.filter_file = self.settings.preprocessing.default_filter_file;
             
-            self.data(self.gui.current_trial).settings.pca.mean_center = 0;
-            self.data(self.gui.current_trial).settings.pca.corr_pca = 0; 
+            self.settings.pca.mean_center = 0;
             
-            self.data(self.gui.current_trial).settings.ica.which_pcs = 1:150;
-            self.data(self.gui.current_trial).settings.ica.positive_skew = true;
-            self.data(self.gui.current_trial).settings.ica.init_guess = -1;
-            self.data(self.gui.current_trial).settings.ica.ica_func = 'fastica';
-            self.data(self.gui.current_trial).settings.ica.mu = 0.2; % This is a parameter for Cellsort ICA
+            self.settings.ica.which_pcs = 1:150;
+            self.settings.ica.positive_skew = true;
+            self.settings.ica.init_guess = -1;
+            self.settings.ica.ica_func = 'fastica';
+            self.settings.ica.mu = 0.2; % This is a parameter for Cellsort ICA
             
-            self.data(self.gui.current_trial).settings.segment.calc_rois_func = @calc_rois_from_components;
-            self.data(self.gui.current_trial).settings.segment.segment_ics_func = @segment_ics;
+            self.settings.post.calc_rois_func = @calc_rois_from_components;
+            self.settings.post.segment_ics_func = @segment_ics;
             
-            self.data(self.gui.current_trial).settings.viz.map_pow = 2;
-            self.data(self.gui.current_trial).settings.viz.color_pow = 2;
-            self.data(self.gui.current_trial).settings.viz.alpha = 0.25;
-            
-            self.data(self.gui.current_trial).settings.cluster.feature_matrix_func = @make_feature_matrix;
-            self.data(self.gui.current_trial).settings.cluster.feature_weights = 1;
-            self.data(self.gui.current_trial).settings.cluster.visualization_func = @viz_best3;
-            self.data(self.gui.current_trial).settings.cluster.calc_sim_matrix_func = @(b, x) sum(repmat(b, [size(x,1), size(x,2), 1]) .* x, 3);
+            self.settings.cluster.feature_matrix_func = @make_feature_matrix;
+            self.settings.cluster.feature_weights = 1;
+            self.settings.cluster.visualization_func = @viz_best3;
+            self.settings.cluster.calc_sim_matrix_func = @(b, x) sum(repmat(b, [size(x,1), size(x,2), 1]) .* x, 3);
             
             
-            self.data(self.gui.current_trial).settings.visualize.norm_best_components = false;
-            self.data(self.gui.current_trial).settings.visualize.num_best_components = 3;
-            self.data(self.gui.current_trial).settings.visualize.show_residual = true;
-            self.data(self.gui.current_trial).settings.visualize.best_selection_type = 1;                        
-        end
-        
-        function init_data(self, im_data, trial_idx, isdefault)
-            % initializes the data struct and data gui elements
+            self.settings.visualize.norm_best_components = false;
+            self.settings.visualize.num_best_components = 3;
+            self.settings.visualize.show_residual = true;
+            self.settings.visualize.best_selection_type = 1;            
             
-            disp('init_data');
             
-            if nargin < 2 || isempty(im_data)
-                % Then we have no im_data, so set the default
-                im_data = rand(128,128,10);
-            end
-            
-            if nargin < 3 || isempty(trial_idx)
-                % Then add a new struct to the end.
-                trial_idx = length(self.data) + 1;
-            end
-            
-            if nargin < 4 || isempty(isdefault)
-                isdefault = false;
-            end
-            
-            self.gui.default_data = isdefault;
-            
-            self.data(trial_idx).im_data = im_data;
-            self.data(trial_idx).pp = [];
-            self.data(trial_idx).pca = [];
-            self.data(trial_idx).ica = [];
-            self.data(trial_idx).viz = [];
-            self.data(trial_idx).segment = [];
-            self.data(trial_idx).cluster = [];            
-            self.data(trial_idx).stage = self.InitStage;
-            
-            self.data(trial_idx).rois{1} = [];
-            self.data(trial_idx).roi_names{1} = 'ROI_set_1';
-            self.data(trial_idx).is_component_set = false;
-            
-            self.init_gui_display(trial_idx);
-            
-            if self.gui.default_data
-                self.data(trial_idx).trial_name = 'Default Data';
-                
-            else
-                self.data(trial_idx).trial_name = ['Trial ' num2str(trial_idx)];
-            end
-            
-            self.gui.current_trial = trial_idx;
-            
-            % Finally copy the settings or do the default
-            if length(self.data) == 1
-                % Then just do the default settings
-                self.default_settings();
-            elseif length(self.data) > 1 && self.gui.current_trial > 1
-                % Then copy the settings from the previous trial
-                self.data(self.gui.current_trial).settings = self.data(self.gui.current_trial - 1).settings;
-            else
-                % Then do the default
-                self.default_settings();
-            end
-        end
-        
-        function init_gui_display(self, trial_idx)
-            % Inits the gui state variables that are needed for each trial.
-            
-            % @todo: use_wavelets may need to be initialized based on the
-            % settings.
-            self.gui.d(trial_idx).use_wavelets = false;
-            self.gui.d(trial_idx).current_roi_set = 1;
-            
-            % 3d-axis state variables
-            self.gui.d(trial_idx).x_pc = 1; % The PC scores to plot on the x-axis
-            self.gui.d(trial_idx).y_pc = 2; % The PC scores to plot on the y-axis
-            self.gui.d(trial_idx).z_pc = 3; % The PC scores to plot on the z-axis 
-            
-            self.gui.d(trial_idx).display = 1;
-            self.gui.d(trial_idx).last_display = 0; 
-            
-            % Keep track of the frame for each of the display panels
-            self.gui.d(trial_idx).current_frame = ones(6, 1);
-            self.gui.d(trial_idx).levels = nan(6, 2);
         end
         
         function plot_locked_components(self)
@@ -2401,26 +2025,26 @@ classdef ImageComponentParser < hgsetget
             % 3-space.
             disp('plot_3d');
 
-            if self.gui.d(self.gui.current_trial).display == 4 && self.data(self.gui.current_trial).stage == self.IcaStage
+            if self.gui.display == 4 && self.stage == self.IcaStage
                 % Then view the ICs
-                sc = self.data(self.gui.current_trial).ica.scores;
+                sc = self.ica.scores;
                 self.build_3d_gui_components(self.IcaStage)
-            elseif self.gui.d(self.gui.current_trial).display == 3 && self.data(self.gui.current_trial).stage >= self.PcaStage
+            elseif self.gui.display == 3 && self.stage >= self.PcaStage
                 % Then view the PCs
-                sc = self.data(self.gui.current_trial).pca.scores;
+                sc = self.pca.scores;
                 self.build_3d_gui_components(self.PcaStage);
 
-            elseif self.data(self.gui.current_trial).stage == self.PcaStage
+            elseif self.stage == self.PcaStage
                 % Then view the PCs
-                sc = self.data(self.gui.current_trial).pca.scores;
+                sc = self.pca.scores;
                 self.build_3d_gui_components(self.PcaStage);
-            elseif self.data(self.gui.current_trial).stage == self.IcaStage
+            elseif self.stage == self.IcaStage
                 % Then view the ICs
-                sc = self.data(self.gui.current_trial).ica.scores;
+                sc = self.ica.scores;
                 self.build_3d_gui_components(self.IcaStage);
             else
                 cla(self.h.pc3_axes);
-                self.build_3d_gui_components(self.data(self.gui.current_trial).stage);
+                self.build_3d_gui_components(self.stage);
                 return;
             end
             
@@ -2430,20 +2054,20 @@ classdef ImageComponentParser < hgsetget
             end
             
             % Make sure everything is in range
-            if self.gui.d(self.gui.current_trial).x_pc < 1 || self.gui.d(self.gui.current_trial).x_pc > size(sc, 2)
+            if self.gui.x_pc < 1 || self.gui.x_pc > size(sc, 2)
                 % Just set to 1 for now.
-                self.gui.d(self.gui.current_trial).x_pc = 1;
+                self.gui.x_pc = 1;
             end
-            if self.gui.d(self.gui.current_trial).y_pc < 1 || self.gui.d(self.gui.current_trial).y_pc > size(sc, 2)
-                self.gui.d(self.gui.current_trial).y_pc = 1;
+            if self.gui.y_pc < 1 || self.gui.y_pc > size(sc, 2)
+                self.gui.y_pc = 1;
             end
-            if self.gui.d(self.gui.current_trial).z_pc < 1 || self.gui.d(self.gui.current_trial).z_pc > size(sc, 2)
-                self.gui.d(self.gui.current_trial).z_pc = 1;
+            if self.gui.z_pc < 1 || self.gui.z_pc > size(sc, 2)
+                self.gui.z_pc = 1;
             end
             
-            xv = sc(:, self.gui.d(self.gui.current_trial).x_pc);
-            yv = sc(:, self.gui.d(self.gui.current_trial).y_pc);
-            zv = sc(:, self.gui.d(self.gui.current_trial).z_pc);
+            xv = sc(:, self.gui.x_pc);
+            yv = sc(:, self.gui.y_pc);
+            zv = sc(:, self.gui.z_pc);
             
             [az, el] = view(self.h.pc3_axes);
             plot3(self.h.pc3_axes, xv, yv, zv, '.k');
@@ -2451,9 +2075,9 @@ classdef ImageComponentParser < hgsetget
             view(self.h.pc3_axes, az, el);
             
             popup_str = get(self.h.x_popup, 'String');
-            xlabel(self.h.pc3_axes, popup_str{self.gui.d(self.gui.current_trial).x_pc});
-            ylabel(self.h.pc3_axes, popup_str{self.gui.d(self.gui.current_trial).y_pc});
-            zlabel(self.h.pc3_axes, popup_str{self.gui.d(self.gui.current_trial).z_pc});
+            xlabel(self.h.pc3_axes, popup_str{self.gui.x_pc});
+            ylabel(self.h.pc3_axes, popup_str{self.gui.y_pc});
+            zlabel(self.h.pc3_axes, popup_str{self.gui.z_pc});
         end
         
         function build_3d_gui_components(self, stage)
@@ -2467,68 +2091,44 @@ classdef ImageComponentParser < hgsetget
                     set(self.h.z_popup, 'String', {'None'}, 'Value', 1);
                     return;
                 case self.PcaStage
-                    popup_str = cellfun(@(n) ['PC ' num2str(n)], num2cell(1:size(self.data(self.gui.current_trial).pca.scores, 2)), ...
+                    popup_str = cellfun(@(n) ['PC ' num2str(n)], num2cell(1:size(self.pca.scores, 2)), ...
                         'UniformOutput', 0);
                     set(self.h.x_popup, 'String', popup_str);
                     set(self.h.y_popup, 'String', popup_str);
                     set(self.h.z_popup, 'String', popup_str);                    
                 case self.IcaStage
-                    popup_str = cellfun(@(n) ['IC ' num2str(n)], num2cell(1:size(self.data(self.gui.current_trial).ica.scores, 2)), ...
+                    popup_str = cellfun(@(n) ['IC ' num2str(n)], num2cell(1:size(self.ica.scores, 2)), ...
                         'UniformOutput', 0);
                     set(self.h.x_popup, 'String', popup_str);
                     set(self.h.y_popup, 'String', popup_str);
                     set(self.h.z_popup, 'String', popup_str);                    
             end
             
-            set(self.h.x_popup, 'Value', self.gui.d(self.gui.current_trial).x_pc);
-            set(self.h.y_popup, 'Value', self.gui.d(self.gui.current_trial).y_pc);
-            set(self.h.z_popup, 'Value', self.gui.d(self.gui.current_trial).z_pc);
+            set(self.h.x_popup, 'Value', self.gui.x_pc);
+            set(self.h.y_popup, 'Value', self.gui.y_pc);
+            set(self.h.z_popup, 'Value', self.gui.z_pc);
         end
         
         function build_roi_listbox(self)
             % build_roi_listbox(self): creates the roi_listbox.
             
-            if isempty(self.data(self.gui.current_trial).rois)
+            if isempty(self.rois)
                 % Then there is nothing in the rois, so create an empty
                 % list.
-                self.data(self.gui.current_trial).rois{1} = [];
-                self.gui.d(self.gui.current_trial).current_roi_set = 1;
-                self.data(self.gui.current_trial).roi_names = {};
-                self.data(self.gui.current_trial).roi_names{1} = 'ROI_set_1';
-                self.data(self.gui.current_trial).is_component_set = false;
+                self.rois{1} = [];
+                self.gui.current_roi_set = 1;
+                self.gui.roi_names = {};
+                self.gui.roi_names{1} = 'ROI_set_1';
+                self.gui.is_component_set = false;
             end
             
             % Check ranges
-            assert(length(self.data(self.gui.current_trial).rois) == length(self.data(self.gui.current_trial).roi_names));
-            if self.gui.d(self.gui.current_trial).current_roi_set < 1 || self.gui.d(self.gui.current_trial).current_roi_set > length(self.data(self.gui.current_trial).rois)
-                self.gui.d(self.gui.current_trial).current_roi_set = length(self.data(self.gui.current_trial).rois);
+            assert(length(self.rois) == length(self.gui.roi_names));
+            if self.gui.current_roi_set < 1 || self.gui.current_roi_set > length(self.rois)
+                self.gui.current_roi_set = length(self.rois);
             end
             
-            set(self.h.roi_listbox, 'String', self.data(self.gui.current_trial).roi_names, 'Value', self.gui.d(self.gui.current_trial).current_roi_set);
-        end
-        
-        function build_trial_listbox(self)
-            % build_trial_listbox(self): creates the contents of the trial
-            % listbox.
-            
-            if isempty(self.data)
-                % Then something is weird... Perhaps generate the default
-                % data?
-                disp('no data!');
-                return;
-            end
-            
-            % @todo: check ranges
-            for i = 1:length(self.data)
-                if isfield(self.data(i), 'trial_name') && ~isempty(self.data(i).trial_name)
-                    self.gui.trial_names{i} = self.data(i).trial_name;
-                else
-                    self.data(i).trial_name = ['Trial ' num2str(i)];
-                    self.gui.trial_names{i} = self.data(i).trial_name;
-                end
-            end
-            
-            set(self.h.trial_listbox, 'String', self.gui.trial_names, 'Value', self.gui.current_trial);
+            set(self.h.roi_listbox, 'String', self.gui.roi_names, 'Value', self.gui.current_roi_set);
         end
         
         function update_current_roi_set(self)
@@ -2537,7 +2137,7 @@ classdef ImageComponentParser < hgsetget
             
             disp('update_current_roi_set');
             
-            self.data(self.gui.current_trial).rois{self.gui.d(self.gui.current_trial).current_roi_set} = self.h.roi_editor.rois.xyrra(:,:,1);
+            self.rois{self.gui.current_roi_set} = self.h.roi_editor.rois.xyrra(:,:,1);
             self.update();
         end
         
@@ -2555,7 +2155,7 @@ classdef ImageComponentParser < hgsetget
             % First see if there are other clustered rois
             cluster_idx = [];
             if ~isempty(roi_idx)
-                cluster_idx = find(self.data(self.gui.current_trial).cluster.cluster_matrix(roi_idx(1), :));
+                cluster_idx = find(self.cluster.cluster_matrix(roi_idx(1), :));
             end
             
             if ~isempty(cluster_idx)
@@ -2568,44 +2168,11 @@ classdef ImageComponentParser < hgsetget
             f = self.h.roi_editor.current_frame;
             
             set(roi_h(f), 'Marker', 's', 'MarkerSize', 1, 'MarkerFaceColor', 'w', 'MarkerEdgeColor', 'w');
-            set(roi_h(self.data(self.gui.current_trial).cluster.top3(f, 1)), 'Marker', 's', 'MarkerSize', 1, 'MarkerFaceColor', 'r', 'MarkerEdgeColor', 'r');
-            set(roi_h(self.data(self.gui.current_trial).cluster.top3(f, 2)), 'Marker', 's', 'MarkerSize', 1, 'MarkerFaceColor', 'g', 'MarkerEdgeColor', 'g');
-            set(roi_h(self.data(self.gui.current_trial).cluster.top3(f, 3)), 'Marker', 's', 'MarkerSize', 1, 'MarkerFaceColor', 'b', 'MarkerEdgeColor', 'b');
+            set(roi_h(self.cluster.top3(f, 1)), 'Marker', 's', 'MarkerSize', 1, 'MarkerFaceColor', 'r', 'MarkerEdgeColor', 'r');
+            set(roi_h(self.cluster.top3(f, 2)), 'Marker', 's', 'MarkerSize', 1, 'MarkerFaceColor', 'g', 'MarkerEdgeColor', 'g');
+            set(roi_h(self.cluster.top3(f, 3)), 'Marker', 's', 'MarkerSize', 1, 'MarkerFaceColor', 'b', 'MarkerEdgeColor', 'b');
 
             
-        end
-        
-        function draw_component_viz(self)
-            % draws the component color map onto the ccd image
-            
-            s = self.data(self.gui.current_trial).settings.viz;
-            
-            im_data = self.data(self.gui.current_trial).im_data;
-            
-            % These will be real values at some point...
-            im_x = 1:size(im_data, 2);
-            im_y = 1:size(im_data, 1);
-            im_z = 1:size(im_data, 3);
-            
-            nccd = repmat(mean(im_data, 3), [1 1 3]);
-            component_resize = zeros(size(nccd));
-            
-            [x,y] = meshgrid(self.data(self.gui.current_trial).viz.ccm_x, self.data(self.gui.current_trial).viz.ccm_y);
-            [xi,yi] = meshgrid(im_x, im_y);
-            
-            component_resize(:,:,1) = interp2(x, y, self.data(self.gui.current_trial).viz.component_color_map(:,:,1), xi, yi);
-            component_resize(:,:,2) = interp2(x, y, self.data(self.gui.current_trial).viz.component_color_map(:,:,2), xi, yi);
-            component_resize(:,:,3) = interp2(x, y, self.data(self.gui.current_trial).viz.component_color_map(:,:,3), xi, yi);
-            
-            component_resize(isnan(component_resize)) = 0;
-            
-            self.data(self.gui.current_trial).viz.im_data = norm_range((1 - s.alpha) * component_resize + s.alpha * norm_range(nccd));
-            self.data(self.gui.current_trial).viz.im_x = im_x;
-            self.data(self.gui.current_trial).viz.im_y = im_y;
-            
-            self.gui.d(self.gui.current_trial).last_display = 0;
-            
-            self.update();
         end
     end
     
